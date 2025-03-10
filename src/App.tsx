@@ -6,6 +6,13 @@ import "./App.css";
 function App() {
   const [count, setCount] = useState(0);
 
+  const apiUrl = import.meta.env.VITE_API_URL;
+  const testPage = apiUrl + "/api/auth/me";
+
+  const clickeee = () =>
+    fetch(testPage)
+      .then((response) => response.json())
+      .then((data) => console.log(data));
   return (
     <>
       <div>
@@ -18,7 +25,12 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
+        <button
+          onClick={() => {
+            clickeee();
+            setCount((count) => count + 1);
+          }}
+        >
           count is {count}
         </button>
         <p>
