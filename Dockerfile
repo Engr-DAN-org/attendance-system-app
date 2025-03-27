@@ -8,8 +8,7 @@ RUN npm install
 FROM base AS dev
 COPY . .
 EXPOSE 5173 24687
-ENV VITE_API_URL="http://localhost:5182"
-ENV VITE_HMR_PORT="24687"
+
 CMD ["npm", "run", "dev", "--", "--host"]
 
 # Production Build Stage
