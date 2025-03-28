@@ -1,15 +1,29 @@
 interface ResponseDTO {
-  status: number;
-  message?: string;
-  data?: object | unknown;
+  responseType: string;
+  message: string;
 }
 
 interface AuthResponseDTO extends ResponseDTO {
-  data?: {
-    role: string;
-    expiry: string;
-    token: string;
-  };
+  role: string;
+  expiry: string;
+  token: string;
 }
 
-export type { ResponseDTO, AuthResponseDTO };
+interface FailedLoginResponseDTO extends ResponseDTO {
+  responseType: string;
+  message: string;
+}
+
+interface SuccessLoginResponseDTO extends ResponseDTO {
+  responseType: string;
+  message: string;
+  email: string;
+  expiry: Date;
+}
+
+export type {
+  ResponseDTO,
+  AuthResponseDTO,
+  FailedLoginResponseDTO,
+  SuccessLoginResponseDTO,
+};

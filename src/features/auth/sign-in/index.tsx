@@ -4,8 +4,14 @@ import { Card } from "../../../components/ui/card";
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { OtpForm } from "./components/otp-form";
-import { LoginDTO, Verify2faDTO } from "../../../interfaces/auth";
+import { LoginDTO } from "../../../interfaces/auth";
 import { login, verify2fa } from "../../../services/auth.service";
+import {
+  FailedLoginResponseDTO,
+  SuccessLoginResponseDTO,
+} from "../../../interfaces/responseDTO";
+import { AxiosError, AxiosResponse } from "axios";
+import { toast } from "sonner";
 
 export default function SignIn() {
   const [isLoading, setIsLoading] = useState(false);
@@ -18,15 +24,34 @@ export default function SignIn() {
       setIsLoading(true);
 
       const response = await login(request);
-      if (response.status == 200) {
-        const { email } = response.data as { email: string };
-        setOtpEmail(email);
-        setIsOTP(true);
-      } else {
-        setIsLoading(false);
-      }
-    } catch (error) {
-      console.log(error);
+      console.log(response);
+
+      const { responseType, message, email } =
+        response as SuccessLoginResponseDTO;
+      // const { email } = response.data as { email: string };
+      setOtpEmail(email);
+      setIsOTP(true);
+
+      toast.info(responseType, {
+        description: <code className="text-gray-700">{message}</code>,
+      });
+    } catch (e: unknown) {
+      const { response } = e as AxiosError & {
+        response?: AxiosResponse & {
+          data: FailedLoginResponseDTO;
+        };
+      };
+      const statusText = response?.statusText;
+      const data = response?.data;
+      console.log(e);
+
+      toast.error(<div>{statusText}</div>, {
+        description: (
+          <code className="text-gray-700">
+            {data?.message ?? "Something Went Wrong."}
+          </code>
+        ),
+      });
     }
     // const response = await coldStart();
     // if
@@ -41,16 +66,33 @@ export default function SignIn() {
     try {
       setIsLoading(true);
 
-      const response = await verify2fa({
+      const { responseType, message, ...response } = await verify2fa({
         email: otpEmail,
         code,
       });
-      // if (response.status == 200) {
-      // } else {
-      // }
       console.log(response);
-    } catch (error) {
-      console.log(error);
+
+      toast.success(responseType, {
+        description: <code className="text-gray-700">{message}</code>,
+      });
+    } catch (e) {
+      const { response } = e as AxiosError & {
+        response?: AxiosResponse & {
+          data: FailedLoginResponseDTO;
+        };
+      };
+      const statusText = response?.statusText;
+      const responseType = response?.data?.responseType;
+      const message = response?.data?.message;
+
+      console.log(e);
+      toast.error(responseType ?? statusText, {
+        description: (
+          <code className="text-gray-700">
+            {message ?? "Something Went Wrong."}
+          </code>
+        ),
+      });
     }
     // const response = await coldStart();
     // if

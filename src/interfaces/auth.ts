@@ -10,10 +10,10 @@ interface AuthState {
 }
 
 interface AuthUser {
-  email: string;
-  role: string;
-  token: string;
+  token: string | null;
   expiry: string;
+  role: string;
+  email: string;
 }
 
 interface LoginDTO {

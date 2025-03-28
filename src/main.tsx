@@ -8,12 +8,12 @@ import {
 } from "@tanstack/react-query";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { handleServerError } from "./utils/handle-server-error";
-import { toast } from "./hooks/use-toast";
 import { FontProvider } from "./context/font-context";
 import { ThemeProvider } from "./context/theme-context";
 import "./index.css";
 // Generated Routes
 import { routeTree } from "./routeTree.gen";
+import { toast } from "sonner";
 // import { useAuthStore } from "./store/authStore";
 
 const queryClient = new QueryClient({
@@ -40,10 +40,7 @@ const queryClient = new QueryClient({
 
         if (error instanceof AxiosError) {
           if (error.response?.status === 304) {
-            toast({
-              variant: "destructive",
-              title: "Content not modified!",
-            });
+            toast.error("Content not modified!");
           }
         }
       },
