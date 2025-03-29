@@ -10,13 +10,13 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../../../../components/ui/form";
-import { cn } from "../../../../lib/utils";
-import { Button } from "../../../../components/ui/button";
-import { Input } from "../../../../components/ui/input";
-import { PasswordInput } from "../../../../components/password-input";
+} from "@/components/ui/form";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/password-input";
 import { useForm } from "react-hook-form";
-import { LoginDTO } from "../../../../interfaces/auth";
+import { LoginDTO } from "@/interfaces/auth";
 
 type UserAuthFormProps = HTMLAttributes<HTMLDivElement> & {
   isLoading: boolean;

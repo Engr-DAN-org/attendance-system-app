@@ -1,20 +1,20 @@
 import { StrictMode } from "react";
-import ReactDOM from "react-dom/client";
+import { createRoot } from "react-dom/client";
 import { AxiosError } from "axios";
 import {
-  // QueryCache,
+  QueryCache,
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
-import { handleServerError } from "./utils/handle-server-error";
-import { FontProvider } from "./context/font-context";
-import { ThemeProvider } from "./context/theme-context";
+import { handleServerError } from "@/utils/handle-server-error";
+import { FontProvider } from "@/context/font-context";
+import { ThemeProvider } from "@/context/theme-context";
 import "./index.css";
 // Generated Routes
-import { routeTree } from "./routeTree.gen";
+import { routeTree } from "@/routeTree.gen";
 import { toast } from "sonner";
-// import { useAuthStore } from "./store/authStore";
+import { useAuthStore } from "./store/authStore";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -46,31 +46,27 @@ const queryClient = new QueryClient({
       },
     },
   },
-  // queryCache: new QueryCache({
-  //   onError: (error) => {
-  //     if (error instanceof AxiosError) {
-  //       if (error.response?.status === 401) {
-  //         toast({
-  //           variant: "destructive",
-  //           title: "Session expired!",
-  //         });
-  //         useAuthStore.getState().auth.reset();
-  //         const redirect = `${router.history.location.href}`;
-  //         router.navigate({ to: "/sign-in", search: { redirect } });
-  //       }
-  //       if (error.response?.status === 500) {
-  //         toast({
-  //           variant: "destructive",
-  //           title: "Internal Server Error!",
-  //         });
-  //         router.navigate({ to: "/500" });
-  //       }
-  //       if (error.response?.status === 403) {
-  //         // router.navigate("/forbidden", { replace: true });
-  //       }
-  //     }
-  //   },
-  // }),
+  queryCache: new QueryCache({
+    onError: (error) => {
+      if (error instanceof AxiosError) {
+        const status = error.response?.status;
+        const navigate = router.navigate;
+
+        if (status == 401) {
+          toast.error("Session expired!");
+          const redirect = `${router.history.location.href}`;
+          useAuthStore.getState().logout(navigate, redirect);
+        }
+        if (error.response?.status === 500) {
+          toast("Internal Server Error!");
+          router.navigate({ to: "/500" });
+        }
+        if (error.response?.status === 403) {
+          router.navigate({ to: "/403", replace: true });
+        }
+      }
+    },
+  }),
 });
 
 // Create a new router instance
@@ -91,7 +87,7 @@ declare module "@tanstack/react-router" {
 // Render the app
 const rootElement = document.getElementById("root")!;
 if (!rootElement.innerHTML) {
-  const root = ReactDOM.createRoot(rootElement);
+  const root = createRoot(rootElement);
   root.render(
     <StrictMode>
       <QueryClientProvider client={queryClient}>

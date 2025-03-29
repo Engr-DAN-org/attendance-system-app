@@ -1,10 +1,10 @@
-import axios from "../utils/axiosSetup";
-import { LoginDTO, Verify2faDTO } from "../interfaces/auth";
+import axios from "@/utils/axiosSetup";
+import { LoginDTO, Verify2faDTO } from "@/interfaces/auth";
 import {
   AuthResponseDTO,
   FailedLoginResponseDTO,
   SuccessLoginResponseDTO,
-} from "../interfaces/responseDTO";
+} from "@/interfaces/responseDTO";
 import { AxiosResponse } from "axios";
 import Cookies from "js-cookie";
 
@@ -12,7 +12,7 @@ const coldStart = async () => {
   return await axios.get("/coldStart");
 };
 
-const login = async (
+const loginAsync = async (
   loginDTO: LoginDTO
 ): Promise<SuccessLoginResponseDTO | FailedLoginResponseDTO> => {
   const response: AxiosResponse<SuccessLoginResponseDTO> = await axios.post(
@@ -22,7 +22,7 @@ const login = async (
   return response.data;
 };
 
-const verify2fa = async (
+const verify2faAsync = async (
   verify2faDTO: Verify2faDTO
 ): Promise<AuthResponseDTO> => {
   const response: AxiosResponse<AuthResponseDTO> = await axios.post(
@@ -40,4 +40,4 @@ const logout = () => {
   Cookies.remove("user");
 };
 
-export { coldStart, login, verify2fa, logout };
+export { coldStart, loginAsync, verify2faAsync, logout };

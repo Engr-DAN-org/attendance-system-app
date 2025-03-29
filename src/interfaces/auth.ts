@@ -1,17 +1,26 @@
 interface AuthState {
   user: AuthUser | null;
-  login: (token: string, expiry: string, role: string, email: string) => void;
-  logout: () => void;
+  login: (response: {
+    token: string;
+    expiry: number;
+    role: string;
+    email: string;
+    navigate: (path: string) => void;
+  }) => void;
+  logout: (
+    navigate: (options: { to: string; search: string }) => void,
+    redirect: string
+  ) => void;
   isAuthenticated: () => boolean;
-  //   isAdmin: () => boolean;
-  //   isUser: () => boolean;
-  //   isTeacher: () => boolean;
-  //   isStudent: () => boolean;
+  getRedirectPath: () => string;
+  isAdmin: () => boolean;
+  isTeacher: () => boolean;
+  isStudent: () => boolean;
 }
 
 interface AuthUser {
   token: string | null;
-  expiry: string;
+  expiry: number;
   role: string;
   email: string;
 }

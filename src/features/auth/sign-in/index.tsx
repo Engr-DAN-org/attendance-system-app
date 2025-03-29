@@ -1,19 +1,22 @@
 import { UserAuthForm } from "./components/user-auth-form";
 import AuthLayout from "../auth-layout";
-import { Card } from "../../../components/ui/card";
+import { Card } from "@/components/ui/card";
 import { useState } from "react";
-import { Link } from "@tanstack/react-router";
+import { Link, useRouter } from "@tanstack/react-router";
 import { OtpForm } from "./components/otp-form";
-import { LoginDTO } from "../../../interfaces/auth";
-import { login, verify2fa } from "../../../services/auth.service";
+import { LoginDTO } from "@/interfaces/auth";
+import { loginAsync, verify2faAsync } from "@/services/auth.service";
 import {
   FailedLoginResponseDTO,
   SuccessLoginResponseDTO,
-} from "../../../interfaces/responseDTO";
+} from "@/interfaces/responseDTO";
 import { AxiosError, AxiosResponse } from "axios";
 import { toast } from "sonner";
+import { useAuthStore } from "@/store/authStore";
 
 export default function SignIn() {
+  const { login } = useAuthStore();
+  const { navigate } = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [isOTP, setIsOTP] = useState<boolean>(false);
   const [otpEmail, setOtpEmail] = useState<string>("");
@@ -23,7 +26,7 @@ export default function SignIn() {
     try {
       setIsLoading(true);
 
-      const response = await login(request);
+      const response = await loginAsync(request);
       console.log(response);
 
       const { responseType, message, email } =
@@ -66,17 +69,26 @@ export default function SignIn() {
     try {
       setIsLoading(true);
 
-      const { responseType, message, ...response } = await verify2fa({
+      const { responseType, message, role, expiry, token } =
+        await verify2faAsync({
+          email: otpEmail,
+          code,
+        });
+
+      //Login using Auth Store
+      login({
+        navigate: (pathName) => navigate({ to: pathName }),
         email: otpEmail,
-        code,
+        role,
+        expiry: new Date(expiry).getTime(),
+        token,
       });
-      console.log(response);
 
       toast.success(responseType, {
         description: <code className="text-gray-700">{message}</code>,
       });
     } catch (e) {
-      const { response } = e as AxiosError & {
+      const { response, status } = e as AxiosError & {
         response?: AxiosResponse & {
           data: FailedLoginResponseDTO;
         };
@@ -93,6 +105,9 @@ export default function SignIn() {
           </code>
         ),
       });
+      if (status == 409) {
+        setIsOTP(false);
+      }
     }
     // const response = await coldStart();
     // if

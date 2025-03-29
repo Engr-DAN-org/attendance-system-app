@@ -2,18 +2,18 @@ import { HTMLAttributes } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { cn } from "../../../../lib/utils";
-import { Button } from "../../../../components/ui/button";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormMessage,
-} from "../../../../components/ui/form";
-import { Input } from "../../../../components/ui/input";
-import { Separator } from "../../../../components/ui/separator";
-import { PinInput, PinInputField } from "../../../../components/pin-input";
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
+import { PinInput, PinInputField } from "@/components/pin-input";
 
 type OtpFormProps = HTMLAttributes<HTMLDivElement> & {
   isLoading: boolean;
