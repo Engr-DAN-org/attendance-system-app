@@ -1,21 +1,22 @@
-import axios from "@/utils/axiosSetup";
-import { LoginDTO, Verify2faDTO } from "@/interfaces/auth";
+import api from "@/lib/axiosSetup";
+import { LoginDTO, Verify2faDTO } from "@/interfaces/types/auth";
 import {
   AuthResponseDTO,
   FailedLoginResponseDTO,
   SuccessLoginResponseDTO,
-} from "@/interfaces/responseDTO";
+} from "@/interfaces/types/responseDTO";
 import { AxiosResponse } from "axios";
-import Cookies from "js-cookie";
+import { GetProfileDTO } from "@/interfaces/types/profile";
 
-const coldStart = async () => {
-  return await axios.get("/coldStart");
+const coldStart = async (): Promise<object> => {
+  const response = await api.get("/coldStart");
+  return response.data;
 };
 
 const loginAsync = async (
   loginDTO: LoginDTO
 ): Promise<SuccessLoginResponseDTO | FailedLoginResponseDTO> => {
-  const response: AxiosResponse<SuccessLoginResponseDTO> = await axios.post(
+  const response: AxiosResponse<SuccessLoginResponseDTO> = await api.post(
     "/auth/login",
     loginDTO
   );
@@ -25,19 +26,16 @@ const loginAsync = async (
 const verify2faAsync = async (
   verify2faDTO: Verify2faDTO
 ): Promise<AuthResponseDTO> => {
-  const response: AxiosResponse<AuthResponseDTO> = await axios.post(
+  const response: AxiosResponse<AuthResponseDTO> = await api.post(
     "/auth/verify-2fa",
     verify2faDTO
   );
   return response.data;
 };
 
-const logout = () => {
-  Cookies.remove("authToken");
-  Cookies.remove("expiry");
-  Cookies.remove("role");
-  Cookies.remove("email");
-  Cookies.remove("user");
+const getProfileAsync = async (): Promise<GetProfileDTO> => {
+  const response: AxiosResponse<GetProfileDTO> = await api.get("/auth/profile");
+  return response.data;
 };
 
-export { coldStart, loginAsync, verify2faAsync, logout };
+export { coldStart, loginAsync, verify2faAsync, getProfileAsync };

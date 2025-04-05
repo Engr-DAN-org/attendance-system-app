@@ -4,12 +4,13 @@ import { Card } from "@/components/ui/card";
 import { useState } from "react";
 import { Link, useRouter } from "@tanstack/react-router";
 import { OtpForm } from "./components/otp-form";
-import { LoginDTO } from "@/interfaces/auth";
+import { LoginDTO } from "@/interfaces/types/auth";
 import { loginAsync, verify2faAsync } from "@/services/auth.service";
 import {
+  AuthResponseDTO,
   FailedLoginResponseDTO,
   SuccessLoginResponseDTO,
-} from "@/interfaces/responseDTO";
+} from "@/interfaces/types/responseDTO";
 import { AxiosError, AxiosResponse } from "axios";
 import { toast } from "sonner";
 import { useAuthStore } from "@/store/authStore";
@@ -69,19 +70,16 @@ export default function SignIn() {
     try {
       setIsLoading(true);
 
-      const { responseType, message, role, expiry, token } =
-        await verify2faAsync({
-          email: otpEmail,
-          code,
-        });
+      const response: AuthResponseDTO = await verify2faAsync({
+        email: otpEmail,
+        code,
+      });
+      const { responseType, message } = response;
 
       //Login using Auth Store
       login({
         navigate: (pathName) => navigate({ to: pathName }),
-        email: otpEmail,
-        role,
-        expiry: new Date(expiry).getTime(),
-        token,
+        auth: response,
       });
 
       toast.success(responseType, {

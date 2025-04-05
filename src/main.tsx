@@ -14,7 +14,7 @@ import "./index.css";
 // Generated Routes
 import { routeTree } from "@/routeTree.gen";
 import { toast } from "sonner";
-import { useAuthStore } from "./store/authStore";
+import { AuthStoreType, useAuthStore } from "./store/authStore";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -54,8 +54,7 @@ const queryClient = new QueryClient({
 
         if (status == 401) {
           toast.error("Session expired!");
-          const redirect = `${router.history.location.href}`;
-          useAuthStore.getState().logout(navigate, redirect);
+          useAuthStore.getState().logout(navigate);
         }
         if (error.response?.status === 500) {
           toast("Internal Server Error!");
@@ -72,7 +71,10 @@ const queryClient = new QueryClient({
 // Create a new router instance
 const router = createRouter({
   routeTree,
-  context: { queryClient },
+  context: {
+    queryClient,
+    authStore: useAuthStore.getState() as AuthStoreType,
+  },
   defaultPreload: "intent",
   defaultPreloadStaleTime: 0,
 });

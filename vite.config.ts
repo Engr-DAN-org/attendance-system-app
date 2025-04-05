@@ -14,9 +14,9 @@ export default defineConfig({
     host: "0.0.0.0", // 👈 Allows access from Docker container
     port: 5173, // 👈 Default Vite dev server port (change if needed)
     strictPort: true, // Ensures the port doesn't switch randomly
-    hmr: {
-      clientPort: 24678, // Ensure HMR works with the exposed port
-    },
+    // hmr: {
+    //   clientPort: 24678, // Ensure HMR works with the exposed port
+    // },
   },
   resolve: {
     alias: {
