@@ -6,6 +6,7 @@ import NotFoundError from "@/features/errors/not-found-error";
 import GeneralError from "@/features/errors/general-error";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthStoreType } from "@/store/authStore";
+import { LoadingComponent } from "@/components/general-loader";
 
 export type SystemContext = {
   queryClient: QueryClient;
@@ -29,5 +30,5 @@ export const Route = createRootRouteWithContext<SystemContext>()({
   },
   notFoundComponent: NotFoundError,
   errorComponent: GeneralError,
-  // pendingComponent:
+  pendingComponent: LoadingComponent,
 });

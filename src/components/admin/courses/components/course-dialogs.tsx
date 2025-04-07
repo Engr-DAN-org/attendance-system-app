@@ -28,6 +28,7 @@ import { Course, CourseForm, courseSchema } from "@/interfaces/types/course";
 import { courseYearOptions } from "@/constants/courseYear";
 import { Dispatch, SetStateAction } from "react";
 import { createAsync, updateAsync } from "@/services/course.service";
+import { UseMutateAsyncFunction } from "@tanstack/react-query";
 
 const initialFormState: CourseForm = {
   name: "",
@@ -41,10 +42,12 @@ interface Props {
   onOpenChange: (open: boolean) => void;
   course?: CourseForm; // For updating a course
   setEditCourse: Dispatch<SetStateAction<Course | undefined>>;
+  submitForm: UseMutateAsyncFunction<Course, Error, CourseForm, unknown>;
 }
 
 export function CourseDialog({
   open,
+  submitForm,
   onOpenChange,
   course,
   setEditCourse,
@@ -57,17 +60,7 @@ export function CourseDialog({
   });
 
   const onSubmit = async (values: CourseForm) => {
-    const data = course ? await updateAsync(values) : await createAsync(values);
-
-    console.log(data);
-
-    toast("You submitted the following values:", {
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(values, null, 2)}</code>
-        </pre>
-      ),
-    });
+    await submitForm(values);
     form.reset();
     onOpenChange(false);
     setEditCourse(undefined);

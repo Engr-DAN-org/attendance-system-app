@@ -16,7 +16,6 @@ export const Route = createFileRoute("/_authenticated")({
 
     // Check if the user is authenticated before loading the route
     const isLoggedIn: boolean = isAuthenticated();
-    console.log(isLoggedIn);
     if (!isLoggedIn) throw redirect({ to: "/sign-in" });
 
     await queryClient.prefetchQuery({
