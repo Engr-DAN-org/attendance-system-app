@@ -1,4 +1,5 @@
 import { Course } from "./course";
+import { User } from "./user";
 
 interface BaseQueryResponse<T> {
   totalCount: number;
@@ -9,5 +10,6 @@ interface BaseQueryResponse<T> {
 }
 
 type CourseQueryResponseDTO = BaseQueryResponse<Course>;
+type UserQueryResponseDTO = BaseQueryResponse<User>;
 
-export type { CourseQueryResponseDTO };
+export type { CourseQueryResponseDTO, UserQueryResponseDTO };

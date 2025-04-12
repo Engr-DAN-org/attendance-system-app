@@ -17,18 +17,23 @@ export const courseYearLabel = (year: string): string => {
   return courseYearLabels[year] || "Unknown Year";
 };
 
-export const courseYearOptions = [
-  { value: "1", label: "1st Year" },
-  { value: "2", label: "2nd Year" },
-  { value: "3", label: "3rd Year" },
-  { value: "4", label: "4th Year" },
-  { value: "5", label: "5th Year" },
-  { value: "6", label: "6th Year" },
-  { value: "7", label: "7th Year" },
-  { value: "8", label: "8th Year" },
+export interface CourseYearOption {
+  value: string;
+  label: string;
+  grade: string;
+}
+
+export const courseYearOptions: CourseYearOption[] = [
+  { value: "1", label: "1 Year", grade: "1st Year" },
+  { value: "2", label: "2 Years", grade: "2nd Year" },
+  { value: "3", label: "3 Years", grade: "3rd Year" },
+  { value: "4", label: "4 Years", grade: "4th Year" },
+  { value: "5", label: "5 Years", grade: "5th Year" },
+  { value: "6", label: "6 Years", grade: "6th Year" },
+  { value: "7", label: "7 Years", grade: "7th Year" },
+  { value: "8", label: "8 Years", grade: "8th Year" },
 ] as const;
 
-export type CourseYearOption = (typeof courseYearOptions)[number];
 export type CourseYearOptionValue = CourseYearOption["value"];
 export type CourseYearOptionLabel = CourseYearOption["label"];
 
@@ -36,7 +41,8 @@ export const courseYearSchema = z
   .string()
   .refine((year) => courseYears.includes(year), {
     message: "Invalid course year",
-  });
+  })
+  .describe("Course Years");
 // Zod schema for an array of CourseYearOption
 export const courseYearArraySchema = z.array(courseYearSchema);
 

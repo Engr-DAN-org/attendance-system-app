@@ -15,8 +15,8 @@ export function LoadingComponent({
   return (
     <div
       className={cn(
-        "flex flex-col items-center justify-center gap-2 text-muted-foreground",
-        fullScreen ? "h-screen w-full" : "",
+        "flex flex-col items-center justify-center gap-2 text-muted-foreground w-full  min-h-64",
+        fullScreen ? "h-screen" : "h-full",
         className
       )}
     >

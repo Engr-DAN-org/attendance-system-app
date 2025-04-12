@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { BadgeCheck, ChevronsUpDown, LogOut } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
@@ -18,9 +18,12 @@ import {
 } from "@/components/ui/sidebar";
 import getNameInitials from "@/utils/avatar.util";
 import { UserProfile } from "@/interfaces/types/profile";
+import { useAuthStore } from "@/store/authStore";
 
 export function NavUser({ user }: { user: UserProfile }) {
   const { isMobile } = useSidebar();
+  const { logout } = useAuthStore((state) => state);
+  const navigate = useNavigate();
 
   return (
     <SidebarMenu>
@@ -79,7 +82,10 @@ export function NavUser({ user }: { user: UserProfile }) {
               </DropdownMenuItem> */}
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => logout(navigate)}
+              className="cursor-pointer"
+            >
               <LogOut />
               Log out
             </DropdownMenuItem>

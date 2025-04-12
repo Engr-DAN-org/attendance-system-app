@@ -1,53 +1,52 @@
-import { Button } from "@/components/ui/button";
+import OptionsButton from "@/components/options-button";
 import { Card } from "@/components/ui/card";
+import { courseIcons } from "@/constants/courseIcons";
 import { Course } from "@/interfaces/types/course";
-import { Pencil, Trash2 } from "lucide-react";
+import { useCourseContext } from "@/components/admin/courses/context/course-context";
+import IconSelector from "./course-icon-selector";
 
 interface CourseCardProps {
   course: Course;
-  handleDelete: (id: number) => void;
-  openEdit: (course: Course) => void;
 }
 
-export const CourseCard = ({
-  course,
-  handleDelete,
-  openEdit,
-}: CourseCardProps) => {
+export const CourseCard = ({ course }: CourseCardProps) => {
+  const { handleDelete, openEditCourse, updateCourseIcon } = useCourseContext();
+
+  const courseLogo =
+    courseIcons.find((icon) => icon.id == course.iconId) ?? courseIcons[0];
+
   return (
-    <Card
-      key={course.id}
-      className="rounded-2xl border shadow-md transition hover:shadow-lg"
-    >
-      <div className="bg-muted p-4 rounded-t-2xl">
-        <h3 className="text-lg font-semibold text-primary">{course.name}</h3>
-        <p className="text-sm text-muted-foreground">{course.code}</p>
-      </div>
-      <div className="p-4 space-y-2">
-        <p className="text-sm">
-          <span className="font-medium text-muted-foreground">Years:</span>{" "}
-          {course.years}
-        </p>
-        <p className="text-sm">{course.description}</p>
-        <div className="flex justify-end gap-2 pt-4">
-          <Button
-            size="icon"
-            variant="ghost"
-            className="rounded-full"
-            onClick={() => openEdit(course)}
-          >
-            <Pencil className="w-4 h-4" />
-          </Button>
-          <Button
-            size="icon"
-            variant="destructive"
-            className="rounded-full"
-            onClick={() => handleDelete(course.id)}
-          >
-            <Trash2 className="w-4 h-4" />
-          </Button>
+    <>
+      <Card
+        key={course.id}
+        className="rounded-lg border p-4 hover:shadow-md transition"
+      >
+        <div className="mb-8 flex items-center justify-between">
+          <div className="flex flex-row gap-2 items-center">
+            <div
+              className={`flex size-10 items-center justify-center rounded-lg bg-muted p-2 ${courseLogo.color}`}
+            >
+              <IconSelector
+                selectedIconId={course.iconId}
+                onIconSelect={(iconId) =>
+                  updateCourseIcon({ courseId: course.id, iconId })
+                }
+              />
+              {/* <courseLogo.icon className="size-6" /> */}
+            </div>
+            <span className="font-semibold text-xl">{course.code}</span>
+          </div>
+          <OptionsButton
+            onDelete={() => handleDelete(course.id)}
+            key={course.id}
+            onEdit={() => openEditCourse(course)}
+          />
         </div>
-      </div>
-    </Card>
+        <div>
+          <h2 className="mb-1 font-semibold">{course.name}</h2>
+          <p className="line-clamp-2 text-gray-500">{course.description}</p>
+        </div>
+      </Card>
+    </>
   );
 };

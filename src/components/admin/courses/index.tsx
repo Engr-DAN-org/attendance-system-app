@@ -1,110 +1,101 @@
-import { useState } from "react";
-import { Course, CourseForm } from "@/interfaces/types/course";
 import { CourseDialog } from "./components/course-dialogs";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { CourseQueryOption } from "@/config/useOptions/courseOption";
-import { CourseQuery } from "@/interfaces/queryParams/courseQuery";
 import { LoadingComponent } from "@/components/general-loader";
 import { CourseCard } from "./components/course-card";
 import { CustomPaginator } from "@/components/paginator";
+import { Separator } from "@/components/ui/separator";
+import { Main } from "@/components/layout/main";
+import { Input } from "@/components/ui/input";
 import {
-  createAsync,
-  deleteAsync,
-  updateAsync,
-} from "@/services/course.service";
-import { toast } from "sonner";
-
-const initialQuery: CourseQuery = {
-  code: null,
-  name: null,
-  years: null,
-  page: 1,
-};
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  IconAdjustmentsHorizontal,
+  IconSortAscendingLetters,
+  IconSortDescendingLetters,
+} from "@tabler/icons-react";
+import { useCourseContext } from "@/components/admin/courses/context/course-context";
 
 export default function CourseManager() {
-  const queryClient = useQueryClient();
-  const [query, setQuery] = useState<CourseQuery>(initialQuery);
-  const {
-    data: response,
-    isLoading,
-    isPending,
-    refetch: refetchCourses,
-  } = useQuery(CourseQueryOption(query));
+  const { query, setQuery, isAnyPendingRefetch, queryResponse } =
+    useCourseContext();
 
-  const { mutateAsync: handleDelete, isPending: isDeletePending } = useMutation(
-    {
-      mutationFn: async (courseId: number) => await deleteAsync(courseId),
-      onSuccess: () => {
-        toast.success("Course has been deleted successfully!");
-        refetchCourses();
-      },
-    }
-  );
-
-  const { mutateAsync: submitForm } = useMutation({
-    mutationFn: async (courseData: CourseForm) =>
-      courseData.id
-        ? await updateAsync(courseData)
-        : await createAsync(courseData),
-    onSuccess: () => {
-      toast.success("Course has been created successfully!");
-      refetchCourses();
-    },
-  });
-
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [editCourse, setEditCourse] = useState<Course | undefined>(undefined);
-
-  const handleEdit = (course: Course) => {
-    setEditCourse(course);
-    setDialogOpen(true);
-  };
-
-  const handlePageClick = (page: number) => {
-    setQuery((prev) => ({
-      ...prev,
-      page: page,
-    }));
-    queryClient.invalidateQueries({ queryKey: ["courses", { query }] });
-  };
-
+  const isLoading = isAnyPendingRefetch();
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold tracking-tight">Courses</h2>
-        <CourseDialog
-          submitForm={submitForm}
-          open={dialogOpen}
-          onOpenChange={setDialogOpen}
-          course={editCourse}
-          setEditCourse={setEditCourse}
-        />
-      </div>
+    <>
+      <Main fixed>
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">List of Courses</h1>
+          <p className="text-muted-foreground">
+            Here’s a list of all the courses available in the system. You can
+            filter the courses by name or sort them in ascending or descending
+            order.
+          </p>
+        </div>
+        <div className="flex flex-row justify-between items-center">
+          <div className="my-4 flex items-end gap-2 sm:my-0 sm:items-center">
+            <div className="flex flex-col gap-4 sm:my-4 sm:flex-row">
+              <Input
+                placeholder="Search Courses..."
+                className="h-9 w-40 lg:w-[250px]"
+                value={query.name ?? ""}
+                onChange={(e) => setQuery({ ...query, name: e.target.value })}
+              />
+            </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {isLoading || isPending || isDeletePending ? (
+            <Select
+              value={query.sort}
+              onValueChange={(value) => {
+                setQuery({ ...query, sort: value as "asc" | "desc" });
+              }}
+            >
+              <SelectTrigger className="w-16">
+                <SelectValue>
+                  <IconAdjustmentsHorizontal size={18} />
+                </SelectValue>
+              </SelectTrigger>
+              <SelectContent align="end">
+                <SelectItem value="asc">
+                  <div className="flex items-center gap-4">
+                    <IconSortAscendingLetters size={16} />
+                    <span>Ascending</span>
+                  </div>
+                </SelectItem>
+                <SelectItem value="desc">
+                  <div className="flex items-center gap-4">
+                    <IconSortDescendingLetters size={16} />
+                    <span>Descending</span>
+                  </div>
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <CourseDialog />
+        </div>
+        <Separator className="shadow" />
+
+        {/* Render course cards here */}
+        {isLoading ? (
           <LoadingComponent fullScreen={false} />
         ) : (
-          response?.data?.map((course) => {
-            return (
-              <CourseCard
-                course={course}
-                handleDelete={handleDelete}
-                openEdit={handleEdit}
-              />
-            );
-          })
+          <ul className="faded-bottom no-scrollbar grid gap-4 overflow-auto pb-16 pt-4 md:grid-cols-2 lg:grid-cols-3">
+            {queryResponse?.data?.map((course) => {
+              return <CourseCard key={course.id} course={course} />;
+            })}
+          </ul>
         )}
-      </div>
-      {response && (
-        <CustomPaginator
-          onClickPage={handlePageClick}
-          currentPage={response.page}
-          pageSize={response.pageSize}
-          totalPages={response.totalPages}
-          totalCount={response.totalCount}
-        />
-      )}
-    </div>
+
+        {queryResponse && (
+          <CustomPaginator
+            currentPage={queryResponse.page}
+            totalPages={queryResponse.totalPages}
+            totalCount={queryResponse.totalCount}
+          />
+        )}
+      </Main>
+    </>
   );
 }

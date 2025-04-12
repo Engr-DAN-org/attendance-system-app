@@ -23,8 +23,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { SelectDropdown } from "@/components/select-dropdown";
-import { userTypes } from "../data/data";
 import { toast } from "sonner";
+import { userTypes } from "@/enums/userRole";
 
 const formSchema = z.object({
   email: z

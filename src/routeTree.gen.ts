@@ -41,6 +41,9 @@ const AuthenticatedComingSoonIndexLazyImport = createFileRoute(
 const AuthenticatedAdminIndexLazyImport = createFileRoute(
   '/_authenticated/admin/',
 )()
+const AuthenticatedAdminSectionsIndexLazyImport = createFileRoute(
+  '/_authenticated/admin/sections/',
+)()
 
 // Create/Update Routes
 
@@ -155,6 +158,17 @@ const AuthenticatedAdminIndexLazyRoute =
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any).lazy(() =>
     import('./routes/_authenticated/admin/index.lazy').then((d) => d.Route),
+  )
+
+const AuthenticatedAdminSectionsIndexLazyRoute =
+  AuthenticatedAdminSectionsIndexLazyImport.update({
+    id: '/sections/',
+    path: '/sections/',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any).lazy(() =>
+    import('./routes/_authenticated/admin/sections/index.lazy').then(
+      (d) => d.Route,
+    ),
   )
 
 const AuthenticatedAdminUsersIndexRoute =
@@ -294,6 +308,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminUsersIndexImport
       parentRoute: typeof AuthenticatedAdminRouteImport
     }
+    '/_authenticated/admin/sections/': {
+      id: '/_authenticated/admin/sections/'
+      path: '/sections'
+      fullPath: '/admin/sections'
+      preLoaderRoute: typeof AuthenticatedAdminSectionsIndexLazyImport
+      parentRoute: typeof AuthenticatedAdminRouteImport
+    }
   }
 }
 
@@ -303,6 +324,7 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminIndexLazyRoute: typeof AuthenticatedAdminIndexLazyRoute
   AuthenticatedAdminCoursesIndexRoute: typeof AuthenticatedAdminCoursesIndexRoute
   AuthenticatedAdminUsersIndexRoute: typeof AuthenticatedAdminUsersIndexRoute
+  AuthenticatedAdminSectionsIndexLazyRoute: typeof AuthenticatedAdminSectionsIndexLazyRoute
 }
 
 const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren =
@@ -310,6 +332,8 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
     AuthenticatedAdminIndexLazyRoute: AuthenticatedAdminIndexLazyRoute,
     AuthenticatedAdminCoursesIndexRoute: AuthenticatedAdminCoursesIndexRoute,
     AuthenticatedAdminUsersIndexRoute: AuthenticatedAdminUsersIndexRoute,
+    AuthenticatedAdminSectionsIndexLazyRoute:
+      AuthenticatedAdminSectionsIndexLazyRoute,
   }
 
 const AuthenticatedAdminRouteRouteWithChildren =
@@ -380,6 +404,7 @@ export interface FileRoutesByFullPath {
   '/teacher/': typeof AuthenticatedTeacherIndexLazyRoute
   '/admin/courses': typeof AuthenticatedAdminCoursesIndexRoute
   '/admin/users': typeof AuthenticatedAdminUsersIndexRoute
+  '/admin/sections': typeof AuthenticatedAdminSectionsIndexLazyRoute
 }
 
 export interface FileRoutesByTo {
@@ -397,6 +422,7 @@ export interface FileRoutesByTo {
   '/teacher': typeof AuthenticatedTeacherIndexLazyRoute
   '/admin/courses': typeof AuthenticatedAdminCoursesIndexRoute
   '/admin/users': typeof AuthenticatedAdminUsersIndexRoute
+  '/admin/sections': typeof AuthenticatedAdminSectionsIndexLazyRoute
 }
 
 export interface FileRoutesById {
@@ -418,6 +444,7 @@ export interface FileRoutesById {
   '/_authenticated/teacher/': typeof AuthenticatedTeacherIndexLazyRoute
   '/_authenticated/admin/courses/': typeof AuthenticatedAdminCoursesIndexRoute
   '/_authenticated/admin/users/': typeof AuthenticatedAdminUsersIndexRoute
+  '/_authenticated/admin/sections/': typeof AuthenticatedAdminSectionsIndexLazyRoute
 }
 
 export interface FileRouteTypes {
@@ -440,6 +467,7 @@ export interface FileRouteTypes {
     | '/teacher/'
     | '/admin/courses'
     | '/admin/users'
+    | '/admin/sections'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -456,6 +484,7 @@ export interface FileRouteTypes {
     | '/teacher'
     | '/admin/courses'
     | '/admin/users'
+    | '/admin/sections'
   id:
     | '__root__'
     | '/'
@@ -475,6 +504,7 @@ export interface FileRouteTypes {
     | '/_authenticated/teacher/'
     | '/_authenticated/admin/courses/'
     | '/_authenticated/admin/users/'
+    | '/_authenticated/admin/sections/'
   fileRoutesById: FileRoutesById
 }
 
@@ -538,7 +568,8 @@ export const routeTree = rootRoute
       "children": [
         "/_authenticated/admin/",
         "/_authenticated/admin/courses/",
-        "/_authenticated/admin/users/"
+        "/_authenticated/admin/users/",
+        "/_authenticated/admin/sections/"
       ]
     },
     "/_authenticated/student": {
@@ -595,6 +626,10 @@ export const routeTree = rootRoute
     },
     "/_authenticated/admin/users/": {
       "filePath": "_authenticated/admin/users/index.tsx",
+      "parent": "/_authenticated/admin"
+    },
+    "/_authenticated/admin/sections/": {
+      "filePath": "_authenticated/admin/sections/index.lazy.tsx",
       "parent": "/_authenticated/admin"
     }
   }

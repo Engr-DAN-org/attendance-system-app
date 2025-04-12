@@ -1,10 +1,15 @@
 import CourseManager from "@/components/admin/courses";
+import { CourseContextProvider } from "@/components/admin/courses/context/course-context";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authenticated/admin/courses/")({
-  component: CourseManager,
+  component: RouteComponent,
 });
 
-// function RouteComponent() {
-//   return <div>Hello "/_authenticated/admin/courses/"!</div>
-// }
+function RouteComponent() {
+  return (
+    <CourseContextProvider>
+      <CourseManager />
+    </CourseContextProvider>
+  );
+}

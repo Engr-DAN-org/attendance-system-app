@@ -1,6 +1,5 @@
 import { CourseQuery } from "@/interfaces/queryParams/courseQuery";
 import { CourseQueryResponseDTO } from "@/interfaces/types/queryResponseDTO";
-// import { Course } from "@/interfaces/types/course";
 import { getQueryAsync } from "@/services/course.service";
 import { queryOptions, UseQueryOptions } from "@tanstack/react-query";
 

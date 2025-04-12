@@ -1,40 +1,24 @@
-import React, { useState } from "react";
-import { User } from "../data/schema";
-import useDialogState from "@/hooks/use-dialog-state";
+import { useUserLogic } from "@/components/admin/users/context/use-user-logic";
+import { createContext, ReactNode, useContext } from "react";
 
-type UsersDialogType = "add" | "edit" | "delete";
+// context/CourseContext.tsx
+const UsersContext = createContext<ReturnType<typeof useUserLogic> | undefined>(
+  undefined
+);
 
-interface UsersContextType {
-  open: UsersDialogType | null;
-  setOpen: (str: UsersDialogType | null) => void;
-  currentRow: User | null;
-  setCurrentRow: React.Dispatch<React.SetStateAction<User | null>>;
-}
-
-const UsersContext = React.createContext<UsersContextType | null>(null);
-
-interface Props {
-  children: React.ReactNode;
-}
-
-export default function UsersProvider({ children }: Props) {
-  const [open, setOpen] = useDialogState<UsersDialogType>(null);
-  const [currentRow, setCurrentRow] = useState<User | null>(null);
-
+export const UsersContextProvider = ({ children }: { children: ReactNode }) => {
+  const value = useUserLogic(); // formerly useCourseForm
   return (
-    <UsersContext value={{ open, setOpen, currentRow, setCurrentRow }}>
-      {children}
-    </UsersContext>
+    <UsersContext.Provider value={value}>{children}</UsersContext.Provider>
   );
-}
+};
 
 // eslint-disable-next-line react-refresh/only-export-components
-export const useUsers = () => {
-  const usersContext = React.useContext(UsersContext);
-
-  if (!usersContext) {
-    throw new Error("useUsers has to be used within <UsersContext>");
-  }
-
-  return usersContext;
+export const useUserQueryContext = () => {
+  const ctx = useContext(UsersContext);
+  if (!ctx)
+    throw new Error(
+      "useUserQueryContext must be used within UserQueryContextProvider"
+    );
+  return ctx;
 };

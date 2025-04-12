@@ -3,10 +3,11 @@ import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import LongText from "@/components/long-text";
-import { callTypes, userTypes } from "../data/data";
 import { DataTableColumnHeader } from "./data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
 import { User } from "@/interfaces/types/user";
+import { statusCallTypes } from "@/enums/userStatus";
+import { userTypes } from "@/enums/userRole";
 
 export const columns: ColumnDef<User>[] = [
   {
@@ -40,12 +41,12 @@ export const columns: ColumnDef<User>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "username",
+    accessorKey: "idNumber",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Username" />
+      <DataTableColumnHeader column={column} title="ID Number" />
     ),
     cell: ({ row }) => (
-      <LongText className="max-w-36">{row.getValue("username")}</LongText>
+      <LongText className="max-w-36">{row.getValue("idNumber")}</LongText>
     ),
     meta: {
       className: cn(
@@ -54,7 +55,8 @@ export const columns: ColumnDef<User>[] = [
         "sticky left-6 md:table-cell"
       ),
     },
-    enableHiding: false,
+    enableHiding: true,
+    enableSorting: false,
   },
   {
     id: "fullName",
@@ -92,7 +94,7 @@ export const columns: ColumnDef<User>[] = [
     ),
     cell: ({ row }) => {
       const { status } = row.original;
-      const badgeColor = callTypes.get(status);
+      const badgeColor = statusCallTypes.get(status);
       return (
         <div className="flex space-x-2">
           <Badge variant="outline" className={cn("capitalize", badgeColor)}>

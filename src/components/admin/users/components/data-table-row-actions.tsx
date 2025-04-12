@@ -1,7 +1,7 @@
-import { DotsHorizontalIcon } from '@radix-ui/react-icons'
-import { Row } from '@tanstack/react-table'
-import { IconEdit, IconTrash } from '@tabler/icons-react'
-import { Button } from '@/components/ui/button'
+import { DotsHorizontalIcon } from "@radix-ui/react-icons";
+import { Row } from "@tanstack/react-table";
+import { IconEdit, IconTrash } from "@tabler/icons-react";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,33 +9,37 @@ import {
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { useUsers } from '../context/users-context'
-import { User } from '../data/schema'
+} from "@/components/ui/dropdown-menu";
+import { User } from "@/interfaces/types/user";
+import { useUserQueryContext } from "../context/users-context";
+import { UsersDialogType } from "../context/use-user-logic";
 
 interface DataTableRowActionsProps {
-  row: Row<User>
+  row: Row<User>;
 }
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
-  const { setOpen, setCurrentRow } = useUsers()
+  const { setDialogOpen, setSelectedUser } = useUserQueryContext();
   return (
     <>
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
           <Button
-            variant='ghost'
-            className='flex h-8 w-8 p-0 data-[state=open]:bg-muted'
+            variant="ghost"
+            className="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
           >
-            <DotsHorizontalIcon className='h-4 w-4' />
-            <span className='sr-only'>Open menu</span>
+            <DotsHorizontalIcon className="h-4 w-4" />
+            <span className="sr-only">Open menu</span>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align='end' className='w-[160px]'>
+        <DropdownMenuContent align="end" className="w-[160px]">
           <DropdownMenuItem
             onClick={() => {
-              setCurrentRow(row.original)
-              setOpen('edit')
+              const user = row.original;
+              setSelectedUser(user);
+              setDialogOpen(
+                `edit-${user.role.toLowerCase()}` as UsersDialogType
+              );
             }}
           >
             Edit
@@ -46,10 +50,11 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={() => {
-              setCurrentRow(row.original)
-              setOpen('delete')
+              const user = row.original;
+              setSelectedUser(user);
+              setDialogOpen("delete");
             }}
-            className='!text-red-500'
+            className="!text-red-500"
           >
             Delete
             <DropdownMenuShortcut>
@@ -59,5 +64,5 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
         </DropdownMenuContent>
       </DropdownMenu>
     </>
-  )
+  );
 }

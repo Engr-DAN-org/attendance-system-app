@@ -1,51 +1,55 @@
-import { useUsers } from '../context/users-context'
-import { UsersActionDialog } from './users-action-dialog'
-import { UsersDeleteDialog } from './users-delete-dialog'
-import { UsersInviteDialog } from './users-invite-dialog'
+import { UsersDialogType } from "../context/use-user-logic";
+import { useUserQueryContext } from "../context/users-context";
+import { InviteTeacherDialog } from "./invite-teacher-dialog";
+import { UsersDeleteDialog } from "./users-delete-dialog";
+import { UsersInviteDialog } from "./users-invite-dialog";
 
 export function UsersDialogs() {
-  const { open, setOpen, currentRow, setCurrentRow } = useUsers()
+  const { dialogOpen, setDialogOpen, selectedUser, setSelectedUser } =
+    useUserQueryContext();
   return (
     <>
-      <UsersActionDialog
-        key='user-add'
-        open={open === 'add'}
-        onOpenChange={() => setOpen('add')}
+      <InviteTeacherDialog
+        key="teacher-invite"
+        open={dialogOpen === "add-teacher"}
+        onOpenChange={() => setDialogOpen("add-teacher")}
       />
 
       <UsersInviteDialog
-        key='user-invite'
-        open={open === 'invite'}
-        onOpenChange={() => setOpen('invite')}
+        key="student-invite"
+        open={dialogOpen === "add-student"}
+        onOpenChange={() => setDialogOpen("add-student")}
       />
 
-      {currentRow && (
+      {selectedUser && (
         <>
-          <UsersActionDialog
-            key={`user-edit-${currentRow.id}`}
-            open={open === 'edit'}
+          <InviteTeacherDialog
+            key={`user-edit-${selectedUser.id}`}
+            open={dialogOpen === `edit-${selectedUser.role.toLowerCase()}`}
             onOpenChange={() => {
-              setOpen('edit')
+              setDialogOpen(
+                `edit-${selectedUser.role.toLowerCase()}` as UsersDialogType
+              );
               setTimeout(() => {
-                setCurrentRow(null)
-              }, 500)
+                setSelectedUser(null);
+              }, 500);
             }}
-            currentRow={currentRow}
+            currentRow={selectedUser}
           />
 
           <UsersDeleteDialog
-            key={`user-delete-${currentRow.id}`}
-            open={open === 'delete'}
+            key={`user-delete-${selectedUser.id}`}
+            open={dialogOpen === "delete"}
             onOpenChange={() => {
-              setOpen('delete')
+              setDialogOpen("delete");
               setTimeout(() => {
-                setCurrentRow(null)
-              }, 500)
+                setSelectedUser(null);
+              }, 500);
             }}
-            currentRow={currentRow}
+            currentRow={selectedUser}
           />
         </>
       )}
     </>
-  )
+  );
 }

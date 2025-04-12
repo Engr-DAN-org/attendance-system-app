@@ -1,4 +1,6 @@
 // import Users from "@/components/admin/users";
+import Users from "@/components/admin/users";
+import { UsersContextProvider } from "@/components/admin/users/context/users-context";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authenticated/admin/users/")({
@@ -6,5 +8,9 @@ export const Route = createFileRoute("/_authenticated/admin/users/")({
 });
 
 function RouteComponent() {
-  return <div>Hello "/_authenticated/admin/users/"!</div>;
+  return (
+    <UsersContextProvider>
+      <Users />
+    </UsersContextProvider>
+  );
 }
