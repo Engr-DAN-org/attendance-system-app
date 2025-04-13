@@ -1,33 +1,34 @@
 import { UserQuery } from "@/interfaces/queryParams/userQuery";
-import { Course, CourseForm } from "@/interfaces/types/course";
 import { UserQueryResponseDTO } from "@/interfaces/types/queryResponseDTO";
+import { User, UserForm } from "@/interfaces/types/user";
 import api from "@/lib/axiosSetup";
 
-const createAsync = async (courseData: CourseForm): Promise<Course> => {
+const createAsync = async (userData: UserForm): Promise<User> => {
   try {
-    const response = await api.post("/course/create", courseData);
+    const response = await api.post("/user/create", userData);
     return response.data;
   } catch (error) {
-    console.error("Error creating course:", error);
+    console.error("Error creating user:", error);
     throw error; // Rethrow the error to be handled by the caller
   }
 };
 
-const updateAsync = async (courseData: CourseForm): Promise<Course> => {
+const updateAsync = async (id: string, userData: UserForm): Promise<User> => {
   try {
-    const response = await api.put("/user/update", courseData);
+    const response = await api.put(`/user/${id}`, userData);
     return response.data;
   } catch (error) {
-    console.error("Error updating course:", error);
+    console.error("Error updating user:", error);
     throw error; // Rethrow the error to be handled by the caller
   }
 };
 
-const deleteAsync = async (userId: number): Promise<void> => {
+const deleteAsync = async (userId: string): Promise<void> => {
   try {
     await api.delete(`/user/${userId}`);
+    return; // No content to return on successful deletion
   } catch (error) {
-    console.error("Error deleting course:", error);
+    console.error("Error deleting user:", error);
     throw error; // Rethrow the error to be handled by the caller
   }
 };
@@ -41,17 +42,17 @@ const getQueryAsync = async (
     });
     return response.data;
   } catch (error) {
-    console.error("Error fetching courses:", error);
+    console.error("Error fetching users:", error);
     throw error; // Rethrow the error to be handled by the caller
   }
 };
 
-const getByIdAsync = async (userId: string): Promise<Course> => {
+const getByIdAsync = async (userId: string): Promise<User> => {
   try {
     const response = await api.get(`/user/${userId}`);
     return response.data;
   } catch (error) {
-    console.error("Error fetching course by ID:", error);
+    console.error("Error fetching user by ID:", error);
     throw error; // Rethrow the error to be handled by the caller
   }
 };

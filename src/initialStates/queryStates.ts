@@ -1,4 +1,5 @@
 import { CourseQuery } from "@/interfaces/queryParams/courseQuery";
+import { SectionQuery } from "@/interfaces/queryParams/sectionQuery";
 
 const initialCourseQuery: CourseQuery = {
   code: null,
@@ -8,4 +9,13 @@ const initialCourseQuery: CourseQuery = {
   sort: "asc",
 };
 
-export { initialCourseQuery };
+const initialSectionQuery: SectionQuery = {
+  name: null,
+  page: 1,
+  sort: "asc",
+  courseCode: null,
+  yearLevel: null,
+  teacherId: null,
+};
+
+export { initialCourseQuery, initialSectionQuery };

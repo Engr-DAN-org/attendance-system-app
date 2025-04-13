@@ -1,8 +1,8 @@
-import { UsersDialogType } from "../context/use-user-logic";
+import { UsersDialogType } from "../../../../use-logic/use-user.logic";
 import { useUserQueryContext } from "../context/users-context";
+import { InviteStudentDialog } from "./invite-student-dialog";
 import { InviteTeacherDialog } from "./invite-teacher-dialog";
 import { UsersDeleteDialog } from "./users-delete-dialog";
-import { UsersInviteDialog } from "./users-invite-dialog";
 
 export function UsersDialogs() {
   const { dialogOpen, setDialogOpen, selectedUser, setSelectedUser } =
@@ -15,7 +15,7 @@ export function UsersDialogs() {
         onOpenChange={() => setDialogOpen("add-teacher")}
       />
 
-      <UsersInviteDialog
+      <InviteStudentDialog
         key="student-invite"
         open={dialogOpen === "add-student"}
         onOpenChange={() => setDialogOpen("add-student")}

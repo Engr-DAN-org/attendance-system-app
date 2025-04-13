@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { User } from "@/interfaces/types/user";
 import { useUserQueryContext } from "../context/users-context";
-import { UsersDialogType } from "../context/use-user-logic";
+import { UsersDialogType } from "../../../../use-logic/use-user.logic";
 
 interface DataTableRowActionsProps {
   row: Row<User>;
@@ -38,7 +38,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
               const user = row.original;
               setSelectedUser(user);
               setDialogOpen(
-                `edit-${user.role.toLowerCase()}` as UsersDialogType
+                `edit-${user.userRole.toLowerCase()}` as UsersDialogType
               );
             }}
           >

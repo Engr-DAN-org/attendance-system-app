@@ -22,11 +22,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { teacherSchema, User } from "@/interfaces/types/user";
-import { toast } from "sonner";
+import { User, userSchema } from "@/interfaces/types/user";
 import { UserRole } from "@/enums/userRole";
+import { useUserQueryContext } from "../context/users-context";
+import { Loader2, Save } from "lucide-react";
+import { IconSend } from "@tabler/icons-react";
 
-type UserForm = z.infer<typeof teacherSchema>;
+type UserForm = z.infer<typeof userSchema>;
 
 interface Props {
   currentRow?: User;
@@ -35,9 +37,10 @@ interface Props {
 }
 
 export function InviteTeacherDialog({ currentRow, open, onOpenChange }: Props) {
+  const { submitForm, isFormSubmitPending } = useUserQueryContext();
   const isEdit = !!currentRow;
   const form = useForm<UserForm>({
-    resolver: zodResolver(teacherSchema),
+    resolver: zodResolver(userSchema),
     defaultValues: isEdit
       ? {
           ...currentRow,
@@ -47,21 +50,15 @@ export function InviteTeacherDialog({ currentRow, open, onOpenChange }: Props) {
           firstName: "",
           lastName: "",
           email: "",
-          role: UserRole.Teacher,
+          userRole: UserRole.Teacher,
           phoneNumber: "",
         },
   });
 
-  const onSubmit = (values: UserForm) => {
-    form.reset();
-    toast("You submitted the following values:", {
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(values, null, 2)}</code>
-        </pre>
-      ),
-    });
+  const onSubmit = async (values: UserForm) => {
+    await submitForm(values);
     onOpenChange(false);
+    form.reset();
   };
 
   return (
@@ -190,10 +187,23 @@ export function InviteTeacherDialog({ currentRow, open, onOpenChange }: Props) {
               <DialogFooter>
                 <Button
                   type="submit"
-                  // form="teacher-form"
+                  disabled={isFormSubmitPending}
                   className="cursor-pointer"
                 >
-                  {isEdit ? "Save changes" : "Send Invite"}
+                  {isFormSubmitPending ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      <span>Executing</span>
+                    </>
+                  ) : isEdit ? (
+                    <>
+                      Save changes <Save />
+                    </>
+                  ) : (
+                    <>
+                      Send Invite <IconSend />
+                    </>
+                  )}
                 </Button>
               </DialogFooter>
             </form>

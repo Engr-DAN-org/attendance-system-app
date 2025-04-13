@@ -1,4 +1,4 @@
-import { useCourseLogic } from "@/components/admin/courses/context/use-course-logic";
+import { useCourseLogic } from "@/use-logic/use-course.logic";
 import { createContext, ReactNode, useContext } from "react";
 
 // context/CourseContext.tsx

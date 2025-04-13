@@ -37,12 +37,6 @@ const queryClient = new QueryClient({
     mutations: {
       onError: (error) => {
         handleServerError(error);
-
-        if (error instanceof AxiosError) {
-          if (error.response?.status === 304) {
-            toast.error("Content not modified!");
-          }
-        }
       },
     },
   },

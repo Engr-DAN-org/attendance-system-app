@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ConfirmDialog } from "@/components/confirm-dialog";
 import { User } from "@/interfaces/types/user";
-import { toast } from "sonner";
+import { useUserQueryContext } from "../context/users-context";
 
 interface Props {
   open: boolean;
@@ -14,28 +14,25 @@ interface Props {
 }
 
 export function UsersDeleteDialog({ open, onOpenChange, currentRow }: Props) {
+  const { handleDelete, isDeletePending } = useUserQueryContext();
   const [value, setValue] = useState("");
 
-  const handleDelete = () => {
+  const handleConfirmDelete = async () => {
     if (value.trim() !== currentRow.idNumber) return;
-
+    if (currentRow.id) {
+      await handleDelete(currentRow.id);
+    } else {
+      console.error("User ID is undefined. Cannot delete user.");
+    }
     onOpenChange(false);
-    toast("The following user has been deleted:", {
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">
-            {JSON.stringify(currentRow, null, 2)}
-          </code>
-        </pre>
-      ),
-    });
   };
 
   return (
     <ConfirmDialog
       open={open}
+      isLoading={isDeletePending}
       onOpenChange={onOpenChange}
-      handleConfirm={handleDelete}
+      handleConfirm={handleConfirmDelete}
       disabled={value.trim() !== currentRow.idNumber}
       title={
         <span className="text-destructive">
@@ -59,7 +56,7 @@ export function UsersDeleteDialog({ open, onOpenChange, currentRow }: Props) {
             from the system. This cannot be undone.
           </p>
 
-          <Label className="my-2">
+          <Label className="mt-2">
             Username:
             <Input
               value={value}
@@ -68,7 +65,7 @@ export function UsersDeleteDialog({ open, onOpenChange, currentRow }: Props) {
             />
           </Label>
 
-          <Alert variant="destructive">
+          <Alert variant="destructive" className="mt-2">
             <AlertTitle>Warning!</AlertTitle>
             <AlertDescription>
               Please be carefull, this operation can not be rolled back.
