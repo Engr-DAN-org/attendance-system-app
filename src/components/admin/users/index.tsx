@@ -19,7 +19,7 @@ export default function Users() {
           <div>
             <h2 className="text-2xl font-bold tracking-tight">Users List</h2>
             <p className="text-muted-foreground">
-              Manage Teachers and Student in you Organization here.
+              Manage Teachers and Student in your organization here.
             </p>
           </div>
           <UsersPrimaryButtons />

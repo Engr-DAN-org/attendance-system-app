@@ -20,8 +20,13 @@ import {
 import { useCourseContext } from "@/components/admin/courses/context/course-context";
 
 export default function CourseManager() {
-  const { query, setQuery, isAnyPendingRefetch, queryResponse } =
-    useCourseContext();
+  const {
+    query,
+    setQuery,
+    isAnyPendingRefetch,
+    queryResponse,
+    handlePageClick,
+  } = useCourseContext();
 
   const isLoading = isAnyPendingRefetch();
   return (
@@ -93,6 +98,9 @@ export default function CourseManager() {
             currentPage={queryResponse.page}
             totalPages={queryResponse.totalPages}
             totalCount={queryResponse.totalCount}
+            onPageClick={handlePageClick}
+            itemLabel="Courses"
+            key={"course-paginator"}
           />
         )}
       </Main>

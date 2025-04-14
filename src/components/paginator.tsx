@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { useCourseContext } from "@/components/admin/courses/context/course-context";
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -11,15 +10,17 @@ interface DataTablePaginationProps {
   totalPages: number;
   currentPage: number;
   totalCount: number;
+  onPageClick: (pageNumber: number) => void;
+  itemLabel?: string;
 }
 
 export function CustomPaginator({
   totalPages,
   currentPage,
   totalCount,
+  onPageClick,
+  itemLabel = "Item(s)",
 }: DataTablePaginationProps) {
-  const { handlePageClick: setPage } = useCourseContext();
-
   return (
     <div
       className="flex items-center justify-between overflow-clip px-2"
@@ -27,7 +28,7 @@ export function CustomPaginator({
     >
       {/* Selected rows */}
       <div className="hidden flex-1 text-sm text-muted-foreground sm:block">
-        {totalCount} Item(s) found.
+        {totalCount} {itemLabel} found.
       </div>
 
       {/* Pagination controls */}
@@ -44,7 +45,7 @@ export function CustomPaginator({
           <Button
             variant="outline"
             className="hidden h-8 w-8 p-0 lg:flex"
-            onClick={() => setPage(1)}
+            onClick={() => onPageClick(1)}
             disabled={currentPage == 1}
           >
             <span className="sr-only">Go to first page</span>
@@ -53,7 +54,7 @@ export function CustomPaginator({
           <Button
             variant="outline"
             className="h-8 w-8 p-0"
-            onClick={() => setPage(currentPage - 1)}
+            onClick={() => onPageClick(currentPage - 1)}
             disabled={currentPage == 1}
           >
             <span className="sr-only">Go to previous page</span>
@@ -62,7 +63,7 @@ export function CustomPaginator({
           <Button
             variant="outline"
             className="h-8 w-8 p-0"
-            onClick={() => setPage(currentPage + 1)}
+            onClick={() => onPageClick(currentPage + 1)}
             disabled={currentPage == totalPages}
           >
             <span className="sr-only">Go to next page</span>
@@ -71,7 +72,7 @@ export function CustomPaginator({
           <Button
             variant="outline"
             className="hidden h-8 w-8 p-0 lg:flex"
-            onClick={() => setPage(totalPages - 1)}
+            onClick={() => onPageClick(totalPages - 1)}
             disabled={currentPage == totalPages}
           >
             <span className="sr-only">Go to last page</span>

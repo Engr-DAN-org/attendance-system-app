@@ -1,9 +1,8 @@
 import { Main } from "@/components/layout/main";
-import { SectionsTable } from "./components/sections-table";
-import { sectionsColumn } from "./components/sections-columns";
-import { Section } from "@/interfaces/types/section";
+import WeeklyCalendar from "./components/weekly-calendar";
+import { Separator } from "@/components/ui/separator";
 
-export const SectionsListPage = () => {
+export const SectionManagement = () => {
   return (
     <>
       <Main>
@@ -18,8 +17,9 @@ export const SectionsListPage = () => {
           </div>
           {/* <UsersPrimaryButtons /> */}
         </div>
+        <Separator />
         <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0">
-          <SectionsTable columns={sectionsColumn} data={[] as Section[]} />
+          <WeeklyCalendar />
         </div>
       </Main>
     </>

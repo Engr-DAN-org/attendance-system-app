@@ -13,3 +13,5 @@ export const sectionSchema = z.object({
 
   classSchedules: z.array(z.any()).optional(), // or replace z.any() with a class schedule schema
 });
+
+export type Section = z.infer<typeof sectionSchema>;
