@@ -30,15 +30,24 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { daysOptions } from "@/enums/dayOfWeek";
+import {
+  FormComboField,
+  OptionType,
+} from "@/components/form-components/form-command";
 
 export const AddScheduleDialog = () => {
-  const { append, setOpenScheduleDialog, openScheduleDialog } =
-    useSectionCreationContext();
+  const {
+    append,
+    setOpenScheduleDialog,
+    openScheduleDialog,
+    subjectsQueryData,
+    updateSubjectQuery,
+  } = useSectionCreationContext();
 
   const scheduleForm = useForm<ClassSchedule>({
     resolver: zodResolver(classScheduleSchema),
     defaultValues: {
-      subjectId: undefined,
+      subjectTeacherId: undefined,
       day: undefined,
       startTime: undefined,
       endTime: undefined,
@@ -50,6 +59,15 @@ export const AddScheduleDialog = () => {
     append(data);
     setOpenScheduleDialog(false);
   };
+
+  const subjectOptions: OptionType[] =
+    subjectsQueryData
+      ?.filter((st) => st.id !== undefined)
+      .map((st) => ({
+        label: `Subject: ${st.subjectCode} - Teacher: ${st.teacherName}`,
+        value: st.id as number,
+      })) || [];
+
   return (
     <Dialog
       modal={true}
@@ -69,18 +87,12 @@ export const AddScheduleDialog = () => {
             onSubmit={scheduleForm.handleSubmit(handleAdd)}
             className="space-y-4"
           >
-            <FormField
-              control={scheduleForm.control}
-              name="subjectId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Subject ID</FormLabel>
-                  <FormControl>
-                    <Input type="number" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+            <FormComboField<(typeof classScheduleSchema)["_def"]["schema"]>
+              form={scheduleForm}
+              name="subjectTeacherId"
+              label="Subject"
+              options={subjectOptions}
+              onSearch={updateSubjectQuery}
             />
 
             <FormField

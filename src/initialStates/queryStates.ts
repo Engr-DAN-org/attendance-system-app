@@ -32,7 +32,12 @@ const initialSubjectQuery = {
   teacherId: [],
 };
 
+const initialSubjectTeacherQuery = {
+  name: "",
+};
+
 export {
+  initialSubjectTeacherQuery,
   initialCourseQuery,
   initialSectionQuery,
   initialUsersQuery,

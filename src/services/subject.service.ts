@@ -1,5 +1,11 @@
-import { SubjectQuery } from "@/interfaces/queryParams/subjectQuery";
-import { SubjectQueryResponseDTO } from "@/interfaces/types/queryResponseDTO";
+import {
+  SubjectQuery,
+  SubjectTeacherQuery,
+} from "@/interfaces/queryParams/subjectQuery";
+import {
+  SubjectQueryResponseDTO,
+  SubjectTeachersResponseDTO,
+} from "@/interfaces/types/queryResponseDTO";
 import { Subject, SubjectForm } from "@/interfaces/types/subject";
 import api from "@/lib/axiosSetup";
 
@@ -52,6 +58,20 @@ const getQueryAsync = async (
   }
 };
 
+const querySubjectTeachersAsync = async (
+  query: SubjectTeacherQuery
+): Promise<SubjectTeachersResponseDTO> => {
+  try {
+    const response = await api.get("/subject/teachers", {
+      params: query,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching subject teachers:", error);
+    throw error; // Rethrow the error to be handled by the caller
+  }
+};
+
 const getByIdAsync = async (subjectId: string): Promise<Subject> => {
   try {
     const response = await api.get(`/subject/${subjectId}`);
@@ -62,4 +82,11 @@ const getByIdAsync = async (subjectId: string): Promise<Subject> => {
   }
 };
 
-export { createAsync, updateAsync, deleteAsync, getQueryAsync, getByIdAsync };
+export {
+  createAsync,
+  updateAsync,
+  deleteAsync,
+  getQueryAsync,
+  querySubjectTeachersAsync,
+  getByIdAsync,
+};

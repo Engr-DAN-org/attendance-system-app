@@ -4,14 +4,17 @@
 // import { useState } from "react";
 
 import { CourseQueryOption } from "@/config/useOptions/courseOption";
+import { subjectTeachersQueryOption } from "@/config/useOptions/subjectQueryOptions";
 import { userQueryOption } from "@/config/useOptions/userQueryOptions";
 import { courseYearOptions } from "@/constants/courseYear";
 import { UserRole } from "@/enums/userRole";
 import {
   initialCourseQuery,
+  initialSubjectTeacherQuery,
   initialUsersQuery,
 } from "@/initialStates/queryStates";
 import { CourseQuery } from "@/interfaces/queryParams/courseQuery";
+import { SubjectTeacherQuery } from "@/interfaces/queryParams/subjectQuery";
 import { UserQuery } from "@/interfaces/queryParams/userQuery";
 import { Section, sectionSchema } from "@/interfaces/types/section";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -40,6 +43,9 @@ export const useSectionCreationLogic = () => {
     ...initialUsersQuery,
     role: [UserRole.Teacher],
   });
+  const [subjectQuery, setSubjectQuery] = useState<SubjectTeacherQuery>(
+    initialSubjectTeacherQuery
+  );
 
   const sectionForm = useForm<Section>({
     resolver: zodResolver(sectionSchema),
@@ -68,6 +74,9 @@ export const useSectionCreationLogic = () => {
     userQueryOption(teachersQuery)
   );
 
+  const { data: subjectsQueryData, isPending: isSubjectQueryPending } =
+    useQuery(subjectTeachersQueryOption(subjectQuery));
+
   const { fields, append, remove } = useFieldArray({
     control: sectionForm.control,
     name: "classSchedules",
@@ -87,7 +96,15 @@ export const useSectionCreationLogic = () => {
     console.log("Teachers Query:", teachersQuery);
   };
 
+  const updateSubjectQuery = (name: string) => {
+    setSubjectQuery({ ...subjectQuery, name });
+    console.log("Subject Query:", subjectQuery);
+  };
+
   return {
+    subjectsQueryData,
+    isSubjectQueryPending,
+    updateSubjectQuery,
     updateTeachersQuery,
     usersQueryData,
     courseQuery,

@@ -6,7 +6,7 @@ export type ClassSchedule = z.infer<typeof classScheduleSchema>;
 export const classScheduleSchema = z
   .object({
     id: z.number().optional().nullable(),
-    subjectId: z.number().min(1, "Subject is required"),
+    subjectTeacherId: z.number().min(1, "Subject is required"),
     subjectName: z.string().optional(),
     teacherId: z.string().optional(),
     day: DayOfWeekSchema.describe("Day"),

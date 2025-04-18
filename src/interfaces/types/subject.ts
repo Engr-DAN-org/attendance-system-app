@@ -3,6 +3,7 @@ import { z } from "zod";
 
 export type Subject = z.infer<typeof SubjectSchema>;
 export type SubjectForm = z.infer<typeof SubjectSchema>;
+export type SubjectTeacher = z.infer<typeof subjectTeacherSchema>;
 
 export const subjectTeacherSchema = z.object({
   id: z.number().optional(),

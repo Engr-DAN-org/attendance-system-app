@@ -17,7 +17,7 @@ import {
   CommandItem,
   CommandList,
 } from "../ui/command";
-import { InputHTMLAttributes, useState } from "react";
+import { InputHTMLAttributes, useEffect, useRef, useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils"; // Utility for conditional classNames
@@ -54,6 +54,19 @@ export const FormComboField = <TSchema extends ZodObject<ZodRawShape>>({
   ...props
 }: FormComboFieldProps<TSchema>) => {
   const [open, setOpen] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (open) {
+      requestAnimationFrame(() => {
+        inputRef.current?.focus();
+      });
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 10); // Wait until popover is fully rendered
+    }
+  }, [open]);
+
   return (
     <FormField
       control={form.control}
@@ -78,13 +91,15 @@ export const FormComboField = <TSchema extends ZodObject<ZodRawShape>>({
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="p-0">
+                <PopoverContent className="p-0 w-[--radix-popover-trigger-width]">
                   <Command
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                     shouldFilter={false} // ✨ disables built-in filtering
                   >
                     <CommandInput
+                      ref={inputRef}
+                      autoFocus
                       onInput={(e) => {
                         const value = e.currentTarget.value;
                         onSearch(value);
@@ -98,9 +113,9 @@ export const FormComboField = <TSchema extends ZodObject<ZodRawShape>>({
                           : emptyMessage || "No item found."}
                       </CommandEmpty>
                       <CommandGroup>
-                        {options.map((option) => (
+                        {options.map((option, index) => (
                           <CommandItem
-                            key={option.value}
+                            key={`${option.value}${option.label}${index}`}
                             onSelect={() => {
                               setOpen(false);
                               field.onChange(
