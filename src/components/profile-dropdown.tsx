@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -52,10 +52,10 @@ export function ProfileDropdown() {
             </Link>
           </DropdownMenuItem> */}
           <DropdownMenuItem asChild>
-            <Link to="/settings">
-              Settings
-              <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
-            </Link>
+            {/* <Link to="/settings"> */}
+            Settings
+            <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
+            {/* </Link> */}
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />

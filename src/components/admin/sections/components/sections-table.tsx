@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/table";
 import { Section } from "@/interfaces/types/section";
 import { CustomPaginator } from "@/components/paginator";
-// import { DataTableToolbar } from "./data-table-toolbar";
+import { DataTableToolbar } from "./data-table-toolbar";
 
 declare module "@tanstack/react-table" {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -68,7 +68,7 @@ export function SectionsTable({ columns, data }: DataTableProps) {
 
   return (
     <div className="space-y-4">
-      {/* <DataTableToolbar table={table} /> */}
+      <DataTableToolbar table={table} />
       <div className="rounded-md border">
         <Table>
           <TableHeader>

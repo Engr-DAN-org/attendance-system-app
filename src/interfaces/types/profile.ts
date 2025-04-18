@@ -1,24 +1,24 @@
-import { UserRoleType } from "@/enums/userRole";
-import { GetGuardianDTO } from "./guardian";
-import { UserStatus } from "@/enums/userStatus";
+// import { UserRoleType } from "@/enums/userRole";
+// import { GetGuardianDTO } from "./guardian";
+// import { UserStatus } from "@/enums/userStatus";
 
-interface GetProfileDTO {
-  idNumber: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  fullName: string;
-  status: UserStatus;
-  sectionId?: number | null;
-  // section?: Section | null;
-  guardianId?: number | null;
-  guardian?: GetGuardianDTO | null;
-  // attendanceRecords?: AttendanceRecord[] | null;
-  // classSchedules?: ClassSchedule[] | null;
+// interface GetProfileDTO {
+//   idNumber: string;
+//   firstName: string;
+//   lastName: string;
+//   email: string;
+//   fullName: string;
+//   status: UserStatus;
+//   sectionId?: number | null;
+//   // section?: Section | null;
+//   guardianId?: number | null;
+//   guardian?: GetGuardianDTO | null;
+//   // attendanceRecords?: AttendanceRecord[] | null;
+//   // classSchedules?: ClassSchedule[] | null;
 
-  // classSessions?: ClassSession[] | null;
-  role: UserRoleType;
-}
+//   // classSessions?: ClassSession[] | null;
+//   role: UserRoleType;
+// }
 
 interface SidebarHeaderProfile {
   nameOrTitle: string;
@@ -32,4 +32,4 @@ interface UserProfile {
   icon: React.ElementType;
 }
 
-export type { SidebarHeaderProfile, GetProfileDTO, UserProfile };
+export type { SidebarHeaderProfile, UserProfile };

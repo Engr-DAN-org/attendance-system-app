@@ -1,19 +1,12 @@
 import { userQueryOption } from "@/config/useOptions/userQueryOptions";
 import useDialogState from "@/hooks/use-dialog-state";
+import { initialUsersQuery } from "@/initialStates/queryStates";
 import { UserQuery } from "@/interfaces/queryParams/userQuery";
 import { User, UserForm } from "@/interfaces/types/user";
 import { createAsync, deleteAsync, updateAsync } from "@/services/user.service";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
-
-const initialQuery: UserQuery = {
-  role: [],
-  page: 1,
-  sort: "asc",
-  name: null,
-  status: [],
-};
 
 export type UsersDialogType =
   | "add-student"
@@ -23,7 +16,7 @@ export type UsersDialogType =
   | "delete";
 
 export const useUserLogic = () => {
-  const [usersQuery, setUsersQuery] = useState<UserQuery>(initialQuery);
+  const [usersQuery, setUsersQuery] = useState<UserQuery>(initialUsersQuery);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [dialogOpen, setDialogOpen] = useDialogState<UsersDialogType>(null);
 

@@ -22,6 +22,15 @@ export interface CourseYearOption {
   label: string;
   grade: string;
 }
+export type CourseYearOptionValue = CourseYearOption["value"];
+export type CourseYearOptionLabel = CourseYearOption["label"];
+
+export interface YearLevelOption {
+  value: string;
+  label: string;
+}
+export type YearLevelOptionValue = YearLevelOption["value"];
+export type YearLevelOptionLabel = YearLevelOption["label"];
 
 export const courseYearOptions: CourseYearOption[] = [
   { value: "1", label: "1 Year", grade: "1st Year" },
@@ -34,8 +43,22 @@ export const courseYearOptions: CourseYearOption[] = [
   { value: "8", label: "8 Years", grade: "8th Year" },
 ] as const;
 
-export type CourseYearOptionValue = CourseYearOption["value"];
-export type CourseYearOptionLabel = CourseYearOption["label"];
+export const yearLevelOptions: YearLevelOption[] = [
+  { value: "1", label: "1st Year" },
+  { value: "2", label: "2nd Year" },
+  { value: "3", label: "3rd Year" },
+  { value: "4", label: "4th Year" },
+  { value: "5", label: "5th Year" },
+  { value: "6", label: "6th Year" },
+  { value: "7", label: "7th Year" },
+  { value: "8", label: "8th Year" },
+] as const;
+
+export const yearLevelSchema = z
+  .string()
+  .refine((year) => yearLevelOptions.some((option) => option.value == year), {
+    message: "Invalid year level",
+  });
 
 export const courseYearSchema = z
   .string()

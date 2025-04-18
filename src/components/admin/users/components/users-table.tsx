@@ -4,7 +4,6 @@ import {
   ColumnFiltersState,
   RowData,
   SortingState,
-  VisibilityState,
   flexRender,
   getCoreRowModel,
   getFacetedRowModel,
@@ -40,7 +39,6 @@ interface DataTableProps {
 
 export function UsersTable({ columns, data }: DataTableProps) {
   const [rowSelection, setRowSelection] = useState({});
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
 
@@ -49,7 +47,6 @@ export function UsersTable({ columns, data }: DataTableProps) {
     columns,
     state: {
       sorting,
-      columnVisibility,
       rowSelection,
       columnFilters,
     },
@@ -57,7 +54,6 @@ export function UsersTable({ columns, data }: DataTableProps) {
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
-    onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),

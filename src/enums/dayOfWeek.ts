@@ -1,28 +1,28 @@
 import { z } from "zod";
 
-export const DayOfWeekSchema = z.number().int().min(0).max(6);
+export const DayOfWeekSchema = z.enum(["0", "1", "2", "3", "4", "5", "6"]);
 
 // Define the type for a single day entry
 type DayOfWeekEntry = {
-  id: number;
+  id: string;
   name: string;
   abv: string;
 };
 
 // Define the type for the entire DayOfWeekMap
 type DayOfWeekMapType = {
-  [key: number]: DayOfWeekEntry;
+  [key: string]: DayOfWeekEntry;
 };
 
 // You can create a simpler DayOfWeekMap, only storing the id
 export const DayOfWeekMap: DayOfWeekMapType = {
-  0: { id: 0, name: "Sunday", abv: "SUN" },
-  1: { id: 1, name: "Monday", abv: "MON" },
-  2: { id: 2, name: "Tuesday", abv: "TUE" },
-  3: { id: 3, name: "Wednesday", abv: "WED" },
-  4: { id: 4, name: "Thursday", abv: "THU" },
-  5: { id: 5, name: "Friday", abv: "FRI" },
-  6: { id: 6, name: "Saturday", abv: "SAT" },
+  "0": { id: "0", name: "Sunday", abv: "SUN" },
+  "1": { id: "1", name: "Monday", abv: "MON" },
+  "2": { id: "2", name: "Tuesday", abv: "TUE" },
+  "3": { id: "3", name: "Wednesday", abv: "WED" },
+  "4": { id: "4", name: "Thursday", abv: "THU" },
+  "5": { id: "5", name: "Friday", abv: "FRI" },
+  "6": { id: "6", name: "Saturday", abv: "SAT" },
 } as const;
 
 // We only need the id for the ClassSchedule form

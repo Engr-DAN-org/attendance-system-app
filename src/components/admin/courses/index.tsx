@@ -99,7 +99,7 @@ export default function CourseManager() {
             totalPages={queryResponse.totalPages}
             totalCount={queryResponse.totalCount}
             onPageClick={handlePageClick}
-            itemLabel="Courses"
+            itemLabel="Course(s)"
             key={"course-paginator"}
           />
         )}

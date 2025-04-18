@@ -1,4 +1,5 @@
 import { Course } from "./course";
+import { Subject } from "./subject";
 import { User } from "./user";
 
 interface BaseQueryResponse<T> {
@@ -11,5 +12,10 @@ interface BaseQueryResponse<T> {
 
 type CourseQueryResponseDTO = BaseQueryResponse<Course>;
 type UserQueryResponseDTO = BaseQueryResponse<User>;
+type SubjectQueryResponseDTO = BaseQueryResponse<Subject>;
 
-export type { CourseQueryResponseDTO, UserQueryResponseDTO };
+export type {
+  CourseQueryResponseDTO,
+  UserQueryResponseDTO,
+  SubjectQueryResponseDTO,
+};

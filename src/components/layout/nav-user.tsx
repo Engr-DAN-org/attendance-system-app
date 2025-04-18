@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { BadgeCheck, ChevronsUpDown, LogOut } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
@@ -69,10 +69,10 @@ export function NavUser({ user }: { user: UserProfile }) {
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem asChild>
-                <Link to="/settings/account">
-                  <BadgeCheck />
-                  Account
-                </Link>
+                {/* <Link to="/settings/account"> */}
+                <BadgeCheck />
+                Account
+                {/* </Link> */}
               </DropdownMenuItem>
               {/* <DropdownMenuItem asChild>
                 <Link to="/settings/notifications">

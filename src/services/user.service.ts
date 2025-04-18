@@ -40,6 +40,8 @@ const getQueryAsync = async (
     const response = await api.get("/user", {
       params: query,
     });
+    console.log(response);
+
     return response.data;
   } catch (error) {
     console.error("Error fetching users:", error);

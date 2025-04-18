@@ -11,8 +11,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { User } from "@/interfaces/types/user";
-import { useUserQueryContext } from "../context/users-context";
-import { UsersDialogType } from "../../../../use-logic/use-user.logic";
+import { UsersDialogType } from "@/use-logic/use-user.logic";
+import { useUserQueryContext } from "@/components/admin/users/context/users-context";
 
 interface DataTableRowActionsProps {
   row: Row<User>;

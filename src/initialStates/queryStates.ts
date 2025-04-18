@@ -1,21 +1,40 @@
 import { CourseQuery } from "@/interfaces/queryParams/courseQuery";
 import { SectionQuery } from "@/interfaces/queryParams/sectionQuery";
+import { UserQuery } from "@/interfaces/queryParams/userQuery";
+
+const baseQueryState = {
+  page: 1,
+  sort: "asc" as "asc" | "desc",
+  name: null,
+};
 
 const initialCourseQuery: CourseQuery = {
   code: null,
-  name: null,
   years: null,
-  page: 1,
-  sort: "asc",
+  ...baseQueryState,
 };
 
 const initialSectionQuery: SectionQuery = {
-  name: null,
-  page: 1,
-  sort: "asc",
+  ...baseQueryState,
   courseCode: null,
   yearLevel: null,
   teacherId: null,
 };
 
-export { initialCourseQuery, initialSectionQuery };
+const initialUsersQuery: UserQuery = {
+  ...baseQueryState,
+  role: [],
+  status: [],
+};
+
+const initialSubjectQuery = {
+  ...baseQueryState,
+  teacherId: [],
+};
+
+export {
+  initialCourseQuery,
+  initialSectionQuery,
+  initialUsersQuery,
+  initialSubjectQuery,
+};

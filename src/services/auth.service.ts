@@ -6,7 +6,7 @@ import {
   SuccessLoginResponseDTO,
 } from "@/interfaces/types/responseDTO";
 import { AxiosResponse } from "axios";
-import { GetProfileDTO } from "@/interfaces/types/profile";
+import { User } from "@/interfaces/types/user";
 
 const coldStart = async (): Promise<object> => {
   const response = await api.get("/coldStart");
@@ -33,8 +33,8 @@ const verify2faAsync = async (
   return response.data;
 };
 
-const getProfileAsync = async (): Promise<GetProfileDTO> => {
-  const response: AxiosResponse<GetProfileDTO> = await api.get("/auth/profile");
+const getProfileAsync = async (): Promise<User> => {
+  const response: AxiosResponse<User> = await api.get("/auth/profile");
   return response.data;
 };
 

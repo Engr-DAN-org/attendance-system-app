@@ -1,22 +1,17 @@
-import { IconMailPlus, IconUserPlus } from "@tabler/icons-react";
+import { IconPlus } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "@tanstack/react-router";
 
 export function SectionPrimaryButtons() {
-  // const { setDialogOpen } = useUserQueryContext();
+  const navigate = useNavigate();
   return (
     <div className="flex gap-2">
       <Button
-        variant="outline"
+        variant="default"
         className="space-x-1"
-        // onClick={() => setDialogOpen("add-teacher")}
+        onClick={() => navigate({ to: "/admin/sections/create" })}
       >
-        <span>Invite Teacher</span> <IconMailPlus size={18} />
-      </Button>
-      <Button
-        className="space-x-1"
-        // onClick={() => setDialogOpen("add-student")}
-      >
-        <span>Invite Student</span> <IconUserPlus size={18} />
+        <span>Create</span> <IconPlus size={18} />
       </Button>
     </div>
   );

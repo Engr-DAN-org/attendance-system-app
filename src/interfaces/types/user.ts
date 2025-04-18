@@ -1,7 +1,7 @@
 import { z } from "zod";
 // import { GetProfileDTO } from "./profile";
 import { UserStatus } from "@/enums/userStatus";
-import { UserRole, userRoleSchema } from "@/enums/userRole";
+import { userRoleSchema, UserRoleType } from "@/enums/userRole";
 import { guardianSchema } from "./guardian";
 
 // interface User extends GetProfileDTO {
@@ -12,7 +12,8 @@ import { guardianSchema } from "./guardian";
 type User = ReturnType<typeof userSchema.parse> & {
   status: UserStatus;
   fullName: string;
-  role: UserRole;
+  role: UserRoleType;
+  guardianId?: number | null;
 };
 
 type UserForm = z.infer<typeof userSchema>;

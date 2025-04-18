@@ -3,7 +3,6 @@ import {
   IconLayoutDashboard,
   IconUsers,
   IconBook,
-  IconCalendar,
   IconBuilding,
 } from "@tabler/icons-react";
 import { LinkProps } from "@tanstack/react-router";
@@ -26,28 +25,23 @@ export const adminNavGroups: NavGroup[] = [
     items: [
       {
         title: "Users",
-        url: `${adminUrl}/users`, // Added users
+        url: `${adminUrl}/users` as LinkProps["to"], // Added users
         icon: IconUsers,
       },
       {
         title: "Courses",
-        url: `${adminUrl}/courses`,
+        url: `${adminUrl}/courses` as LinkProps["to"],
         icon: IconBuilding,
       },
       {
         title: "Sections",
-        url: `${adminUrl}/sections`,
+        url: `${adminUrl}/sections` as LinkProps["to"],
         icon: IconBuilding, // Appropriate Icon for sections.
       },
       {
         title: "Subjects",
-        url: `${adminUrl}/subjects`, //Added subjects
+        url: `${adminUrl}/subjects` as LinkProps["to"], //Added subjects
         icon: IconBook, // appropriate Icon for subjects
-      },
-      {
-        title: "Class Schedules",
-        url: `${adminUrl}/class-schedules`, //Added schedules
-        icon: IconCalendar, // Appropriate Icon for schedules.
       },
     ],
   },

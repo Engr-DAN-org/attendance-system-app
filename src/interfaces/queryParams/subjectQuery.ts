@@ -1,0 +1,5 @@
+import { BaseQueryParam } from "./baseQueryParam";
+
+export interface SubjectQuery extends BaseQueryParam {
+  teacherId?: string[];
+}

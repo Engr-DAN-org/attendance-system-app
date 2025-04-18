@@ -20,7 +20,9 @@ import { Route as AuthenticatedTeacherRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedStudentRouteImport } from './routes/_authenticated/student/route'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin/route'
 import { Route as AuthenticatedAdminUsersIndexImport } from './routes/_authenticated/admin/users/index'
+import { Route as AuthenticatedAdminSubjectsIndexImport } from './routes/_authenticated/admin/subjects/index'
 import { Route as AuthenticatedAdminCoursesIndexImport } from './routes/_authenticated/admin/courses/index'
+import { Route as AuthenticatedAdminSectionsCreateIndexImport } from './routes/_authenticated/admin/sections/create/index'
 
 // Create Virtual Routes
 
@@ -178,10 +180,24 @@ const AuthenticatedAdminUsersIndexRoute =
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
 
+const AuthenticatedAdminSubjectsIndexRoute =
+  AuthenticatedAdminSubjectsIndexImport.update({
+    id: '/subjects/',
+    path: '/subjects/',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+
 const AuthenticatedAdminCoursesIndexRoute =
   AuthenticatedAdminCoursesIndexImport.update({
     id: '/courses/',
     path: '/courses/',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+
+const AuthenticatedAdminSectionsCreateIndexRoute =
+  AuthenticatedAdminSectionsCreateIndexImport.update({
+    id: '/sections/create/',
+    path: '/sections/create/',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
 
@@ -301,6 +317,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminCoursesIndexImport
       parentRoute: typeof AuthenticatedAdminRouteImport
     }
+    '/_authenticated/admin/subjects/': {
+      id: '/_authenticated/admin/subjects/'
+      path: '/subjects'
+      fullPath: '/admin/subjects'
+      preLoaderRoute: typeof AuthenticatedAdminSubjectsIndexImport
+      parentRoute: typeof AuthenticatedAdminRouteImport
+    }
     '/_authenticated/admin/users/': {
       id: '/_authenticated/admin/users/'
       path: '/users'
@@ -315,6 +338,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminSectionsIndexLazyImport
       parentRoute: typeof AuthenticatedAdminRouteImport
     }
+    '/_authenticated/admin/sections/create/': {
+      id: '/_authenticated/admin/sections/create/'
+      path: '/sections/create'
+      fullPath: '/admin/sections/create'
+      preLoaderRoute: typeof AuthenticatedAdminSectionsCreateIndexImport
+      parentRoute: typeof AuthenticatedAdminRouteImport
+    }
   }
 }
 
@@ -323,17 +353,22 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminIndexLazyRoute: typeof AuthenticatedAdminIndexLazyRoute
   AuthenticatedAdminCoursesIndexRoute: typeof AuthenticatedAdminCoursesIndexRoute
+  AuthenticatedAdminSubjectsIndexRoute: typeof AuthenticatedAdminSubjectsIndexRoute
   AuthenticatedAdminUsersIndexRoute: typeof AuthenticatedAdminUsersIndexRoute
   AuthenticatedAdminSectionsIndexLazyRoute: typeof AuthenticatedAdminSectionsIndexLazyRoute
+  AuthenticatedAdminSectionsCreateIndexRoute: typeof AuthenticatedAdminSectionsCreateIndexRoute
 }
 
 const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren =
   {
     AuthenticatedAdminIndexLazyRoute: AuthenticatedAdminIndexLazyRoute,
     AuthenticatedAdminCoursesIndexRoute: AuthenticatedAdminCoursesIndexRoute,
+    AuthenticatedAdminSubjectsIndexRoute: AuthenticatedAdminSubjectsIndexRoute,
     AuthenticatedAdminUsersIndexRoute: AuthenticatedAdminUsersIndexRoute,
     AuthenticatedAdminSectionsIndexLazyRoute:
       AuthenticatedAdminSectionsIndexLazyRoute,
+    AuthenticatedAdminSectionsCreateIndexRoute:
+      AuthenticatedAdminSectionsCreateIndexRoute,
   }
 
 const AuthenticatedAdminRouteRouteWithChildren =
@@ -403,8 +438,10 @@ export interface FileRoutesByFullPath {
   '/student/': typeof AuthenticatedStudentIndexLazyRoute
   '/teacher/': typeof AuthenticatedTeacherIndexLazyRoute
   '/admin/courses': typeof AuthenticatedAdminCoursesIndexRoute
+  '/admin/subjects': typeof AuthenticatedAdminSubjectsIndexRoute
   '/admin/users': typeof AuthenticatedAdminUsersIndexRoute
   '/admin/sections': typeof AuthenticatedAdminSectionsIndexLazyRoute
+  '/admin/sections/create': typeof AuthenticatedAdminSectionsCreateIndexRoute
 }
 
 export interface FileRoutesByTo {
@@ -421,8 +458,10 @@ export interface FileRoutesByTo {
   '/student': typeof AuthenticatedStudentIndexLazyRoute
   '/teacher': typeof AuthenticatedTeacherIndexLazyRoute
   '/admin/courses': typeof AuthenticatedAdminCoursesIndexRoute
+  '/admin/subjects': typeof AuthenticatedAdminSubjectsIndexRoute
   '/admin/users': typeof AuthenticatedAdminUsersIndexRoute
   '/admin/sections': typeof AuthenticatedAdminSectionsIndexLazyRoute
+  '/admin/sections/create': typeof AuthenticatedAdminSectionsCreateIndexRoute
 }
 
 export interface FileRoutesById {
@@ -443,8 +482,10 @@ export interface FileRoutesById {
   '/_authenticated/student/': typeof AuthenticatedStudentIndexLazyRoute
   '/_authenticated/teacher/': typeof AuthenticatedTeacherIndexLazyRoute
   '/_authenticated/admin/courses/': typeof AuthenticatedAdminCoursesIndexRoute
+  '/_authenticated/admin/subjects/': typeof AuthenticatedAdminSubjectsIndexRoute
   '/_authenticated/admin/users/': typeof AuthenticatedAdminUsersIndexRoute
   '/_authenticated/admin/sections/': typeof AuthenticatedAdminSectionsIndexLazyRoute
+  '/_authenticated/admin/sections/create/': typeof AuthenticatedAdminSectionsCreateIndexRoute
 }
 
 export interface FileRouteTypes {
@@ -466,8 +507,10 @@ export interface FileRouteTypes {
     | '/student/'
     | '/teacher/'
     | '/admin/courses'
+    | '/admin/subjects'
     | '/admin/users'
     | '/admin/sections'
+    | '/admin/sections/create'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -483,8 +526,10 @@ export interface FileRouteTypes {
     | '/student'
     | '/teacher'
     | '/admin/courses'
+    | '/admin/subjects'
     | '/admin/users'
     | '/admin/sections'
+    | '/admin/sections/create'
   id:
     | '__root__'
     | '/'
@@ -503,8 +548,10 @@ export interface FileRouteTypes {
     | '/_authenticated/student/'
     | '/_authenticated/teacher/'
     | '/_authenticated/admin/courses/'
+    | '/_authenticated/admin/subjects/'
     | '/_authenticated/admin/users/'
     | '/_authenticated/admin/sections/'
+    | '/_authenticated/admin/sections/create/'
   fileRoutesById: FileRoutesById
 }
 
@@ -568,8 +615,10 @@ export const routeTree = rootRoute
       "children": [
         "/_authenticated/admin/",
         "/_authenticated/admin/courses/",
+        "/_authenticated/admin/subjects/",
         "/_authenticated/admin/users/",
-        "/_authenticated/admin/sections/"
+        "/_authenticated/admin/sections/",
+        "/_authenticated/admin/sections/create/"
       ]
     },
     "/_authenticated/student": {
@@ -624,12 +673,20 @@ export const routeTree = rootRoute
       "filePath": "_authenticated/admin/courses/index.tsx",
       "parent": "/_authenticated/admin"
     },
+    "/_authenticated/admin/subjects/": {
+      "filePath": "_authenticated/admin/subjects/index.tsx",
+      "parent": "/_authenticated/admin"
+    },
     "/_authenticated/admin/users/": {
       "filePath": "_authenticated/admin/users/index.tsx",
       "parent": "/_authenticated/admin"
     },
     "/_authenticated/admin/sections/": {
       "filePath": "_authenticated/admin/sections/index.lazy.tsx",
+      "parent": "/_authenticated/admin"
+    },
+    "/_authenticated/admin/sections/create/": {
+      "filePath": "_authenticated/admin/sections/create/index.tsx",
       "parent": "/_authenticated/admin"
     }
   }

@@ -13,7 +13,7 @@ const general: NavGroup = {
     },
     {
       title: "Class Schedule",
-      url: teacherUrl + "/class-schedule",
+      url: (teacherUrl + "/class-schedule") as LinkProps["to"],
       icon: IconChecklist,
     },
   ],

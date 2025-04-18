@@ -19,7 +19,7 @@ export function CustomPaginator({
   currentPage,
   totalCount,
   onPageClick,
-  itemLabel = "Item(s)",
+  itemLabel = "Item/s",
 }: DataTablePaginationProps) {
   return (
     <div

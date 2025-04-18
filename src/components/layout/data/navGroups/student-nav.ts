@@ -20,7 +20,7 @@ export const studentNavGroups: NavGroup[] = [
       },
       {
         title: "Class Schedule",
-        url: `${studentUrl}/class-schedule`,
+        url: `${studentUrl}/class-schedule` as LinkProps["to"],
         icon: IconCalendar, // Use calendar icon
       },
     ],
@@ -30,12 +30,12 @@ export const studentNavGroups: NavGroup[] = [
     items: [
       {
         title: "Attendance History", // More descriptive and less redundant
-        url: `${studentUrl}/attendance`,
+        url: `${studentUrl}/attendance` as LinkProps["to"],
         icon: IconListCheck, // Use a checklist icon
       },
       {
         title: "Scan QR Code",
-        url: `${studentUrl}/scan-qr-code`,
+        url: `${studentUrl}/scan-qr-code` as LinkProps["to"],
         icon: IconQrcode, // Use QR code icon
       },
     ],
