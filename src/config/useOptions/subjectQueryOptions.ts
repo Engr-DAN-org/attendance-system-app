@@ -6,10 +6,8 @@ import {
   SubjectQueryResponseDTO,
   SubjectTeachersResponseDTO,
 } from "@/interfaces/types/queryResponseDTO";
-import {
-  getQueryAsync,
-  querySubjectTeachersAsync,
-} from "@/services/subject.service";
+import { getSTQueryAsync } from "@/services/subject-teacher.service";
+import { getQueryAsync } from "@/services/subject.service";
 import { queryOptions, UseQueryOptions } from "@tanstack/react-query";
 
 export const subjectQueryOption = (
@@ -25,7 +23,7 @@ export const subjectTeachersQueryOption = (
   query: SubjectTeacherQuery
 ): UseQueryOptions<SubjectTeachersResponseDTO, Error> => {
   return queryOptions<SubjectTeachersResponseDTO, Error>({
-    queryKey: ["subject/teachers", { query }] as const,
-    queryFn: async () => querySubjectTeachersAsync(query),
+    queryKey: ["subject-teachers", { query }] as const,
+    queryFn: async () => getSTQueryAsync(query),
   });
 };

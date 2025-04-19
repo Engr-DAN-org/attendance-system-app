@@ -1,19 +1,19 @@
 import { slotHeight, timeSlots } from "@/constants/section.constants";
 import { ScheduleEvent } from "./schedule-event";
 import { ClassSchedule } from "@/interfaces/types/classSchedule";
-import { DayOfWeek } from "@/enums/dayOfWeek";
+import { DayOfWeekEntry } from "@/enums/dayOfWeek";
 
 interface DayColumnProps {
-  day: DayOfWeek;
+  day: DayOfWeekEntry;
   data: ClassSchedule[];
 }
 
 export default function DayColumn({ day, data }: DayColumnProps) {
   const luncBreak: ClassSchedule = {
-    subjectId: 0,
-    day: day,
-    startTime: "12:00 PM",
-    endTime: "1:00 PM",
+    subjectTeacherId: 0,
+    day: day.id,
+    startTime: "12:00",
+    endTime: "13:00",
     // : "Lunch Break",
     gracePeriod: 0,
     isBreak: true,
@@ -22,7 +22,7 @@ export default function DayColumn({ day, data }: DayColumnProps) {
   return (
     <div className="col-span-1 border-r relative">
       <div className="sticky top-0 bg-secondary text-center font-semibold border-b h-10 flex justify-center items-center">
-        {day}
+        {day.name}
       </div>
       <div className="flex flex-col !relative">
         {timeSlots.map((_, i) => (
@@ -34,9 +34,9 @@ export default function DayColumn({ day, data }: DayColumnProps) {
         ))}
         <ScheduleEvent event={luncBreak} />
         {data
-          .filter((s) => s.day == day)
+          .filter((s) => s.day == day.id)
           .map((value, key) => {
-            return <ScheduleEvent key={key} event={value} />;
+            return <ScheduleEvent key={key} index={key} event={value} />;
           })}
       </div>
     </div>

@@ -1,10 +1,14 @@
 import { Main } from "@/components/layout/main";
 import { SectionsTable } from "./components/sections-table";
 import { sectionsColumn } from "./components/sections-columns";
-import { Section } from "@/interfaces/types/section";
 import { SectionPrimaryButtons } from "./components/section-primary-buttons";
+import { useSectionContext } from "./context/section-context";
+import { LoadingComponent } from "@/components/general-loader";
 
 export const SectionsListPage = () => {
+  const { respose, isQueryPending } = useSectionContext();
+  console.log("respose", respose);
+
   return (
     <>
       <Main>
@@ -20,7 +24,11 @@ export const SectionsListPage = () => {
           <SectionPrimaryButtons />
         </div>
         <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0">
-          <SectionsTable columns={sectionsColumn} data={[] as Section[]} />
+          {respose && !isQueryPending ? (
+            <SectionsTable columns={sectionsColumn} data={respose.data} />
+          ) : (
+            <LoadingComponent />
+          )}
         </div>
       </Main>
     </>

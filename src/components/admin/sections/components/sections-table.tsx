@@ -1,17 +1,8 @@
-import { useState } from "react";
 import {
   ColumnDef,
-  ColumnFiltersState,
   RowData,
-  SortingState,
-  VisibilityState,
   flexRender,
   getCoreRowModel,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import {
@@ -39,31 +30,24 @@ interface DataTableProps {
 }
 
 export function SectionsTable({ columns, data }: DataTableProps) {
-  const [rowSelection, setRowSelection] = useState({});
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [sorting, setSorting] = useState<SortingState>([]);
-
   const table = useReactTable({
     data,
     columns,
-    state: {
-      sorting,
-      columnVisibility,
-      rowSelection,
-      columnFilters,
-    },
-    enableRowSelection: true,
-    onRowSelectionChange: setRowSelection,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    onColumnVisibilityChange: setColumnVisibility,
+    // state: {
+    //   sorting,
+    //   rowSelection,
+    //   columnFilters,
+    // },
+    // enableRowSelection: true,
+    // onRowSelectionChange: setRowSelection,
+    // onSortingChange: setSorting,
+    // onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
+    // getFilteredRowModel: getFilteredRowModel(),
+    // getPaginationRowModel: getPaginationRowModel(),
+    // getSortedRowModel: getSortedRowModel(),
+    // getFacetedRowModel: getFacetedRowModel(),
+    // getFacetedUniqueValues: getFacetedUniqueValues(),
   });
 
   return (

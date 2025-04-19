@@ -5,14 +5,17 @@ export type ClassSchedule = z.infer<typeof classScheduleSchema>;
 
 export const classScheduleSchema = z
   .object({
-    id: z.number().optional().nullable(),
+    index: z.any().optional(), // for local handling
+    id: z.any().optional().nullable(),
     subjectTeacherId: z.number().min(1, "Subject is required"),
     subjectName: z.string().optional(),
+    subjectCode: z.string().optional(),
+    teacherName: z.string().optional(),
     teacherId: z.string().optional(),
     day: DayOfWeekSchema.describe("Day"),
     startTime: z.string().min(1, "Start time is required"), // Format: "HH:mm"
     endTime: z.string().min(1, "End time is required"), // Format: "HH:mm"
-    gracePeriod: z.number().min(0).default(5),
+    gracePeriod: z.any().default("5"),
     isBreak: z.boolean().optional(),
   })
   .refine(

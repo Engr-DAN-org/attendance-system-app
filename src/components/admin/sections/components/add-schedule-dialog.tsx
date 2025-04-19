@@ -19,8 +19,6 @@ import {
   ClassSchedule,
   classScheduleSchema,
 } from "@/interfaces/types/classSchedule";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -34,30 +32,52 @@ import {
   FormComboField,
   OptionType,
 } from "@/components/form-components/form-command";
+import { stepMinutes } from "@/constants/section.constants";
+import { SubjectTeacher } from "@/interfaces/types/subject";
+import { getByIdAsync } from "@/services/subject-teacher.service";
+import { toast } from "sonner";
 
 export const AddScheduleDialog = () => {
   const {
     append,
+    update,
     setOpenScheduleDialog,
     openScheduleDialog,
     subjectsQueryData,
     updateSubjectQuery,
+    scheduleForm,
   } = useSectionCreationContext();
 
-  const scheduleForm = useForm<ClassSchedule>({
-    resolver: zodResolver(classScheduleSchema),
-    defaultValues: {
-      subjectTeacherId: undefined,
-      day: undefined,
-      startTime: undefined,
-      endTime: undefined,
-      gracePeriod: 5,
-    },
-  });
+  const handleAdd = async (formData: ClassSchedule) => {
+    try {
+      const { subjectTeacherId, index } = formData;
+      const {
+        subjectName,
+        subjectCode,
+        teacherName,
+      }: SubjectTeacher | undefined = await getByIdAsync(subjectTeacherId);
 
-  const handleAdd = (data: ClassSchedule) => {
-    append(data);
-    setOpenScheduleDialog(false);
+      const data = {
+        ...formData,
+        subjectName,
+        subjectCode,
+        teacherName,
+      };
+
+      if (typeof index === "number") {
+        console.log("updating", index);
+        update(index, data);
+      } else {
+        console.log("appending");
+        append(data);
+      }
+
+      setOpenScheduleDialog(false);
+      scheduleForm.reset();
+    } catch (error) {
+      console.error("Error fetching subject teacher:", error);
+      toast.error("Something went wrong.");
+    }
   };
 
   const subjectOptions: OptionType[] =
@@ -73,8 +93,8 @@ export const AddScheduleDialog = () => {
       modal={true}
       open={openScheduleDialog}
       onOpenChange={(state) => {
-        scheduleForm.reset();
         setOpenScheduleDialog(state);
+        scheduleForm.reset(); // reset only when closing
       }}
     >
       <DialogContent>
@@ -131,7 +151,7 @@ export const AddScheduleDialog = () => {
                   <FormItem>
                     <FormLabel>Start Time</FormLabel>
                     <FormControl>
-                      <Input type="time" {...field} />
+                      <Input type="time" step={stepMinutes * 60} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -145,7 +165,7 @@ export const AddScheduleDialog = () => {
                   <FormItem>
                     <FormLabel>End Time</FormLabel>
                     <FormControl>
-                      <Input type="time" {...field} />
+                      <Input type="time" step={stepMinutes * 60} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

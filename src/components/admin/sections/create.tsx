@@ -21,7 +21,7 @@ export default function SectionForm() {
     sectionForm: form,
     onFormSubmit,
     setOpenScheduleDialog,
-    classSchedules,
+    fields,
     courseSelectData,
     usersQueryData,
     updateTeachersQuery,
@@ -46,7 +46,10 @@ export default function SectionForm() {
     <>
       <Form {...form}>
         <form
-          onSubmit={form.handleSubmit(onFormSubmit)}
+          id="section-form"
+          onSubmit={form.handleSubmit(onFormSubmit, (errors) =>
+            console.log("Validation Errors:", errors)
+          )}
           className="space-y-6 mx-auto py-6"
         >
           {/* Section: Basic Info */}
@@ -119,11 +122,11 @@ export default function SectionForm() {
                 variant="default"
                 onClick={() => setOpenScheduleDialog(true)}
               >
-                <PlusIcon /> Add Schedule
+                <PlusIcon /> Schedule
               </Button>
             </div>
 
-            <WeeklyCalendar data={classSchedules} />
+            <WeeklyCalendar data={fields} />
           </div>
 
           {/* Optional Submit */}
