@@ -1,41 +1,61 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { cn } from "@/lib/utils";
 // import { Badge } from "@/components/ui/badge";
-import { Checkbox } from "@/components/ui/checkbox";
+// import { Checkbox } from "@/components/ui/checkbox";
 import LongText from "@/components/long-text";
 import { DataTableColumnHeader } from "./data-table-column-header";
-// import { DataTableRowActions } from "./data-table-row-actions";
+import { DataTableRowActions } from "./data-table-row-actions";
 import { Section } from "@/interfaces/types/section";
 
 export const sectionsColumn: ColumnDef<Section>[] = [
+  // {
+  //   id: "select",
+  //   header: ({ table }) => (
+  //     <Checkbox
+  //       checked={
+  //         table.getIsAllPageRowsSelected() ||
+  //         (table.getIsSomePageRowsSelected() && "indeterminate")
+  //       }
+  //       onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+  //       aria-label="Select all"
+  //       className="translate-y-[2px]"
+  //     />
+  //   ),
+  //   meta: {
+  //     className: cn(
+  //       "sticky md:table-cell left-0 z-10 rounded-tl",
+  //       "bg-background transition-colors duration-200 group-hover/row:bg-muted group-data-[state=selected]/row:bg-muted"
+  //     ),
+  //   },
+  //   cell: ({ row }) => (
+  //     <Checkbox
+  //       checked={row.getIsSelected()}
+  //       onCheckedChange={(value) => row.toggleSelected(!!value)}
+  //       aria-label="Select row"
+  //       className="translate-y-[2px]"
+  //     />
+  //   ),
+  //   enableSorting: false,
+  //   enableHiding: false,
+  // },
   {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-        className="translate-y-[2px]"
-      />
+    id: "course",
+    accessorKey: "courseId",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Course" />
     ),
+    cell: ({ row }) => {
+      const { course } = row.original;
+      return <div className="max-w-36">{course?.code}</div>;
+    },
     meta: {
       className: cn(
-        "sticky md:table-cell left-0 z-10 rounded-tl",
-        "bg-background transition-colors duration-200 group-hover/row:bg-muted group-data-[state=selected]/row:bg-muted"
+        "drop-shadow-[0_1px_2px_rgb(0_0_0_/_0.1)] dark:drop-shadow-[0_1px_2px_rgb(255_255_255_/_0.1)] lg:drop-shadow-none",
+        "bg-background transition-colors duration-200 group-hover/row:bg-muted group-data-[state=selected]/row:bg-muted",
+        "sticky left-0 md:table-cell"
       ),
     },
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-        className="translate-y-[2px]"
-      />
-    ),
-    enableSorting: false,
+    enableSorting: true,
     enableHiding: false,
   },
   {
@@ -43,18 +63,12 @@ export const sectionsColumn: ColumnDef<Section>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Year Level" />
     ),
-    cell: ({ row }) => (
-      <LongText className="max-w-36">{row.getValue("yearLevel")}</LongText>
-    ),
-    meta: {
-      className: cn(
-        "drop-shadow-[0_1px_2px_rgb(0_0_0_/_0.1)] dark:drop-shadow-[0_1px_2px_rgb(255_255_255_/_0.1)] lg:drop-shadow-none",
-        "bg-background transition-colors duration-200 group-hover/row:bg-muted group-data-[state=selected]/row:bg-muted",
-        "sticky left-6 md:table-cell"
-      ),
+    cell: ({ row }) => {
+      return (
+        <LongText className="max-w-36">{row.getValue("yearLevel")}</LongText>
+      );
     },
-    enableHiding: true,
-    enableSorting: false,
+    meta: { className: "w-36" },
   },
   {
     id: "name",
@@ -68,67 +82,30 @@ export const sectionsColumn: ColumnDef<Section>[] = [
     meta: { className: "w-36" },
   },
   {
-    accessorKey: "email",
+    id: "teacher",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Email" />
-    ),
-    cell: ({ row }) => (
-      <div className="w-fit text-nowrap">{row.getValue("email")}</div>
-    ),
-  },
-  {
-    accessorKey: "phoneNumber",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Phone Number" />
-    ),
-    cell: ({ row }) => <div>{row.getValue("phoneNumber")}</div>,
-    enableSorting: false,
-  },
-  {
-    accessorKey: "status",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Status" />
+      <DataTableColumnHeader column={column} title="Teacher" />
     ),
     cell: ({ row }) => {
-      const { description } = row.original;
-      return <div className="flex space-x-2">{description}</div>;
+      const { teacher } = row.original;
+      <div className="w-fit text-nowrap">
+        {teacher ? `${teacher.firstName} ${teacher.lastName}` : ""}
+      </div>;
     },
-    filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id));
+  },
+  {
+    id: "students",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Student Headcount" />
+    ),
+    cell: ({ row }) => {
+      const { students } = row.original;
+      return <div>{students ? students.length : 0}</div>;
     },
-    enableHiding: false,
     enableSorting: false,
   },
-  // {
-  //   accessorKey: "role",
-  //   header: ({ column }) => (
-  //     <DataTableColumnHeader column={column} title="Role" />
-  //   ),
-  //   cell: ({ row }) => {
-  //     const {  } = row.original;
-  //     const userType = userTypes.find(({ value }) => value === role);
-
-  //     if (!userType) {
-  //       return null;
-  //     }
-
-  //     return (
-  //       <div className="flex items-center gap-x-2">
-  //         {userType.icon && (
-  //           <userType.icon size={16} className="text-muted-foreground" />
-  //         )}
-  //         <span className="text-sm capitalize">{row.getValue("role")}</span>
-  //       </div>
-  //     );
-  //   },
-  //   filterFn: (row, id, value) => {
-  //     return value.includes(row.getValue(id));
-  //   },
-  //   enableSorting: false,
-  //   enableHiding: false,
-  // },
-  // {
-  //   id: "actions",
-  //   cell: DataTableRowActions,
-  // },
+  {
+    id: "actions",
+    cell: DataTableRowActions,
+  },
 ];

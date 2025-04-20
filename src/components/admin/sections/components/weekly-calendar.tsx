@@ -50,9 +50,9 @@ export default function WeeklyCalendar({ data }: WeeklyCalendarProps) {
       </div>
       <ScrollArea className="flex-1 overflow-x-auto">
         <div className="grid grid-cols-7 whitespace-nowrap min-w-[1000px]">
-          {Object.values(DayOfWeekMap).map(({ id, name }) => {
-            const filteredData = data?.filter((item) => item.day === id);
-            return <DayColumn key={id} day={name} data={filteredData} />;
+          {Object.values(DayOfWeekMap).map((day) => {
+            const filteredData = data?.filter((item) => item.day === day.id);
+            return <DayColumn key={day.id} day={day} data={filteredData} />;
           })}
         </div>
         <ScrollBar orientation="horizontal" />

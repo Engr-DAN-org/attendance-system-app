@@ -3,8 +3,8 @@ import { z } from "zod";
 export const DayOfWeekSchema = z.enum(["0", "1", "2", "3", "4", "5", "6"]);
 
 // Define the type for a single day entry
-type DayOfWeekEntry = {
-  id: string;
+export type DayOfWeekEntry = {
+  id: DayOfWeek;
   name: string;
   abv: string;
 };

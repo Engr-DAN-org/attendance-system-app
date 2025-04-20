@@ -10,16 +10,15 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { User } from "@/interfaces/types/user";
-import { UsersDialogType } from "@/use-logic/use-user.logic";
-import { useUserQueryContext } from "@/components/admin/users/context/users-context";
+import { Section } from "@/interfaces/types/section";
+import { useSectionContext } from "../context/section-context";
 
 interface DataTableRowActionsProps {
-  row: Row<User>;
+  row: Row<Section>;
 }
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
-  const { setDialogOpen, setSelectedUser } = useUserQueryContext();
+  const { setTargetDeletion } = useSectionContext();
   return (
     <>
       <DropdownMenu modal={false}>
@@ -35,11 +34,8 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
         <DropdownMenuContent align="end" className="w-[160px]">
           <DropdownMenuItem
             onClick={() => {
-              const user = row.original;
-              setSelectedUser(user);
-              setDialogOpen(
-                `edit-${user.userRole.toLowerCase()}` as UsersDialogType
-              );
+              const section = row.original;
+              setTargetDeletion(section);
             }}
           >
             Edit
@@ -50,9 +46,8 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={() => {
-              const user = row.original;
-              setSelectedUser(user);
-              setDialogOpen("delete");
+              const section = row.original;
+              setTargetDeletion(section);
             }}
             className="!text-red-500"
           >

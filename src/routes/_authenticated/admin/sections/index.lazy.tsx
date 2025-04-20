@@ -1,10 +1,15 @@
 import { SectionsListPage } from "@/components/admin/sections";
+import { SectionContextProvider } from "@/components/admin/sections/context/section-context";
 import { createLazyFileRoute } from "@tanstack/react-router";
 
 export const Route = createLazyFileRoute("/_authenticated/admin/sections/")({
-  component: SectionsListPage,
+  component: RouteComponent,
 });
 
-// function RouteComponent() {
-//   return <div>Hello "/_authenticated/admin/sections/"!</div>
-// }
+function RouteComponent() {
+  return (
+    <SectionContextProvider>
+      <SectionsListPage />
+    </SectionContextProvider>
+  );
+}
