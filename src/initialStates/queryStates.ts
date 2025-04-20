@@ -16,9 +16,9 @@ const initialCourseQuery: CourseQuery = {
 
 const initialSectionQuery: SectionQuery = {
   ...baseQueryState,
-  courseCode: null,
-  yearLevel: null,
-  teacherId: null,
+  courseCode: undefined,
+  yearLevel: undefined,
+  teacherId: undefined,
 };
 
 const initialUsersQuery: UserQuery = {
