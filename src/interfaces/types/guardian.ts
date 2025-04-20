@@ -1,4 +1,5 @@
 import { StudentGuardianRelationship } from "@/enums/studentGuardianRelationship";
+import { z } from "zod";
 
 export interface UpdateGuardianDTO {
   firstName: string;
@@ -26,6 +27,27 @@ export interface GetGuardianDTO {
   address: string;
   relationship: StudentGuardianRelationship;
 }
+
+export const guardianSchema = z.object({
+  firstName: z.string().min(1, "First name is required."),
+  lastName: z.string().min(1, "Last name is required."),
+  email: z.string().email("Invalid email address."),
+  contactNumber: z
+    .string()
+    .optional()
+    .refine(
+      (val) => {
+        if (!val) return true; // Allow empty since it's optional
+        return /^[0-9]{10,11}$/.test(val);
+      },
+      {
+        message: "Contact number must be 10 to 11 digits.",
+      }
+    )
+    .describe("Contact Number"),
+  address: z.string().min(1, "Address is required."),
+  relationship: z.nativeEnum(StudentGuardianRelationship),
+});
 
 // export const createGetGuardianDTO = (guardian: {
 //   firstName: string;

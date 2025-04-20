@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/password-input";
 import { useForm } from "react-hook-form";
-import { LoginDTO } from "@/interfaces/auth";
+import { LoginDTO } from "@/interfaces/types/auth";
 
 type UserAuthFormProps = HTMLAttributes<HTMLDivElement> & {
   isLoading: boolean;

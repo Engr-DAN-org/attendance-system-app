@@ -5,10 +5,15 @@ import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import NotFoundError from "@/features/errors/not-found-error";
 import GeneralError from "@/features/errors/general-error";
 import { Toaster } from "@/components/ui/sonner";
+import { AuthStoreType } from "@/store/authStore";
+import { LoadingComponent } from "@/components/general-loader";
 
-export const Route = createRootRouteWithContext<{
+export type SystemContext = {
   queryClient: QueryClient;
-}>()({
+  authStore: AuthStoreType;
+};
+
+export const Route = createRootRouteWithContext<SystemContext>()({
   component: () => {
     return (
       <>
@@ -25,4 +30,5 @@ export const Route = createRootRouteWithContext<{
   },
   notFoundComponent: NotFoundError,
   errorComponent: GeneralError,
+  pendingComponent: LoadingComponent,
 });

@@ -1,10 +1,12 @@
+import { User } from "./user";
+
 interface ResponseDTO {
   responseType: string;
   message: string;
 }
 
 interface AuthResponseDTO extends ResponseDTO {
-  role: string;
+  user: User;
   expiry: string;
   token: string;
 }

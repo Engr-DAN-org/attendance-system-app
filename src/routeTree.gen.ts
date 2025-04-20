@@ -13,8 +13,16 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as AuthenticatedRouteImport } from './routes/_authenticated/route'
 import { Route as IndexImport } from './routes/index'
 import { Route as authSignInImport } from './routes/(auth)/sign-in'
+import { Route as AuthenticatedTeacherRouteImport } from './routes/_authenticated/teacher/route'
+import { Route as AuthenticatedStudentRouteImport } from './routes/_authenticated/student/route'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin/route'
+import { Route as AuthenticatedAdminUsersIndexImport } from './routes/_authenticated/admin/users/index'
+import { Route as AuthenticatedAdminSubjectsIndexImport } from './routes/_authenticated/admin/subjects/index'
+import { Route as AuthenticatedAdminCoursesIndexImport } from './routes/_authenticated/admin/courses/index'
+import { Route as AuthenticatedAdminSectionsCreateIndexImport } from './routes/_authenticated/admin/sections/create/index'
 
 // Create Virtual Routes
 
@@ -23,11 +31,28 @@ const errors500LazyImport = createFileRoute('/(errors)/500')()
 const errors404LazyImport = createFileRoute('/(errors)/404')()
 const errors403LazyImport = createFileRoute('/(errors)/403')()
 const errors401LazyImport = createFileRoute('/(errors)/401')()
+const AuthenticatedTeacherIndexLazyImport = createFileRoute(
+  '/_authenticated/teacher/',
+)()
+const AuthenticatedStudentIndexLazyImport = createFileRoute(
+  '/_authenticated/student/',
+)()
 const AuthenticatedComingSoonIndexLazyImport = createFileRoute(
   '/_authenticated/coming-soon/',
 )()
+const AuthenticatedAdminIndexLazyImport = createFileRoute(
+  '/_authenticated/admin/',
+)()
+const AuthenticatedAdminSectionsIndexLazyImport = createFileRoute(
+  '/_authenticated/admin/sections/',
+)()
 
 // Create/Update Routes
+
+const AuthenticatedRouteRoute = AuthenticatedRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const IndexRoute = IndexImport.update({
   id: '/',
@@ -81,16 +106,100 @@ const authSignInRoute = authSignInImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const AuthenticatedTeacherRouteRoute = AuthenticatedTeacherRouteImport.update({
+  id: '/teacher',
+  path: '/teacher',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+
+const AuthenticatedStudentRouteRoute = AuthenticatedStudentRouteImport.update({
+  id: '/student',
+  path: '/student',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+
+const AuthenticatedAdminRouteRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+
+const AuthenticatedTeacherIndexLazyRoute =
+  AuthenticatedTeacherIndexLazyImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedTeacherRouteRoute,
+  } as any).lazy(() =>
+    import('./routes/_authenticated/teacher/index.lazy').then((d) => d.Route),
+  )
+
+const AuthenticatedStudentIndexLazyRoute =
+  AuthenticatedStudentIndexLazyImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedStudentRouteRoute,
+  } as any).lazy(() =>
+    import('./routes/_authenticated/student/index.lazy').then((d) => d.Route),
+  )
+
 const AuthenticatedComingSoonIndexLazyRoute =
   AuthenticatedComingSoonIndexLazyImport.update({
-    id: '/_authenticated/coming-soon/',
+    id: '/coming-soon/',
     path: '/coming-soon/',
-    getParentRoute: () => rootRoute,
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any).lazy(() =>
     import('./routes/_authenticated/coming-soon/index.lazy').then(
       (d) => d.Route,
     ),
   )
+
+const AuthenticatedAdminIndexLazyRoute =
+  AuthenticatedAdminIndexLazyImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any).lazy(() =>
+    import('./routes/_authenticated/admin/index.lazy').then((d) => d.Route),
+  )
+
+const AuthenticatedAdminSectionsIndexLazyRoute =
+  AuthenticatedAdminSectionsIndexLazyImport.update({
+    id: '/sections/',
+    path: '/sections/',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any).lazy(() =>
+    import('./routes/_authenticated/admin/sections/index.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+
+const AuthenticatedAdminUsersIndexRoute =
+  AuthenticatedAdminUsersIndexImport.update({
+    id: '/users/',
+    path: '/users/',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+
+const AuthenticatedAdminSubjectsIndexRoute =
+  AuthenticatedAdminSubjectsIndexImport.update({
+    id: '/subjects/',
+    path: '/subjects/',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+
+const AuthenticatedAdminCoursesIndexRoute =
+  AuthenticatedAdminCoursesIndexImport.update({
+    id: '/courses/',
+    path: '/courses/',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+
+const AuthenticatedAdminSectionsCreateIndexRoute =
+  AuthenticatedAdminSectionsCreateIndexImport.update({
+    id: '/sections/create/',
+    path: '/sections/create/',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -102,6 +211,34 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthenticatedRouteImport
+      parentRoute: typeof rootRoute
+    }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteImport
+    }
+    '/_authenticated/student': {
+      id: '/_authenticated/student'
+      path: '/student'
+      fullPath: '/student'
+      preLoaderRoute: typeof AuthenticatedStudentRouteImport
+      parentRoute: typeof AuthenticatedRouteImport
+    }
+    '/_authenticated/teacher': {
+      id: '/_authenticated/teacher'
+      path: '/teacher'
+      fullPath: '/teacher'
+      preLoaderRoute: typeof AuthenticatedTeacherRouteImport
+      parentRoute: typeof AuthenticatedRouteImport
     }
     '/(auth)/sign-in': {
       id: '/(auth)/sign-in'
@@ -145,106 +282,299 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof errors503LazyImport
       parentRoute: typeof rootRoute
     }
+    '/_authenticated/admin/': {
+      id: '/_authenticated/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AuthenticatedAdminIndexLazyImport
+      parentRoute: typeof AuthenticatedAdminRouteImport
+    }
     '/_authenticated/coming-soon/': {
       id: '/_authenticated/coming-soon/'
       path: '/coming-soon'
       fullPath: '/coming-soon'
       preLoaderRoute: typeof AuthenticatedComingSoonIndexLazyImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof AuthenticatedRouteImport
+    }
+    '/_authenticated/student/': {
+      id: '/_authenticated/student/'
+      path: '/'
+      fullPath: '/student/'
+      preLoaderRoute: typeof AuthenticatedStudentIndexLazyImport
+      parentRoute: typeof AuthenticatedStudentRouteImport
+    }
+    '/_authenticated/teacher/': {
+      id: '/_authenticated/teacher/'
+      path: '/'
+      fullPath: '/teacher/'
+      preLoaderRoute: typeof AuthenticatedTeacherIndexLazyImport
+      parentRoute: typeof AuthenticatedTeacherRouteImport
+    }
+    '/_authenticated/admin/courses/': {
+      id: '/_authenticated/admin/courses/'
+      path: '/courses'
+      fullPath: '/admin/courses'
+      preLoaderRoute: typeof AuthenticatedAdminCoursesIndexImport
+      parentRoute: typeof AuthenticatedAdminRouteImport
+    }
+    '/_authenticated/admin/subjects/': {
+      id: '/_authenticated/admin/subjects/'
+      path: '/subjects'
+      fullPath: '/admin/subjects'
+      preLoaderRoute: typeof AuthenticatedAdminSubjectsIndexImport
+      parentRoute: typeof AuthenticatedAdminRouteImport
+    }
+    '/_authenticated/admin/users/': {
+      id: '/_authenticated/admin/users/'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AuthenticatedAdminUsersIndexImport
+      parentRoute: typeof AuthenticatedAdminRouteImport
+    }
+    '/_authenticated/admin/sections/': {
+      id: '/_authenticated/admin/sections/'
+      path: '/sections'
+      fullPath: '/admin/sections'
+      preLoaderRoute: typeof AuthenticatedAdminSectionsIndexLazyImport
+      parentRoute: typeof AuthenticatedAdminRouteImport
+    }
+    '/_authenticated/admin/sections/create/': {
+      id: '/_authenticated/admin/sections/create/'
+      path: '/sections/create'
+      fullPath: '/admin/sections/create'
+      preLoaderRoute: typeof AuthenticatedAdminSectionsCreateIndexImport
+      parentRoute: typeof AuthenticatedAdminRouteImport
     }
   }
 }
 
 // Create and export the route tree
 
+interface AuthenticatedAdminRouteRouteChildren {
+  AuthenticatedAdminIndexLazyRoute: typeof AuthenticatedAdminIndexLazyRoute
+  AuthenticatedAdminCoursesIndexRoute: typeof AuthenticatedAdminCoursesIndexRoute
+  AuthenticatedAdminSubjectsIndexRoute: typeof AuthenticatedAdminSubjectsIndexRoute
+  AuthenticatedAdminUsersIndexRoute: typeof AuthenticatedAdminUsersIndexRoute
+  AuthenticatedAdminSectionsIndexLazyRoute: typeof AuthenticatedAdminSectionsIndexLazyRoute
+  AuthenticatedAdminSectionsCreateIndexRoute: typeof AuthenticatedAdminSectionsCreateIndexRoute
+}
+
+const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren =
+  {
+    AuthenticatedAdminIndexLazyRoute: AuthenticatedAdminIndexLazyRoute,
+    AuthenticatedAdminCoursesIndexRoute: AuthenticatedAdminCoursesIndexRoute,
+    AuthenticatedAdminSubjectsIndexRoute: AuthenticatedAdminSubjectsIndexRoute,
+    AuthenticatedAdminUsersIndexRoute: AuthenticatedAdminUsersIndexRoute,
+    AuthenticatedAdminSectionsIndexLazyRoute:
+      AuthenticatedAdminSectionsIndexLazyRoute,
+    AuthenticatedAdminSectionsCreateIndexRoute:
+      AuthenticatedAdminSectionsCreateIndexRoute,
+  }
+
+const AuthenticatedAdminRouteRouteWithChildren =
+  AuthenticatedAdminRouteRoute._addFileChildren(
+    AuthenticatedAdminRouteRouteChildren,
+  )
+
+interface AuthenticatedStudentRouteRouteChildren {
+  AuthenticatedStudentIndexLazyRoute: typeof AuthenticatedStudentIndexLazyRoute
+}
+
+const AuthenticatedStudentRouteRouteChildren: AuthenticatedStudentRouteRouteChildren =
+  {
+    AuthenticatedStudentIndexLazyRoute: AuthenticatedStudentIndexLazyRoute,
+  }
+
+const AuthenticatedStudentRouteRouteWithChildren =
+  AuthenticatedStudentRouteRoute._addFileChildren(
+    AuthenticatedStudentRouteRouteChildren,
+  )
+
+interface AuthenticatedTeacherRouteRouteChildren {
+  AuthenticatedTeacherIndexLazyRoute: typeof AuthenticatedTeacherIndexLazyRoute
+}
+
+const AuthenticatedTeacherRouteRouteChildren: AuthenticatedTeacherRouteRouteChildren =
+  {
+    AuthenticatedTeacherIndexLazyRoute: AuthenticatedTeacherIndexLazyRoute,
+  }
+
+const AuthenticatedTeacherRouteRouteWithChildren =
+  AuthenticatedTeacherRouteRoute._addFileChildren(
+    AuthenticatedTeacherRouteRouteChildren,
+  )
+
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRouteRoute: typeof AuthenticatedAdminRouteRouteWithChildren
+  AuthenticatedStudentRouteRoute: typeof AuthenticatedStudentRouteRouteWithChildren
+  AuthenticatedTeacherRouteRoute: typeof AuthenticatedTeacherRouteRouteWithChildren
+  AuthenticatedComingSoonIndexLazyRoute: typeof AuthenticatedComingSoonIndexLazyRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRouteRoute: AuthenticatedAdminRouteRouteWithChildren,
+  AuthenticatedStudentRouteRoute: AuthenticatedStudentRouteRouteWithChildren,
+  AuthenticatedTeacherRouteRoute: AuthenticatedTeacherRouteRouteWithChildren,
+  AuthenticatedComingSoonIndexLazyRoute: AuthenticatedComingSoonIndexLazyRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '': typeof AuthenticatedRouteRouteWithChildren
+  '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
+  '/student': typeof AuthenticatedStudentRouteRouteWithChildren
+  '/teacher': typeof AuthenticatedTeacherRouteRouteWithChildren
   '/sign-in': typeof authSignInRoute
   '/401': typeof errors401LazyRoute
   '/403': typeof errors403LazyRoute
   '/404': typeof errors404LazyRoute
   '/500': typeof errors500LazyRoute
   '/503': typeof errors503LazyRoute
+  '/admin/': typeof AuthenticatedAdminIndexLazyRoute
   '/coming-soon': typeof AuthenticatedComingSoonIndexLazyRoute
+  '/student/': typeof AuthenticatedStudentIndexLazyRoute
+  '/teacher/': typeof AuthenticatedTeacherIndexLazyRoute
+  '/admin/courses': typeof AuthenticatedAdminCoursesIndexRoute
+  '/admin/subjects': typeof AuthenticatedAdminSubjectsIndexRoute
+  '/admin/users': typeof AuthenticatedAdminUsersIndexRoute
+  '/admin/sections': typeof AuthenticatedAdminSectionsIndexLazyRoute
+  '/admin/sections/create': typeof AuthenticatedAdminSectionsCreateIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '': typeof AuthenticatedRouteRouteWithChildren
   '/sign-in': typeof authSignInRoute
   '/401': typeof errors401LazyRoute
   '/403': typeof errors403LazyRoute
   '/404': typeof errors404LazyRoute
   '/500': typeof errors500LazyRoute
   '/503': typeof errors503LazyRoute
+  '/admin': typeof AuthenticatedAdminIndexLazyRoute
   '/coming-soon': typeof AuthenticatedComingSoonIndexLazyRoute
+  '/student': typeof AuthenticatedStudentIndexLazyRoute
+  '/teacher': typeof AuthenticatedTeacherIndexLazyRoute
+  '/admin/courses': typeof AuthenticatedAdminCoursesIndexRoute
+  '/admin/subjects': typeof AuthenticatedAdminSubjectsIndexRoute
+  '/admin/users': typeof AuthenticatedAdminUsersIndexRoute
+  '/admin/sections': typeof AuthenticatedAdminSectionsIndexLazyRoute
+  '/admin/sections/create': typeof AuthenticatedAdminSectionsCreateIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
+  '/_authenticated/student': typeof AuthenticatedStudentRouteRouteWithChildren
+  '/_authenticated/teacher': typeof AuthenticatedTeacherRouteRouteWithChildren
   '/(auth)/sign-in': typeof authSignInRoute
   '/(errors)/401': typeof errors401LazyRoute
   '/(errors)/403': typeof errors403LazyRoute
   '/(errors)/404': typeof errors404LazyRoute
   '/(errors)/500': typeof errors500LazyRoute
   '/(errors)/503': typeof errors503LazyRoute
+  '/_authenticated/admin/': typeof AuthenticatedAdminIndexLazyRoute
   '/_authenticated/coming-soon/': typeof AuthenticatedComingSoonIndexLazyRoute
+  '/_authenticated/student/': typeof AuthenticatedStudentIndexLazyRoute
+  '/_authenticated/teacher/': typeof AuthenticatedTeacherIndexLazyRoute
+  '/_authenticated/admin/courses/': typeof AuthenticatedAdminCoursesIndexRoute
+  '/_authenticated/admin/subjects/': typeof AuthenticatedAdminSubjectsIndexRoute
+  '/_authenticated/admin/users/': typeof AuthenticatedAdminUsersIndexRoute
+  '/_authenticated/admin/sections/': typeof AuthenticatedAdminSectionsIndexLazyRoute
+  '/_authenticated/admin/sections/create/': typeof AuthenticatedAdminSectionsCreateIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | ''
+    | '/admin'
+    | '/student'
+    | '/teacher'
     | '/sign-in'
     | '/401'
     | '/403'
     | '/404'
     | '/500'
     | '/503'
+    | '/admin/'
     | '/coming-soon'
+    | '/student/'
+    | '/teacher/'
+    | '/admin/courses'
+    | '/admin/subjects'
+    | '/admin/users'
+    | '/admin/sections'
+    | '/admin/sections/create'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | ''
     | '/sign-in'
     | '/401'
     | '/403'
     | '/404'
     | '/500'
     | '/503'
+    | '/admin'
     | '/coming-soon'
+    | '/student'
+    | '/teacher'
+    | '/admin/courses'
+    | '/admin/subjects'
+    | '/admin/users'
+    | '/admin/sections'
+    | '/admin/sections/create'
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
+    | '/_authenticated/admin'
+    | '/_authenticated/student'
+    | '/_authenticated/teacher'
     | '/(auth)/sign-in'
     | '/(errors)/401'
     | '/(errors)/403'
     | '/(errors)/404'
     | '/(errors)/500'
     | '/(errors)/503'
+    | '/_authenticated/admin/'
     | '/_authenticated/coming-soon/'
+    | '/_authenticated/student/'
+    | '/_authenticated/teacher/'
+    | '/_authenticated/admin/courses/'
+    | '/_authenticated/admin/subjects/'
+    | '/_authenticated/admin/users/'
+    | '/_authenticated/admin/sections/'
+    | '/_authenticated/admin/sections/create/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   authSignInRoute: typeof authSignInRoute
   errors401LazyRoute: typeof errors401LazyRoute
   errors403LazyRoute: typeof errors403LazyRoute
   errors404LazyRoute: typeof errors404LazyRoute
   errors500LazyRoute: typeof errors500LazyRoute
   errors503LazyRoute: typeof errors503LazyRoute
-  AuthenticatedComingSoonIndexLazyRoute: typeof AuthenticatedComingSoonIndexLazyRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   authSignInRoute: authSignInRoute,
   errors401LazyRoute: errors401LazyRoute,
   errors403LazyRoute: errors403LazyRoute,
   errors404LazyRoute: errors404LazyRoute,
   errors500LazyRoute: errors500LazyRoute,
   errors503LazyRoute: errors503LazyRoute,
-  AuthenticatedComingSoonIndexLazyRoute: AuthenticatedComingSoonIndexLazyRoute,
 }
 
 export const routeTree = rootRoute
@@ -258,17 +588,52 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/_authenticated",
         "/(auth)/sign-in",
         "/(errors)/401",
         "/(errors)/403",
         "/(errors)/404",
         "/(errors)/500",
-        "/(errors)/503",
-        "/_authenticated/coming-soon/"
+        "/(errors)/503"
       ]
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/_authenticated": {
+      "filePath": "_authenticated/route.tsx",
+      "children": [
+        "/_authenticated/admin",
+        "/_authenticated/student",
+        "/_authenticated/teacher",
+        "/_authenticated/coming-soon/"
+      ]
+    },
+    "/_authenticated/admin": {
+      "filePath": "_authenticated/admin/route.tsx",
+      "parent": "/_authenticated",
+      "children": [
+        "/_authenticated/admin/",
+        "/_authenticated/admin/courses/",
+        "/_authenticated/admin/subjects/",
+        "/_authenticated/admin/users/",
+        "/_authenticated/admin/sections/",
+        "/_authenticated/admin/sections/create/"
+      ]
+    },
+    "/_authenticated/student": {
+      "filePath": "_authenticated/student/route.tsx",
+      "parent": "/_authenticated",
+      "children": [
+        "/_authenticated/student/"
+      ]
+    },
+    "/_authenticated/teacher": {
+      "filePath": "_authenticated/teacher/route.tsx",
+      "parent": "/_authenticated",
+      "children": [
+        "/_authenticated/teacher/"
+      ]
     },
     "/(auth)/sign-in": {
       "filePath": "(auth)/sign-in.tsx"
@@ -288,8 +653,41 @@ export const routeTree = rootRoute
     "/(errors)/503": {
       "filePath": "(errors)/503.lazy.tsx"
     },
+    "/_authenticated/admin/": {
+      "filePath": "_authenticated/admin/index.lazy.tsx",
+      "parent": "/_authenticated/admin"
+    },
     "/_authenticated/coming-soon/": {
-      "filePath": "_authenticated/coming-soon/index.lazy.tsx"
+      "filePath": "_authenticated/coming-soon/index.lazy.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/student/": {
+      "filePath": "_authenticated/student/index.lazy.tsx",
+      "parent": "/_authenticated/student"
+    },
+    "/_authenticated/teacher/": {
+      "filePath": "_authenticated/teacher/index.lazy.tsx",
+      "parent": "/_authenticated/teacher"
+    },
+    "/_authenticated/admin/courses/": {
+      "filePath": "_authenticated/admin/courses/index.tsx",
+      "parent": "/_authenticated/admin"
+    },
+    "/_authenticated/admin/subjects/": {
+      "filePath": "_authenticated/admin/subjects/index.tsx",
+      "parent": "/_authenticated/admin"
+    },
+    "/_authenticated/admin/users/": {
+      "filePath": "_authenticated/admin/users/index.tsx",
+      "parent": "/_authenticated/admin"
+    },
+    "/_authenticated/admin/sections/": {
+      "filePath": "_authenticated/admin/sections/index.lazy.tsx",
+      "parent": "/_authenticated/admin"
+    },
+    "/_authenticated/admin/sections/create/": {
+      "filePath": "_authenticated/admin/sections/create/index.tsx",
+      "parent": "/_authenticated/admin"
     }
   }
 }
