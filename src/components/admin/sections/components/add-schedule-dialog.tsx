@@ -16,8 +16,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import {
+  baseClassScheduleSchema,
   ClassSchedule,
-  classScheduleSchema,
 } from "@/interfaces/types/classSchedule";
 import { Input } from "@/components/ui/input";
 import {
@@ -107,7 +107,7 @@ export const AddScheduleDialog = () => {
             onSubmit={scheduleForm.handleSubmit(handleAdd)}
             className="space-y-4"
           >
-            <FormComboField<(typeof classScheduleSchema)["_def"]["schema"]>
+            <FormComboField<typeof baseClassScheduleSchema>
               form={scheduleForm}
               name="subjectTeacherId"
               label="Subject"

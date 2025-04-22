@@ -3,21 +3,22 @@ import { z } from "zod";
 
 export type ClassSchedule = z.infer<typeof classScheduleSchema>;
 
-export const classScheduleSchema = z
-  .object({
-    index: z.any().optional(), // for local handling
-    id: z.any().optional().nullable(),
-    subjectTeacherId: z.number().min(1, "Subject is required"),
-    subjectName: z.string().optional(),
-    subjectCode: z.string().optional(),
-    teacherName: z.string().optional(),
-    teacherId: z.string().optional(),
-    day: DayOfWeekSchema.describe("Day"),
-    startTime: z.string().min(1, "Start time is required"), // Format: "HH:mm"
-    endTime: z.string().min(1, "End time is required"), // Format: "HH:mm"
-    gracePeriod: z.any().default("5"),
-    isBreak: z.boolean().optional(),
-  })
+export const baseClassScheduleSchema = z.object({
+  index: z.any().optional(), // for local handling
+  id: z.any().optional().nullable(),
+  subjectTeacherId: z.number().min(1, "Subject is required"),
+  subjectName: z.string().optional(),
+  subjectCode: z.string().optional(),
+  teacherName: z.string().optional(),
+  teacherId: z.string().optional(),
+  day: DayOfWeekSchema.describe("Day"),
+  startTime: z.string().min(1, "Start time is required"), // Format: "HH:mm"
+  endTime: z.string().min(1, "End time is required"), // Format: "HH:mm"
+  gracePeriod: z.any().default("5"),
+  isBreak: z.boolean().optional(),
+});
+
+export const classScheduleSchema = baseClassScheduleSchema
   .refine(
     (data) => {
       const [startHour, startMin] = data.startTime.split(":").map(Number);
