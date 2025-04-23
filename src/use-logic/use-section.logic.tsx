@@ -37,7 +37,7 @@ export const useSectionLogic = () => {
   const [deleteDialogState, setDeleteDialogState] = useState<boolean>(false);
 
   const {
-    data: respose,
+    data: response,
     isPending: isQueryPending,
     refetch,
   } = useQuery(SectionQueryOption(query));
@@ -50,7 +50,7 @@ export const useSectionLogic = () => {
   return {
     query,
     setQuery,
-    respose,
+    response,
     isQueryPending,
     refetch,
     deleteDialogState,

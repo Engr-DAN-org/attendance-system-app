@@ -6,8 +6,8 @@ import { useSectionContext } from "./context/section-context";
 import { LoadingComponent } from "@/components/general-loader";
 
 export const SectionsListPage = () => {
-  const { respose, isQueryPending } = useSectionContext();
-  console.log("respose", respose);
+  const { response, isQueryPending } = useSectionContext();
+  console.log("response", response);
 
   return (
     <>
@@ -24,10 +24,13 @@ export const SectionsListPage = () => {
           <SectionPrimaryButtons />
         </div>
         <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0">
-          {respose && !isQueryPending ? (
-            <SectionsTable columns={sectionsColumn} data={respose.data} />
-          ) : (
+          {isQueryPending ? (
             <LoadingComponent />
+          ) : (
+            response &&
+            response.data && (
+              <SectionsTable columns={sectionsColumn} data={response.data} />
+            )
           )}
         </div>
       </Main>
