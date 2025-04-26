@@ -1,4 +1,3 @@
-import { UsersDialogType } from "../../../../use-logic/use-user.logic";
 import { useUserQueryContext } from "../context/users-context";
 import { InviteStudentDialog } from "./invite-student-dialog";
 import { InviteTeacherDialog } from "./invite-teacher-dialog";
@@ -12,39 +11,49 @@ export function UsersDialogs() {
       <InviteTeacherDialog
         key="teacher-invite"
         open={dialogOpen === "add-teacher"}
-        onOpenChange={() => setDialogOpen("add-teacher")}
+        onOpenChange={() => {
+          setDialogOpen(null);
+        }}
       />
 
       <InviteStudentDialog
         key="student-invite"
         open={dialogOpen === "add-student"}
-        onOpenChange={() => setDialogOpen("add-student")}
+        onOpenChange={() => setDialogOpen(null)}
       />
 
       {selectedUser && (
         <>
           <InviteTeacherDialog
-            key={`user-edit-${selectedUser.id}`}
+            key={`teacher-edit-${selectedUser.id}`}
             open={dialogOpen === `edit-${selectedUser.role.toLowerCase()}`}
             onOpenChange={() => {
-              setDialogOpen(
-                `edit-${selectedUser.role.toLowerCase()}` as UsersDialogType
-              );
+              setDialogOpen(null);
               setTimeout(() => {
                 setSelectedUser(null);
-              }, 500);
+              }, 10);
             }}
             currentRow={selectedUser}
+          />
+
+          <InviteStudentDialog
+            key={`student-edit-${selectedUser.id}`}
+            open={dialogOpen === "edit-student"}
+            selectedUser={selectedUser}
+            onOpenChange={() => {
+              setDialogOpen(null);
+              setTimeout(() => {
+                setSelectedUser(null);
+              }, 10);
+            }}
           />
 
           <UsersDeleteDialog
             key={`user-delete-${selectedUser.id}`}
             open={dialogOpen === "delete"}
             onOpenChange={() => {
-              setDialogOpen("delete");
-              setTimeout(() => {
-                setSelectedUser(null);
-              }, 500);
+              setDialogOpen(null);
+              setSelectedUser(null);
             }}
             currentRow={selectedUser}
           />

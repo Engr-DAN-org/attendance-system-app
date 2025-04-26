@@ -1,6 +1,6 @@
 "use client";
 
-import { z, ZodObject, ZodRawShape } from "zod";
+import { z, ZodTypeAny } from "zod";
 import {
   FormControl,
   FormField,
@@ -23,11 +23,11 @@ import { Button } from "../ui/button";
 import { cn } from "@/lib/utils"; // Utility for conditional classNames
 import { ChevronsUpDown, Check } from "lucide-react";
 
-interface FormComboFieldProps<TSchema extends ZodObject<ZodRawShape>>
+interface FormComboFieldProps<TSchema extends ZodTypeAny>
   extends Omit<InputHTMLAttributes<HTMLInputElement>, "form"> {
   form: UseFormReturn<z.infer<TSchema>>;
   name: Path<z.infer<TSchema>>;
-  label?: string;
+  label: string;
   options: OptionType[];
   placeholder?: string;
   emptyMessage?: string;
@@ -42,7 +42,7 @@ export interface OptionType {
 
 export type OptionTypes = OptionType[];
 
-export const FormComboField = <TSchema extends ZodObject<ZodRawShape>>({
+export const FormComboField = <TSchema extends ZodTypeAny>({
   form,
   name,
   label,
@@ -72,7 +72,7 @@ export const FormComboField = <TSchema extends ZodObject<ZodRawShape>>({
       control={form.control}
       name={name}
       render={({ field }) => {
-        const selected = options.find((opt) => opt.value === field.value);
+        const selected = options.find((opt) => opt.value == field.value);
         return (
           <FormItem {...props}>
             {label && <FormLabel>{label}</FormLabel>}

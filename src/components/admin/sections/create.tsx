@@ -16,26 +16,29 @@ import { AddScheduleDialog } from "./components/add-schedule-dialog";
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "@radix-ui/react-icons";
 import { ClassScheduleInfoButton } from "./components/info-button";
+import { ScheduleClickType } from "./components/schedule-event";
+import { useSelectDataContext } from "@/context/select-data-context";
 
 export default function SectionForm() {
+  const {
+    courseSelectData,
+    updateSelectCourseQuery: updateCourseQuery,
+    isCourseQueryPending,
+  } = useSelectDataContext();
   const {
     sectionForm: form,
     onFormSubmit,
     setOpenScheduleDialog,
     fields,
-    courseSelectData,
     usersQueryData,
     updateTeachersQuery,
-    updateCourseQuery,
     isUsersQueryPending,
-    isCourseQueryPending,
+    editSchedule,
   } = useSectionCreationContext();
 
-  const courseSelects: OptionTypes =
-    courseSelectData?.data.map((course) => ({
-      value: course.id.toString(),
-      label: course.code,
-    })) || [];
+  const onScheduleClick: ScheduleClickType = ({ index }) => {
+    if (index !== undefined && !isNaN(index)) editSchedule(index);
+  };
 
   const teacherSelects: OptionTypes =
     usersQueryData?.data.map((teacher) => ({
@@ -65,7 +68,7 @@ export default function SectionForm() {
               form={form}
               name="courseId"
               label="Course"
-              options={courseSelects}
+              options={courseSelectData}
               isLoading={isCourseQueryPending}
             />
 
@@ -140,7 +143,7 @@ export default function SectionForm() {
               </Button>
             </div>
 
-            <WeeklyCalendar data={fields} />
+            <WeeklyCalendar data={fields} onScheduleClick={onScheduleClick} />
           </div>
 
           {/* Optional Submit */}

@@ -38,7 +38,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
               const user = row.original;
               setSelectedUser(user);
               setDialogOpen(
-                `edit-${user.userRole.toLowerCase()}` as UsersDialogType
+                `edit-${user.role.toLowerCase()}` as UsersDialogType
               );
             }}
           >

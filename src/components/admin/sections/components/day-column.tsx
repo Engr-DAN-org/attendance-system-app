@@ -1,14 +1,19 @@
 import { slotHeight, timeSlots } from "@/constants/section.constants";
-import { ScheduleEvent } from "./schedule-event";
+import { ScheduleClickType, ScheduleEvent } from "./schedule-event";
 import { ClassSchedule } from "@/interfaces/types/classSchedule";
 import { DayOfWeekEntry } from "@/enums/dayOfWeek";
 
 interface DayColumnProps {
   day: DayOfWeekEntry;
   data: ClassSchedule[];
+  onScheduleClick?: ScheduleClickType;
 }
 
-export default function DayColumn({ day, data }: DayColumnProps) {
+export default function DayColumn({
+  day,
+  data,
+  onScheduleClick,
+}: DayColumnProps) {
   const luncBreak: ClassSchedule = {
     subjectTeacherId: 0,
     day: day.id,
@@ -34,9 +39,16 @@ export default function DayColumn({ day, data }: DayColumnProps) {
         ))}
         <ScheduleEvent event={luncBreak} />
         {data
-          .filter((s) => s.day == day.id)
+          .filter((s) => s.day == day.id.toString() || s.dayName == day.name)
           .map((value, key) => {
-            return <ScheduleEvent key={key} index={key} event={value} />;
+            return (
+              <ScheduleEvent
+                key={key}
+                index={key}
+                event={value}
+                onScheduleClick={onScheduleClick}
+              />
+            );
           })}
       </div>
     </div>

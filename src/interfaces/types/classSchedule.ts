@@ -12,6 +12,7 @@ export const baseClassScheduleSchema = z.object({
   teacherName: z.string().optional(),
   teacherId: z.string().optional(),
   day: DayOfWeekSchema.describe("Day"),
+  dayName: z.string().optional(),
   startTime: z.string().min(1, "Start time is required"), // Format: "HH:mm"
   endTime: z.string().min(1, "End time is required"), // Format: "HH:mm"
   gracePeriod: z.any().default("5"),

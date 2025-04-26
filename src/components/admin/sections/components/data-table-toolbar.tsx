@@ -1,23 +1,25 @@
-import { Table } from "@tanstack/react-table";
 import { Input } from "@/components/ui/input";
 // import { DataTableFacetedFilter } from "./data-table-faceted-filter";
 
-interface DataTableToolbarProps<TData> {
-  table: Table<TData>;
+interface DataTableToolbarProps {
+  placeholder?: string;
+  columnId?: string;
+  searchValue?: string | number;
+  onSearchChange?: (value: string) => void;
 }
 
-export function DataTableToolbar<TData>({
-  table,
-}: DataTableToolbarProps<TData>) {
+export function DataTableToolbar({
+  placeholder = "Filter...",
+  searchValue,
+  onSearchChange = () => {},
+}: DataTableToolbarProps) {
   return (
     <div className="flex items-center justify-between">
       <div className="flex flex-1 flex-col-reverse items-start gap-y-2 sm:flex-row sm:items-center sm:space-x-2">
         <Input
-          placeholder="Filter users..."
-          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("name")?.setFilterValue(event.target.value)
-          }
+          placeholder={placeholder}
+          value={searchValue}
+          onChange={(event) => onSearchChange(event.target.value)}
           className="h-8 w-[150px] lg:w-[250px]"
         />
         <div className="flex gap-x-2">

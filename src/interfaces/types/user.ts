@@ -1,86 +1,74 @@
 import { z } from "zod";
 // import { GetProfileDTO } from "./profile";
-import { UserStatus } from "@/enums/userStatus";
-import { userRoleSchema, UserRoleType } from "@/enums/userRole";
+import { userStatusSchema } from "@/enums/userStatus";
+import { userRoleSchema } from "@/enums/userRole";
 import { guardianSchema } from "./guardian";
+import { sectionSchema } from "./section";
 
-// interface User extends GetProfileDTO {
-//   id: string;
-//   status: UserStatus;
-// }
+const baseUserSchema = z.object({
+  id: z.string().optional(),
+  idNumber: z
+    .string()
+    .min(1, "ID Number is required.")
+    .min(6, "ID Number must be at least 6 Digits.")
+    .max(8, "ID Number must not exceed the 8-digit limit.")
+    .describe("ID Number")
+    .refine((val) => /^[0-9]{6,8}$/.test(val), {
+      message: "ID Number must not contain non-numeric characters.",
+    }),
+  firstName: z
+    .string()
+    .min(1, "First name is required.")
+    .describe("First Name"),
+  lastName: z.string().min(1, "Last name is required.").describe("Last Name"),
+  email: z.string().email().describe("Email"),
+  phoneNumber: z
+    .string()
+    .optional()
+    .refine(
+      (val) => {
+        if (!val) return true;
+        return /^[0-9]{10,11}$/.test(val);
+      },
+      { message: "Phone number must be 10 to 11 digits." }
+    )
+    .describe("Phone Number"),
+  userRole: userRoleSchema,
+  guardian: guardianSchema.optional().describe("Guardian"),
+  sectionId: z.number().optional(),
+});
 
-type User = ReturnType<typeof userSchema.parse> & {
-  status: UserStatus;
-  fullName: string;
-  role: UserRoleType;
-  guardianId?: number | null;
-};
-
-type UserForm = z.infer<typeof userSchema>;
-
-const userSchema = z
-  .object({
-    id: z.string().optional(),
-    idNumber: z
-      .string()
-      .min(6, "ID Number is required.")
-      .max(8, "ID Number must not exceed the 8-digit limit.")
-      .describe("ID Number")
-      .refine((val) => {
-        // Check if the value is a number and has 6 to 8 digits
-        const regex = /^[0-9]{6,8}$/;
-        return regex.test(val);
-      }, "ID Number must not contain non-numeric characters."),
-    firstName: z
-      .string()
-      .min(1, "First name is required.")
-      .describe("First Name"),
-    lastName: z.string().min(1, "Last name is required.").describe("Last Name"),
-    email: z.string().email().describe("Email"),
-    phoneNumber: z
-      .string()
-      .optional()
-      .refine(
-        (val) => {
-          if (!val) return true; // Allow empty since it's optional
-          return /^[0-9]{10,11}$/.test(val);
-        },
-        {
-          message: "Phone number must be 10 to 11 digits.",
-        }
-      )
-      .describe("Phone Number"),
-    userRole: userRoleSchema,
-    guardian: guardianSchema.optional().describe("Guardian"),
-  })
-  .superRefine((data, ctx) => {
-    if (data.userRole === "Student") {
-      if (!data.guardian) {
-        ctx.addIssue({
-          path: ["guardian"],
-          code: z.ZodIssueCode.custom,
-          message: "Guardian is required for students.",
-        });
-      }
-
-      // if (!data.section || data.section.trim() === "") {
-      //   ctx.addIssue({
-      //     path: ["section"],
-      //     code: z.ZodIssueCode.custom,
-      //     message: "Section is required for students.",
-      //   });
-      // }
+// Step 1: Base schema for form handling/step 1 validation
+const userFormSchema = baseUserSchema.superRefine((data, ctx) => {
+  if (data.userRole === "Student") {
+    if (!data.guardian) {
+      ctx.addIssue({
+        path: ["guardian"],
+        code: z.ZodIssueCode.custom,
+        message: "Guardian is required for registration.",
+      });
     }
-  });
+    if (!data.sectionId) {
+      ctx.addIssue({
+        path: ["sectionId"],
+        code: z.ZodIssueCode.custom,
+        message: "Please Assign to a Section.",
+      });
+    }
+  }
+});
 
-// const studentSchema = userSchema({
-//   // Add student-specific fields here
-// });
+const userSchema: z.ZodSchema = baseUserSchema.extend({
+  fullName: z.string().optional(),
+  status: userStatusSchema,
+  role: userRoleSchema,
+  section: sectionSchema.optional().describe("Section"),
+  guardianId: z.number().optional(),
+});
 
-// const teacherSchema = userSchema.extend({
-//   // Add teacher-specific fields here
-// });
+type UserForm = z.infer<typeof userFormSchema>;
+type User = z.infer<typeof userSchema>;
 
 export type { User, UserForm };
-export { userSchema };
+export { userSchema, userFormSchema };
 export const userListSchema = z.array(userSchema);

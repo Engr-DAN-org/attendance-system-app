@@ -1,21 +1,13 @@
-// import { initialSectionQuery } from "@/initialStates/queryStates";
-// import { SectionQuery } from "@/interfaces/queryParams/sectionQuery";
-// import { useQueryClient } from "@tanstack/react-query";
-// import { useState } from "react";
-
-import { CourseQueryOption } from "@/config/useOptions/courseOption";
 import { SectionQueryOption } from "@/config/useOptions/sectionQueryOptions";
 import { subjectTeachersQueryOption } from "@/config/useOptions/subjectQueryOptions";
 import { userQueryOption } from "@/config/useOptions/userQueryOptions";
 import { courseYearOptions } from "@/constants/courseYear";
 import { UserRole } from "@/enums/userRole";
 import {
-  initialCourseQuery,
   initialSectionQuery,
   initialSubjectTeacherQuery,
   initialUsersQuery,
 } from "@/initialStates/queryStates";
-import { CourseQuery } from "@/interfaces/queryParams/courseQuery";
 import { SectionQuery } from "@/interfaces/queryParams/sectionQuery";
 import { SubjectTeacherQuery } from "@/interfaces/queryParams/subjectQuery";
 import { UserQuery } from "@/interfaces/queryParams/userQuery";
@@ -47,6 +39,10 @@ export const useSectionLogic = () => {
     setDeleteDialogState(true);
   };
 
+  const handlePageClick = (page: number) => {
+    setQuery({ ...query, page });
+  };
+
   return {
     query,
     setQuery,
@@ -56,14 +52,14 @@ export const useSectionLogic = () => {
     deleteDialogState,
     section,
     setTargetDeletion,
+    handlePageClick,
   };
 };
 
 export const useSectionCreationLogic = () => {
   const [section, setSection] = useState<Section | undefined>(undefined);
   const [openScheduleDialog, setOpenScheduleDialog] = useState<boolean>(false);
-  const [courseQuery, setCourseQuery] =
-    useState<CourseQuery>(initialCourseQuery);
+
   const [teachersQuery, setTeachersQuery] = useState<UserQuery>({
     ...initialUsersQuery,
     role: [UserRole.Teacher],
@@ -121,11 +117,6 @@ export const useSectionCreationLogic = () => {
     name: "classSchedules",
   });
 
-  // Course Query
-  const { data: courseSelectData, isPending: isCourseQueryPending } = useQuery(
-    CourseQueryOption(courseQuery)
-  );
-
   const { data: usersQueryData, isPending: isUsersQueryPending } = useQuery(
     userQueryOption(teachersQuery)
   );
@@ -137,11 +128,6 @@ export const useSectionCreationLogic = () => {
     console.log("Form submitted:", data);
     await submitForm(data);
     sectionForm.reset();
-  };
-
-  const updateCourseQuery = (code: string) => {
-    setCourseQuery({ ...courseQuery, code });
-    console.log("Course Query:", courseQuery);
   };
 
   const updateTeachersQuery = (name: string) => {
@@ -172,10 +158,7 @@ export const useSectionCreationLogic = () => {
     updateSubjectQuery,
     updateTeachersQuery,
     usersQueryData,
-    courseQuery,
-    updateCourseQuery,
-    courseSelectData,
-    isCourseQueryPending,
+
     isUsersQueryPending,
     openScheduleDialog,
     setOpenScheduleDialog,

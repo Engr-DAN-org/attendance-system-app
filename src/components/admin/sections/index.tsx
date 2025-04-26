@@ -27,10 +27,7 @@ export const SectionsListPage = () => {
           {isQueryPending ? (
             <LoadingComponent />
           ) : (
-            response &&
-            response.data && (
-              <SectionsTable columns={sectionsColumn} data={response.data} />
-            )
+            response && <SectionsTable columns={sectionsColumn} />
           )}
         </div>
       </Main>

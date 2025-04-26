@@ -4,16 +4,27 @@ import { getSlotIndex } from "@/utils/section.util";
 import { slotHeight } from "@/constants/section.constants";
 import { ClassSchedule } from "@/interfaces/types/classSchedule";
 import { formatTime } from "@/utils/time-format.util";
-import { useSectionCreationContext } from "../context/create-section-context";
+
+export type ScheduleClickType = ({
+  index,
+  event,
+}: {
+  index?: number;
+  event: ClassSchedule;
+}) => void;
 
 interface ScheduleEventProps {
   event: ClassSchedule;
   index?: number;
+  onScheduleClick?: ScheduleClickType;
 }
 
-export function ScheduleEvent({ event, index }: ScheduleEventProps) {
+export function ScheduleEvent({
+  event,
+  index,
+  onScheduleClick,
+}: ScheduleEventProps) {
   const { isBreak, startTime, endTime, subjectCode } = event;
-  const { editSchedule } = useSectionCreationContext();
 
   const startPosition = getSlotIndex(startTime);
   const endPosition = getSlotIndex(endTime);
@@ -23,7 +34,11 @@ export function ScheduleEvent({ event, index }: ScheduleEventProps) {
   return (
     <Card
       onClick={() => {
-        if (index !== undefined && !isNaN(index)) editSchedule(index);
+        console.log("Clicked", event, index);
+
+        if (onScheduleClick) {
+          onScheduleClick({ event, index });
+        }
       }}
       className={cn(
         "absolute mx-auto z-10 text-center overflow-hidden justify-center flex items-center cursor-pointer",

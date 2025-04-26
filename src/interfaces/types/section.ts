@@ -14,9 +14,12 @@ export const sectionSchema = z.object({
   course: courseSchema.optional(), // optional nested Course object
 
   teacherId: z.string().optional().nullable(),
-  teacher: userSchema.optional().nullable(),
+  teacher: z
+    .lazy(() => userSchema)
+    .optional()
+    .nullable(),
 
-  students: z.array(userSchema).optional(),
+  students: z.array(z.lazy(() => userSchema)).optional(),
 
   classSchedules: classSchedulesSchema,
 });

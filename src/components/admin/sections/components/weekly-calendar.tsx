@@ -3,6 +3,7 @@ import { DayOfWeekMap } from "@/enums/dayOfWeek";
 import TimeColumn from "./time-column";
 import DayColumn from "./day-column";
 import { ClassSchedule } from "@/interfaces/types/classSchedule";
+import { ScheduleClickType } from "./schedule-event";
 
 // export interface Event {
 //   day: string;
@@ -40,9 +41,15 @@ export interface TimeSlot {
 
 interface WeeklyCalendarProps {
   data: ClassSchedule[];
+  onScheduleClick?: ScheduleClickType;
 }
 
-export default function WeeklyCalendar({ data }: WeeklyCalendarProps) {
+export default function WeeklyCalendar({
+  data,
+  onScheduleClick,
+}: WeeklyCalendarProps) {
+  console.log("WeeklyCalendar data", data);
+
   return (
     <div className="flex flex-row border-collapse relative rounded-md border overflow-hidden">
       <div className="w-20 sticky left-0 z-10 bg-background border-r">
@@ -51,8 +58,15 @@ export default function WeeklyCalendar({ data }: WeeklyCalendarProps) {
       <ScrollArea className="flex-1 overflow-x-auto">
         <div className="grid grid-cols-7 whitespace-nowrap min-w-[1000px]">
           {Object.values(DayOfWeekMap).map((day) => {
-            const filteredData = data?.filter((item) => item.day === day.id);
-            return <DayColumn key={day.id} day={day} data={filteredData} />;
+            const filteredData = data?.filter((item) => item.day == day.id);
+            return (
+              <DayColumn
+                key={day.id}
+                day={day}
+                data={filteredData}
+                onScheduleClick={onScheduleClick}
+              />
+            );
           })}
         </div>
         <ScrollBar orientation="horizontal" />

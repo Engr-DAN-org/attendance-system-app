@@ -20,24 +20,39 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { UserRole } from "@/enums/userRole";
-import { UserForm, userSchema } from "@/interfaces/types/user";
+import { User, UserForm, userFormSchema } from "@/interfaces/types/user";
 import { SelectDropdown } from "@/components/select-dropdown";
 import { StudentGuardianRelationshipOptions } from "@/enums/studentGuardianRelationship";
 import { useState } from "react";
 import { useUserQueryContext } from "../context/users-context";
+import { FormComboField } from "@/components/form-components/form-command";
+import { useSelectDataContext } from "@/context/select-data-context";
+import { Save } from "lucide-react";
 
 interface Props {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  selectedUser?: User;
 }
 
-export function InviteStudentDialog({ open, onOpenChange }: Props) {
+export function InviteStudentDialog({
+  open,
+  onOpenChange,
+  selectedUser,
+}: Props) {
+  console.log(selectedUser);
+
+  const isEdit = !!selectedUser;
   const [step, setStep] = useState<1 | 2>(1);
   const { submitForm } = useUserQueryContext();
+  const { sectionSelectData, updateSelectSectionQuery, isSectionQueryPending } =
+    useSelectDataContext();
 
   const form = useForm<UserForm>({
-    resolver: zodResolver(userSchema),
-    defaultValues: { userRole: UserRole.Student },
+    resolver: zodResolver(userFormSchema),
+    defaultValues: selectedUser
+      ? { ...selectedUser, userRole: selectedUser.role }
+      : { userRole: UserRole.Student },
   });
 
   const onSubmit = async (values: UserForm) => {
@@ -53,10 +68,21 @@ export function InviteStudentDialog({ open, onOpenChange }: Props) {
    */
   const nextStep = () => {
     form
-      .trigger(["idNumber", "firstName", "lastName", "email", "phoneNumber"])
+      .trigger([
+        "idNumber",
+        "firstName",
+        "lastName",
+        "email",
+        "phoneNumber",
+        "sectionId",
+      ])
       .then((isValid) => {
+        console.log("Is Valid:", isValid);
+
         if (isValid) setStep(2);
       });
+
+    console.log(form.formState.errors);
   };
 
   /**
@@ -86,7 +112,7 @@ export function InviteStudentDialog({ open, onOpenChange }: Props) {
         <Form {...form}>
           <form
             id="user-invite-form"
-            onSubmit={form.handleSubmit(onSubmit)}
+            onSubmit={form.handleSubmit(onSubmit, (err) => console.log(err))}
             className="space-y-4"
           >
             {step === 1 && (
@@ -108,6 +134,14 @@ export function InviteStudentDialog({ open, onOpenChange }: Props) {
                       <FormMessage />
                     </FormItem>
                   )}
+                />
+                <FormComboField<typeof userFormSchema>
+                  label="Course-Section"
+                  form={form}
+                  name="sectionId"
+                  options={sectionSelectData}
+                  isLoading={isSectionQueryPending}
+                  onSearch={updateSelectSectionQuery}
                 />
                 <div className="flex flex-col md:flex-row gap-4">
                   <FormField
@@ -311,7 +345,15 @@ export function InviteStudentDialog({ open, onOpenChange }: Props) {
                 Back
               </Button>
               <Button type="submit" form="user-invite-form">
-                Invite <IconSend />
+                {isEdit ? (
+                  <>
+                    Save Changes <Save />
+                  </>
+                ) : (
+                  <>
+                    Invite <IconSend />
+                  </>
+                )}
               </Button>
             </div>
           )}
