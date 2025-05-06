@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/form";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { z, ZodObject, ZodRawShape } from "zod";
+import { z, ZodObject, ZodRawShape, ZodTypeAny } from "zod";
 import { Path, UseFormReturn } from "react-hook-form";
 import { InputHTMLAttributes, useState } from "react";
 import clsx from "clsx";
@@ -25,7 +25,7 @@ interface OptionType {
   [key: string]: string | number;
 }
 
-interface FormMultiSelectComboFieldProps<TSchema extends ZodObject<ZodRawShape>>
+interface FormMultiSelectComboFieldProps<TSchema extends ZodTypeAny>
   extends Omit<InputHTMLAttributes<HTMLInputElement>, "form"> {
   form: UseFormReturn<z.infer<TSchema>>;
   name: Path<z.infer<TSchema>>;

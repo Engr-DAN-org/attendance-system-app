@@ -51,7 +51,7 @@ const getQueryAsync = async (
   }
 };
 
-const getByIdAsync = async (sectionId: string): Promise<Section> => {
+const getByIdAsync = async (sectionId: number): Promise<Section> => {
   try {
     const response = await api.get(`/section/${sectionId}`);
     return response.data;

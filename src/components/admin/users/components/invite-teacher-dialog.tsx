@@ -22,13 +22,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { User, userFormSchema } from "@/interfaces/types/user";
+import { User, userCompleteFormSchema } from "@/interfaces/types/user";
 import { UserRole } from "@/enums/userRole";
 import { useUserQueryContext } from "../context/users-context";
 import { Loader2, Save } from "lucide-react";
 import { IconSend } from "@tabler/icons-react";
 
-type UserForm = z.infer<typeof userFormSchema>;
+type UserCompleteForm = z.infer<typeof userCompleteFormSchema>;
 
 interface Props {
   currentRow?: User;
@@ -39,8 +39,8 @@ interface Props {
 export function InviteTeacherDialog({ currentRow, open, onOpenChange }: Props) {
   const { submitForm, isFormSubmitPending } = useUserQueryContext();
   const isEdit = !!currentRow;
-  const form = useForm<UserForm>({
-    resolver: zodResolver(userFormSchema),
+  const form = useForm<UserCompleteForm>({
+    resolver: zodResolver(userCompleteFormSchema),
     defaultValues: isEdit
       ? {
           ...currentRow,
@@ -56,7 +56,7 @@ export function InviteTeacherDialog({ currentRow, open, onOpenChange }: Props) {
         },
   });
 
-  const onSubmit = async (values: UserForm) => {
+  const onSubmit = async (values: UserCompleteForm) => {
     await submitForm(values);
     onOpenChange(false);
     form.reset();

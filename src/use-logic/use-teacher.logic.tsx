@@ -1,7 +1,10 @@
+import { User } from "@/interfaces/types/user";
 import { getClassSchedulesAsync } from "@/services/teacher.service";
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 
-export const useUserLogic = (teacherId: string) => {
+export const useTeacherLogic = () => {
+  const [authTeacher, setAuthTeacher] = useState<User | undefined>(undefined);
   //   const [usersQuery, setUsersQuery] = useState<UserQuery>(initialUsersQuery);
   //   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   //   const [dialogOpen, setDialogOpen] = useDialogState<UsersDialogType>(null);
@@ -9,7 +12,7 @@ export const useUserLogic = (teacherId: string) => {
   // User Create or Edit
   //   const { mutateAsync: submitForm, isPending: isFormSubmitPending } =
   //     useMutation({
-  //       mutationFn: async (userData: UserForm) =>
+  //       mutationFn: async (userData: UserCompleteForm) =>
   //         userData.id
   //           ? await updateAsync(userData.id, userData)
   //           : await createAsync(userData),
@@ -30,18 +33,20 @@ export const useUserLogic = (teacherId: string) => {
   //   );
 
   const {
-    data: response,
+    data: teacherSchedules,
     refetch: refechSchedules,
     isFetching: isFetchingSchedules,
   } = useQuery({
-    queryKey: ["class-schedule", teacherId],
-    queryFn: async () => getClassSchedulesAsync(teacherId),
-    enabled: !!teacherId,
+    queryKey: ["teacher-class-schedule"],
+    queryFn: async () => await getClassSchedulesAsync(),
+    enabled: !!authTeacher,
   });
 
   return {
-    response,
+    teacherSchedules,
     refechSchedules,
     isFetchingSchedules,
+    authTeacher,
+    setAuthTeacher,
   };
 };

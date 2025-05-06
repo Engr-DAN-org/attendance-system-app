@@ -1,4 +1,4 @@
-import { z, ZodObject, ZodRawShape } from "zod";
+import { z, ZodTypeAny } from "zod";
 import {
   FormControl,
   FormField,
@@ -10,7 +10,7 @@ import { Path, UseFormReturn } from "react-hook-form";
 import { SelectDropdown } from "../select-dropdown";
 import { InputHTMLAttributes } from "react";
 
-interface FormSelectFieldProps<TSchema extends ZodObject<ZodRawShape>>
+interface FormSelectFieldProps<TSchema extends ZodTypeAny>
   extends Omit<InputHTMLAttributes<HTMLInputElement>, "form"> {
   form: UseFormReturn<z.infer<TSchema>>;
   name: Path<z.infer<TSchema>>;
@@ -24,7 +24,7 @@ type optionType = {
   value: string | number;
 };
 
-export const FormSelectField = <TSchema extends ZodObject<ZodRawShape>>({
+export const FormSelectField = <TSchema extends ZodTypeAny>({
   form,
   name,
   label,
@@ -41,6 +41,7 @@ export const FormSelectField = <TSchema extends ZodObject<ZodRawShape>>({
           {label && <FormLabel>{label}</FormLabel>}
           <FormControl>
             <SelectDropdown
+              className="w-full"
               defaultValue={field.value}
               onValueChange={field.onChange}
               placeholder={placeholder ? placeholder : ""}

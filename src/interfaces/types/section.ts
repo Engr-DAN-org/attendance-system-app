@@ -14,14 +14,11 @@ export const sectionSchema = z.object({
   course: courseSchema.optional(), // optional nested Course object
 
   teacherId: z.string().optional().nullable(),
-  teacher: z
-    .lazy(() => userSchema)
-    .optional()
-    .nullable(),
+  teacher: userSchema.optional().nullable(),
 
-  students: z.array(z.lazy(() => userSchema)).optional(),
+  students: z.array(userSchema).optional(),
 
-  classSchedules: classSchedulesSchema,
+  classSchedules: classSchedulesSchema.optional(),
 });
 
 export type Section = z.infer<typeof sectionSchema>;

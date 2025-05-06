@@ -3,9 +3,7 @@ import NotFoundError from "@/features/errors/not-found-error";
 import { getByIdAsync } from "@/services/section.service";
 import { createFileRoute, ErrorComponent } from "@tanstack/react-router";
 
-export const Route = createFileRoute(
-  "/_authenticated/admin/sections/target/$id"
-)({
+export const Route = createFileRoute("/_authenticated/admin/sections/$id/")({
   notFoundComponent: NotFoundError,
   errorComponent: ErrorComponent,
   component: RouteComponent,
@@ -30,5 +28,6 @@ export const Route = createFileRoute(
 
 function RouteComponent() {
   const data = Route.useLoaderData();
+
   return <SectionManagement data={data} />;
 }

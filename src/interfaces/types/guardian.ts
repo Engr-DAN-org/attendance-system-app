@@ -10,16 +10,6 @@ export interface UpdateGuardianDTO {
   relationship: StudentGuardianRelationship;
 }
 
-//   // Default relationship value can be set when creating an instance
-//   export const createUpdateGuardianDTO = (data: Partial<UpdateGuardianDTO>): UpdateGuardianDTO => ({
-//     firstName: data.firstName ?? "",
-//     lastName: data.lastName ?? "",
-//     email: data.email ?? "",
-//     contactNumber: data.contactNumber,
-//     address: data.address ?? "",
-//     relationship: data.relationship ?? StudentGuardianRelationship.Parent,
-//   });
-
 export interface GetGuardianDTO {
   fullName: string;
   email: string;
@@ -29,6 +19,7 @@ export interface GetGuardianDTO {
 }
 
 export const guardianSchema = z.object({
+  studentId: z.string().optional(),
   firstName: z.string().min(1, "First name is required."),
   lastName: z.string().min(1, "Last name is required."),
   email: z.string().email("Invalid email address."),
@@ -48,6 +39,8 @@ export const guardianSchema = z.object({
   address: z.string().min(1, "Address is required."),
   relationship: z.nativeEnum(StudentGuardianRelationship),
 });
+
+export type GuardianForm = z.infer<typeof guardianSchema>;
 
 // export const createGetGuardianDTO = (guardian: {
 //   firstName: string;

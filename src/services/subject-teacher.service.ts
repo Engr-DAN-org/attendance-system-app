@@ -12,7 +12,7 @@ const getSTQueryAsync = async (
     });
     return response.data;
   } catch (error) {
-    console.error("Error fetching subject teachers:", error);
+    console.error("Error fetching teacher subjects:", error);
     throw error; // Rethrow the error to be handled by the caller
   }
 };

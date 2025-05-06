@@ -4,12 +4,14 @@ import { ClassSchedule } from "@/interfaces/types/classSchedule";
 import { DayOfWeekEntry } from "@/enums/dayOfWeek";
 
 interface DayColumnProps {
+  onClickCloseEvent?: (event: ClassSchedule) => void;
   day: DayOfWeekEntry;
-  data: ClassSchedule[];
+  data?: ClassSchedule[];
   onScheduleClick?: ScheduleClickType;
 }
 
 export default function DayColumn({
+  onClickCloseEvent,
   day,
   data,
   onScheduleClick,
@@ -37,9 +39,9 @@ export default function DayColumn({
             style={{ height: `${slotHeight}px` }}
           ></div>
         ))}
-        <ScheduleEvent event={luncBreak} />
+        <ScheduleEvent event={luncBreak} onClickClose={onClickCloseEvent} />
         {data
-          .filter((s) => s.day == day.id.toString() || s.dayName == day.name)
+          ?.filter((s) => s.day == day.id.toString() || s.dayName == day.name)
           .map((value, key) => {
             return (
               <ScheduleEvent

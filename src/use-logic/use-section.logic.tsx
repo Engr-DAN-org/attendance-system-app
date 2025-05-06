@@ -1,4 +1,4 @@
-import { SectionQueryOption } from "@/config/useOptions/sectionQueryOptions";
+import { SectionsQueryOption } from "@/config/useOptions/sectionQueryOptions";
 import { subjectTeachersQueryOption } from "@/config/useOptions/subjectQueryOptions";
 import { userQueryOption } from "@/config/useOptions/userQueryOptions";
 import { courseYearOptions } from "@/constants/courseYear";
@@ -16,23 +16,25 @@ import {
   classScheduleSchema,
 } from "@/interfaces/types/classSchedule";
 import { Section, sectionSchema } from "@/interfaces/types/section";
+import { getByTeacherOrSectionAsync } from "@/services/class-schedule.service";
 import { createAsync, updateAsync } from "@/services/section.service";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { useFieldArray, useForm, useWatch } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 export const useSectionLogic = () => {
   const [section, setSection] = useState<Section | undefined>(undefined);
   const [query, setQuery] = useState<SectionQuery>(initialSectionQuery);
   const [deleteDialogState, setDeleteDialogState] = useState<boolean>(false);
-
+  // used for determining if the form is in edit mode
+  const [isEdit, setIsEdit] = useState<boolean>(false);
   const {
     data: response,
     isPending: isQueryPending,
     refetch,
-  } = useQuery(SectionQueryOption(query));
+  } = useQuery(SectionsQueryOption(query));
 
   const setTargetDeletion = (data: Section) => {
     setSection(data);
@@ -53,12 +55,26 @@ export const useSectionLogic = () => {
     section,
     setTargetDeletion,
     handlePageClick,
+    isEdit,
+    setIsEdit,
   };
 };
 
 export const useSectionCreationLogic = () => {
   const [section, setSection] = useState<Section | undefined>(undefined);
   const [openScheduleDialog, setOpenScheduleDialog] = useState<boolean>(false);
+  const [sectionId, setSectionId] = useState<number | undefined>(undefined);
+  const {
+    data: classScheduleList,
+    refetch: refetchSectionClassSchedules,
+    isPending: isFetchPending,
+  } = useQuery({
+    queryKey: ["sectionlassSchedule", sectionId],
+    queryFn: async () =>
+      getByTeacherOrSectionAsync({
+        sectionId,
+      }),
+  });
 
   const [teachersQuery, setTeachersQuery] = useState<UserQuery>({
     ...initialUsersQuery,
@@ -108,15 +124,6 @@ export const useSectionCreationLogic = () => {
       },
     });
 
-  const classSchedules = useWatch({
-    control: sectionForm.control,
-    name: "classSchedules",
-  });
-  const { fields, append, update, remove } = useFieldArray({
-    control: sectionForm.control,
-    name: "classSchedules",
-  });
-
   const { data: usersQueryData, isPending: isUsersQueryPending } = useQuery(
     userQueryOption(teachersQuery)
   );
@@ -140,18 +147,6 @@ export const useSectionCreationLogic = () => {
     console.log("Subject Query:", subjectQuery);
   };
 
-  const editSchedule = (index: number) => {
-    console.log("Editing schedule at index:", index);
-
-    const data = fields[index];
-    if (!data) {
-      console.error("No data found for the given index:", index);
-      return;
-    }
-    scheduleForm.reset({ ...data, index });
-    setOpenScheduleDialog(true);
-  };
-
   return {
     subjectsQueryData,
     isSubjectQueryPending,
@@ -166,13 +161,11 @@ export const useSectionCreationLogic = () => {
     setSection,
     sectionForm,
     scheduleForm,
-    editSchedule,
-    fields,
-    append,
-    update,
-    remove,
     onFormSubmit,
     isFormSubmitPending,
-    classSchedules,
+    classScheduleList,
+    refetchSectionClassSchedules,
+    isFetchPending,
+    setSectionId,
   };
 };

@@ -15,8 +15,16 @@ import {
 } from "@/components/ui/sidebar";
 import { AccountProfile } from "@/interfaces/types/sidebar";
 import { useAuthStore } from "@/store/authStore";
+import { UserRole } from "@/enums/userRole";
+import { cn } from "@/lib/utils";
 
-export function AccountSwitcher({ profiles }: { profiles: AccountProfile[] }) {
+export function AccountSwitcher({
+  profiles,
+  role,
+}: {
+  profiles: AccountProfile[];
+  role: UserRole;
+}) {
   const { isMobile } = useSidebar();
   const { profileIndex, setProfileIndex } = useAuthStore((state) => state);
   const activeProfile = profiles[profileIndex] || profiles[0];
@@ -26,6 +34,7 @@ export function AccountSwitcher({ profiles }: { profiles: AccountProfile[] }) {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
+              disabled={role != UserRole.Admin}
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
@@ -40,7 +49,9 @@ export function AccountSwitcher({ profiles }: { profiles: AccountProfile[] }) {
                   {activeProfile.header.roleOrDescription}
                 </span>
               </div>
-              <ChevronsUpDown className="ml-auto" />
+              <ChevronsUpDown
+                className={cn("ml-auto", role != UserRole.Admin && "hidden")}
+              />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent

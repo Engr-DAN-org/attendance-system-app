@@ -1,9 +1,9 @@
 import { UserQuery } from "@/interfaces/queryParams/userQuery";
 import { UserQueryResponseDTO } from "@/interfaces/types/queryResponseDTO";
-import { User, UserForm } from "@/interfaces/types/user";
+import { User, UserCompleteForm } from "@/interfaces/types/user";
 import api from "@/lib/axiosSetup";
 
-const createAsync = async (userData: UserForm): Promise<User> => {
+const createAsync = async (userData: UserCompleteForm): Promise<User> => {
   try {
     const response = await api.post("/user/create", userData);
     return response.data;
@@ -13,7 +13,10 @@ const createAsync = async (userData: UserForm): Promise<User> => {
   }
 };
 
-const updateAsync = async (id: string, userData: UserForm): Promise<User> => {
+const updateAsync = async (
+  id: string,
+  userData: UserCompleteForm
+): Promise<User> => {
   try {
     const response = await api.put(`/user/${id}`, userData);
     return response.data;

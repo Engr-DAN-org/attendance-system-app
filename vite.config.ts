@@ -1,12 +1,40 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
+import { VitePWA } from "vite-plugin-pwa";
 import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
 import path from "path";
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), tailwindcss(), TanStackRouterVite()],
+  plugins: [
+    react(),
+    tailwindcss(),
+    TanStackRouterVite(),
+    VitePWA({
+      registerType: "autoUpdate",
+      devOptions: {
+        enabled: true,
+      },
+      manifest: {
+        name: "Attendance System",
+        start_url: "/",
+        display: "standalone",
+        icons: [
+          {
+            src: "/192.png",
+            sizes: "192x192",
+            type: "image/png",
+          },
+          {
+            src: "/512.png",
+            sizes: "512x512",
+            type: "image/png",
+          },
+        ],
+      },
+    }),
+  ],
   server: {
     watch: {
       usePolling: true, // 👈 Enables polling to detect file changes inside Docker

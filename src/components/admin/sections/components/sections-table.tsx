@@ -87,9 +87,9 @@ export function SectionsTable({ columns }: DataTableProps) {
                       {row.getVisibleCells().map((cell) => (
                         <TableCell
                           onClick={() => {
-                            if (cell.id != "actions" && row.original.id)
+                            if (!cell.id.includes("actions") && row.original.id)
                               navigate({
-                                to: "/admin/sections/target/$id",
+                                to: "/admin/sections/$id",
                                 params: { id: row.original.id.toString() },
                               });
                           }}

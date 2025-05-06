@@ -4,6 +4,7 @@ import TimeColumn from "./time-column";
 import DayColumn from "./day-column";
 import { ClassSchedule } from "@/interfaces/types/classSchedule";
 import { ScheduleClickType } from "./schedule-event";
+import { cn } from "@/lib/utils";
 
 // export interface Event {
 //   day: string;
@@ -40,13 +41,21 @@ export interface TimeSlot {
 // ];
 
 interface WeeklyCalendarProps {
-  data: ClassSchedule[];
+  data?: ClassSchedule[];
   onScheduleClick?: ScheduleClickType;
+  onClickCloseEvent?: (event: ClassSchedule) => void;
+  fullWidth?: boolean;
+  viewOnly?: boolean;
+  withSafeClickMethod?: boolean;
 }
 
 export default function WeeklyCalendar({
+  onClickCloseEvent,
+  viewOnly = true,
+  withSafeClickMethod = false,
   data,
   onScheduleClick,
+  fullWidth = false,
 }: WeeklyCalendarProps) {
   console.log("WeeklyCalendar data", data);
 
@@ -56,15 +65,24 @@ export default function WeeklyCalendar({
         <TimeColumn />
       </div>
       <ScrollArea className="flex-1 overflow-x-auto">
-        <div className="grid grid-cols-7 whitespace-nowrap min-w-[1000px]">
+        <div
+          className={cn(
+            "grid grid-cols-7 whitespace-nowrap w-full",
+            fullWidth ? "w-full min-w-[850px]" : "min-w-[1000px]"
+          )}
+        >
           {Object.values(DayOfWeekMap).map((day) => {
             const filteredData = data?.filter((item) => item.day == day.id);
             return (
               <DayColumn
+                onClickCloseEvent={onClickCloseEvent}
                 key={day.id}
                 day={day}
                 data={filteredData}
-                onScheduleClick={onScheduleClick}
+                onScheduleClick={({ event, index }) => {
+                  if (viewOnly && !withSafeClickMethod) return;
+                  onScheduleClick?.({ event, index });
+                }}
               />
             );
           })}

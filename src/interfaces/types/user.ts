@@ -4,8 +4,9 @@ import { userStatusSchema } from "@/enums/userStatus";
 import { userRoleSchema } from "@/enums/userRole";
 import { guardianSchema } from "./guardian";
 import { sectionSchema } from "./section";
+import { subjectTeacherSchema } from "./subject";
 
-const baseUserSchema = z.object({
+const baseUserCredSchema = z.object({
   id: z.string().optional(),
   idNumber: z
     .string()
@@ -34,12 +35,27 @@ const baseUserSchema = z.object({
     )
     .describe("Phone Number"),
   userRole: userRoleSchema,
-  guardian: guardianSchema.optional().describe("Guardian"),
   sectionId: z.number().optional(),
 });
 
+const baseUserSchema = baseUserCredSchema.extend({
+  guardian: guardianSchema.optional().describe("Guardian"),
+});
+
+const userCredFormSchema = baseUserCredSchema.superRefine((data, ctx) => {
+  if (data.userRole === "Student") {
+    if (!data.sectionId) {
+      ctx.addIssue({
+        path: ["sectionId"],
+        code: z.ZodIssueCode.custom,
+        message: "Please Assign to a Section.",
+      });
+    }
+  }
+});
+
 // Step 1: Base schema for form handling/step 1 validation
-const userFormSchema = baseUserSchema.superRefine((data, ctx) => {
+const userCompleteFormSchema = baseUserSchema.superRefine((data, ctx) => {
   if (data.userRole === "Student") {
     if (!data.guardian) {
       ctx.addIssue({
@@ -62,13 +78,18 @@ const userSchema: z.ZodSchema = baseUserSchema.extend({
   fullName: z.string().optional(),
   status: userStatusSchema,
   role: userRoleSchema,
-  section: sectionSchema.optional().describe("Section"),
+  section: z
+    .lazy(() => sectionSchema)
+    .optional()
+    .describe("Section"),
   guardianId: z.number().optional(),
+  subjectTeachers: z.array(subjectTeacherSchema).optional(),
 });
 
-type UserForm = z.infer<typeof userFormSchema>;
+type UserCredForm = z.infer<typeof userCredFormSchema>;
+type UserCompleteForm = z.infer<typeof userCompleteFormSchema>;
 type User = z.infer<typeof userSchema>;
 
-export type { User, UserForm };
-export { userSchema, userFormSchema };
+export type { User, UserCredForm, UserCompleteForm };
+export { userSchema, userCredFormSchema, userCompleteFormSchema };
 export const userListSchema = z.array(userSchema);

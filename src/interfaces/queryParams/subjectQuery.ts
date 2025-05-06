@@ -6,4 +6,7 @@ export interface SubjectQuery extends BaseQueryParam {
 
 export interface SubjectTeacherQuery {
   name?: string;
+  teacherId?: string;
+  sectionId?: string;
+  limit?: number;
 }

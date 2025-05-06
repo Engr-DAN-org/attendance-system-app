@@ -20,7 +20,11 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { UserRole } from "@/enums/userRole";
-import { User, UserForm, userFormSchema } from "@/interfaces/types/user";
+import {
+  User,
+  UserCompleteForm,
+  userCompleteFormSchema,
+} from "@/interfaces/types/user";
 import { SelectDropdown } from "@/components/select-dropdown";
 import { StudentGuardianRelationshipOptions } from "@/enums/studentGuardianRelationship";
 import { useState } from "react";
@@ -48,14 +52,14 @@ export function InviteStudentDialog({
   const { sectionSelectData, updateSelectSectionQuery, isSectionQueryPending } =
     useSelectDataContext();
 
-  const form = useForm<UserForm>({
-    resolver: zodResolver(userFormSchema),
+  const form = useForm<UserCompleteForm>({
+    resolver: zodResolver(userCompleteFormSchema),
     defaultValues: selectedUser
       ? { ...selectedUser, userRole: selectedUser.role }
       : { userRole: UserRole.Student },
   });
 
-  const onSubmit = async (values: UserForm) => {
+  const onSubmit = async (values: UserCompleteForm) => {
     await submitForm(values);
     form.reset();
     prevStep();
@@ -135,7 +139,7 @@ export function InviteStudentDialog({
                     </FormItem>
                   )}
                 />
-                <FormComboField<typeof userFormSchema>
+                <FormComboField<typeof userCompleteFormSchema>
                   label="Course-Section"
                   form={form}
                   name="sectionId"

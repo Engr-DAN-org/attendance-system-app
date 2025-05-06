@@ -1,11 +1,19 @@
 import { DayOfWeekSchema } from "@/enums/dayOfWeek";
 import { z } from "zod";
 
-export type ClassSchedule = z.infer<typeof classScheduleSchema>;
+export const classScheduleQuerySchema = z.object({
+  unassigned: z.boolean().optional(),
+  subjectName: z.string().optional(),
+  teacherName: z.string().optional(),
+  day: DayOfWeekSchema.optional().describe("Day"),
+  startTime: z.string().optional(), // Format: "HH:mm"
+  endTime: z.string().optional(), // Format: "HH:mm"
+});
 
 export const baseClassScheduleSchema = z.object({
   index: z.any().optional(), // for local handling
   id: z.any().optional().nullable(),
+  sectionId: z.number().optional().nullable(),
   subjectTeacherId: z.number().min(1, "Subject is required"),
   subjectName: z.string().optional(),
   subjectCode: z.string().optional(),
@@ -85,36 +93,8 @@ export const classScheduleSchema = baseClassScheduleSchema
     }
   );
 
-export const classSchedulesSchema = z
-  .array(classScheduleSchema)
-  .min(1, "At least one class schedule is required")
-  .refine(
-    (schedules) => {
-      const toMinutes = (time: string) => {
-        const [hour, min] = time.split(":").map(Number);
-        return hour * 60 + min;
-      };
+export const classSchedulesSchema = z.array(classScheduleSchema);
 
-      for (let i = 0; i < schedules.length; i++) {
-        for (let j = i + 1; j < schedules.length; j++) {
-          const a = schedules[i];
-          const b = schedules[j];
-
-          if (a.day !== b.day) continue;
-
-          const startA = toMinutes(a.startTime);
-          const endA = toMinutes(a.endTime);
-          const startB = toMinutes(b.startTime);
-          const endB = toMinutes(b.endTime);
-
-          const isOverlap = startA < endB && startB < endA;
-          if (isOverlap) return false;
-        }
-      }
-
-      return true;
-    },
-    {
-      message: "Class schedules should not conflict with each other.",
-    }
-  );
+export type ClassScheduleQueryForm = z.infer<typeof classScheduleQuerySchema>;
+export type ClassSchedule = z.infer<typeof classScheduleSchema>;
+export type ClassSchedules = z.infer<typeof classSchedulesSchema>;

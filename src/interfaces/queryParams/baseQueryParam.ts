@@ -1,5 +1,6 @@
 export interface BaseQueryParam {
-  name: string | null;
-  page: number | null;
-  sort: "asc" | "desc";
+  paginate?: boolean;
+  name?: string | null;
+  page?: number | null;
+  sort?: "asc" | "desc";
 }

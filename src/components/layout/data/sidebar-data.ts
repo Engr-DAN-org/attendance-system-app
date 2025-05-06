@@ -6,6 +6,7 @@ import { SidebarHeaderProfile } from "@/interfaces/types/profile";
 import { systemName } from "@/context/system-context";
 import { adminNavGroups } from "./navGroups/admin-nav";
 import { teacherNavGroups } from "./navGroups/teacher-nav";
+import { studentNavGroups } from "./navGroups/student-nav";
 
 const adminProfile: SidebarHeaderProfile = {
   nameOrTitle: systemName.title,
@@ -37,7 +38,10 @@ export function getSidebarData(user: UserType | null): SidebarData {
       : [
           {
             header: userProfile,
-            navgroups: [],
+            navgroups:
+              user.role == UserRole.Teacher
+                ? teacherNavGroups
+                : studentNavGroups,
           },
         ];
 

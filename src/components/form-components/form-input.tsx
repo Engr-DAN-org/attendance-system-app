@@ -7,23 +7,25 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
-import { z, ZodObject, ZodRawShape } from "zod";
+import { z, ZodTypeAny } from "zod";
 import { Textarea } from "../ui/textarea";
 import { InputHTMLAttributes } from "react";
 
-interface FormInputFieldProps<TSchema extends ZodObject<ZodRawShape>>
+interface FormInputFieldProps<TSchema extends ZodTypeAny>
   extends Omit<InputHTMLAttributes<HTMLInputElement>, "form"> {
   form: UseFormReturn<z.infer<TSchema>>;
   name: Path<z.infer<TSchema>>;
   label?: string;
   placeholder?: string;
+  type?: React.HTMLInputTypeAttribute;
 }
 
-export const FormInputField = <TSchema extends ZodObject<ZodRawShape>>({
+export const FormInputField = <TSchema extends ZodTypeAny>({
   form,
   name,
   label,
   placeholder,
+  type = "text",
   ...props
 }: FormInputFieldProps<TSchema>) => {
   return (
@@ -35,7 +37,11 @@ export const FormInputField = <TSchema extends ZodObject<ZodRawShape>>({
         <FormItem {...props}>
           {label && <FormLabel>{label}</FormLabel>}
           <FormControl>
-            <Input {...field} placeholder={placeholder ? placeholder : ""} />
+            <Input
+              {...field}
+              placeholder={placeholder ? placeholder : ""}
+              type={type}
+            />
           </FormControl>
           <FormMessage />
         </FormItem>
@@ -44,7 +50,7 @@ export const FormInputField = <TSchema extends ZodObject<ZodRawShape>>({
   );
 };
 
-export const FormTextAreaField = <TSchema extends ZodObject<ZodRawShape>>({
+export const FormTextAreaField = <TSchema extends ZodTypeAny>({
   form,
   name,
   label,

@@ -1,8 +1,10 @@
 import WeeklyCalendar from "@/components/admin/sections/components/weekly-calendar";
 import { LoadingComponent } from "@/components/general-loader";
 import { Main } from "@/components/layout/main";
+import { useTeacherContext } from "@/components/teacher/context/teacher.context";
 import { Separator } from "@/components/ui/separator";
-import { createLazyFileRoute } from "@tanstack/react-router";
+import { createLazyFileRoute, useRouter } from "@tanstack/react-router";
+import { useEffect } from "react";
 
 export const Route = createLazyFileRoute(
   "/_authenticated/teacher/class-schedule/"
@@ -12,6 +14,19 @@ export const Route = createLazyFileRoute(
 });
 
 function RouteComponent() {
+  const { teacherSchedules, authTeacher, refechSchedules } =
+    useTeacherContext();
+  const { navigate } = useRouter();
+  useEffect(() => {
+    async function fetchSchedules() {
+      await refechSchedules();
+      console.log("scgedyles:", teacherSchedules, authTeacher);
+    }
+    fetchSchedules();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <>
       <Main>
@@ -32,7 +47,16 @@ function RouteComponent() {
           </div>
           <Separator />
         </div>
-        <WeeklyCalendar data={[]} />
+        <WeeklyCalendar
+          data={teacherSchedules}
+          withSafeClickMethod={true}
+          onScheduleClick={({ event }) =>
+            navigate({
+              to: "/teacher/class-schedule/$scheduleId",
+              params: { scheduleId: event.id },
+            })
+          }
+        />
       </Main>
     </>
   );

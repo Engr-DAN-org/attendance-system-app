@@ -1,4 +1,4 @@
-import { UserForm } from "@/interfaces/types/user";
+import { User, UserCompleteForm } from "@/interfaces/types/user";
 
 import { cn } from "@/lib/utils";
 // import { Badge } from "@/components/ui/badge";
@@ -31,7 +31,7 @@ import {
 import { DataTableToolbar } from "./data-table-toolbar";
 
 interface DataTableProps {
-  data: UserForm[];
+  data: UserCompleteForm[];
 }
 
 export const StudentsTable = ({ data }: DataTableProps) => {
@@ -50,7 +50,7 @@ declare module "@tanstack/react-table" {
 }
 
 interface DataTableProps {
-  data: UserForm[];
+  data: UserCompleteForm[];
 }
 
 function UsersTable({ data }: DataTableProps) {
@@ -144,7 +144,7 @@ function UsersTable({ data }: DataTableProps) {
   );
 }
 
-const columns: ColumnDef<UserForm>[] = [
+const columns: ColumnDef<User>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -199,8 +199,7 @@ const columns: ColumnDef<UserForm>[] = [
       <DataTableColumnHeader column={column} title="Name" />
     ),
     cell: ({ row }) => {
-      const { firstName, lastName } = row.original;
-      const fullName = `${firstName} ${lastName}`;
+      const { fullName } = row.original;
       return <LongText className="max-w-36">{fullName}</LongText>;
     },
     meta: { className: "w-36" },

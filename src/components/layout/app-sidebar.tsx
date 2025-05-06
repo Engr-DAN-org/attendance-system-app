@@ -11,21 +11,24 @@ import { AccountSwitcher } from "@/components/layout/account-switcher";
 import { userProfile } from "@/interfaces/resource/user";
 import { SidebarData } from "@/interfaces/types/sidebar";
 import { useAuthStore } from "@/store/authStore";
+import { UserRole } from "@/enums/userRole";
 
 export function AppSidebar({
   sidebarData,
+  role,
   ...props
 }: {
   sidebarData: SidebarData;
+  role: UserRole;
   props?: React.ComponentProps<typeof Sidebar>;
 }) {
   const { profileIndex } = useAuthStore((state) => state);
   const { profiles } = sidebarData;
   const profile = profiles[profileIndex] || profiles[0];
   return (
-    <Sidebar collapsible="icon" variant="floating" {...props}>
+    <Sidebar className="w-64" collapsible="icon" variant="floating" {...props}>
       <SidebarHeader>
-        <AccountSwitcher profiles={profiles} />
+        <AccountSwitcher role={role} profiles={profiles} />
       </SidebarHeader>
       <SidebarContent>
         {profile.navgroups.map((props) => (

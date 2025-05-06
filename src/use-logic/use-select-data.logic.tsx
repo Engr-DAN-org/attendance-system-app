@@ -1,21 +1,27 @@
 import { OptionTypes } from "@/components/form-components/form-command";
 import { CourseQueryOption } from "@/config/useOptions/courseOption";
 import { SectionQueryOption } from "@/config/useOptions/sectionQueryOptions";
+import { subjectTeachersQueryOption } from "@/config/useOptions/subjectQueryOptions";
 import {
   initialCourseQuery,
   initialSectionQuery,
+  initialSubjectTeacherQuery,
 } from "@/initialStates/queryStates";
 import { CourseQuery } from "@/interfaces/queryParams/courseQuery";
 import { SectionQuery } from "@/interfaces/queryParams/sectionQuery";
+import { SubjectTeacherQuery } from "@/interfaces/queryParams/subjectQuery";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
 export const useSelectDataLogic = () => {
+  const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [courseSelectQuery, setCourseSelectQuery] =
     useState<CourseQuery>(initialCourseQuery);
   const [selectSectionQuery, setSelectSectionQuery] =
     useState<SectionQuery>(initialSectionQuery);
 
+  const [subjectTeacherQuery, setSubjectTeacherQuery] =
+    useState<SubjectTeacherQuery>(initialSubjectTeacherQuery);
   // Course Query
   const { data: courseData, isPending: isCourseQueryPending } = useQuery(
     CourseQueryOption(courseSelectQuery)
@@ -25,7 +31,7 @@ export const useSelectDataLogic = () => {
       id: course.id,
       code: course.code,
       name: course.name,
-      value: course.id,
+      value: course.id.toString(),
       label: course.code,
     })
   );
@@ -55,7 +61,15 @@ export const useSelectDataLogic = () => {
     })
   );
 
+  const {
+    data: subjectTeacherQueryData,
+    isPending: isSubjectTeacherQueryPending,
+  } = useQuery(subjectTeachersQueryOption(subjectTeacherQuery));
+
   return {
+    //Dialog State
+    openDialog,
+    setOpenDialog,
     // Section Query
     selectSectionQuery,
     sectionSelectData,
@@ -66,5 +80,10 @@ export const useSelectDataLogic = () => {
     updateSelectCourseQuery,
     courseSelectData,
     isCourseQueryPending,
+    // Subject-Teacher Query
+    subjectTeacherQuery,
+    setSubjectTeacherQuery,
+    subjectTeacherQueryData,
+    isSubjectTeacherQueryPending,
   };
 };

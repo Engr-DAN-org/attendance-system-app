@@ -24,6 +24,7 @@ import {
 import { DataTablePagination } from "./data-table-pagination";
 import { DataTableToolbar } from "./data-table-toolbar";
 import { User } from "@/interfaces/types/user";
+import { useRouter } from "@tanstack/react-router";
 
 declare module "@tanstack/react-table" {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -39,6 +40,7 @@ interface DataTableProps {
 
 export function UsersTable({ columns, data }: DataTableProps) {
   const [rowSelection, setRowSelection] = useState({});
+  const { navigate } = useRouter();
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
 
@@ -99,6 +101,17 @@ export function UsersTable({ columns, data }: DataTableProps) {
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell
+                      onClick={() => {
+                        if (!cell.id.includes("actions")) {
+                          const { id } = row.original;
+
+                          // navigate to the user details page
+                          navigate({
+                            to: "/admin/users/$userId",
+                            params: { userId: id },
+                          });
+                        }
+                      }}
                       key={cell.id}
                       className={cell.column.columnDef.meta?.className ?? ""}
                     >

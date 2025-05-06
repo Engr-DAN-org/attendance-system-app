@@ -44,7 +44,7 @@ function RouteComponent() {
   return (
     <SidebarProvider defaultOpen={defaultOpen}>
       <SkipToMain />
-      <AppSidebar sidebarData={sidebarData} />
+      <AppSidebar sidebarData={sidebarData} role={user.role} />
       <div
         id="content"
         className={cn(
