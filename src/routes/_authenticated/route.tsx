@@ -41,6 +41,7 @@ function RouteComponent() {
   const sidebarData = getSidebarData(user);
 
   const defaultOpen = Cookies.get("sidebar:state") !== "false";
+
   return (
     <SidebarProvider defaultOpen={defaultOpen}>
       <SkipToMain />
@@ -59,7 +60,7 @@ function RouteComponent() {
       >
         {/* ===== Top Heading ===== */}
         <Header>
-          <TopNav links={topNav} />
+          <TopNav />
           <div className="ml-auto flex items-center space-x-4">
             <ThemeSwitch />
             <ProfileDropdown />
@@ -71,30 +72,3 @@ function RouteComponent() {
     </SidebarProvider>
   );
 }
-
-const topNav = [
-  {
-    title: "Overview",
-    href: "dashboard/overview",
-    isActive: true,
-    disabled: true,
-  },
-  // {
-  //   title: "Customers",
-  //   href: "dashboard/customers",
-  //   isActive: false,
-  //   disabled: true,
-  // },
-  // {
-  //   title: "Products",
-  //   href: "dashboard/products",
-  //   isActive: false,
-  //   disabled: true,
-  // },
-  // {
-  //   title: "Settings",
-  //   href: "dashboard/settings",
-  //   isActive: false,
-  //   disabled: true,
-  // },
-];

@@ -1,67 +1,43 @@
-import { Link } from '@tanstack/react-router'
-import { IconMenu } from '@tabler/icons-react'
-import { cn } from '@/lib/utils'
-import { Button } from '@/components/ui/button'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "@tanstack/react-router";
+import { IconArrowLeft } from "@tabler/icons-react";
 
-interface TopNavProps extends React.HTMLAttributes<HTMLElement> {
-  links: {
-    title: string
-    href: string
-    isActive: boolean
-    disabled?: boolean
-  }[]
+interface TopNavProps {
+  className?: string;
 }
 
-export function TopNav({ className, links, ...props }: TopNavProps) {
+export function TopNav({ className, ...props }: TopNavProps) {
+  const { history, navigate } = useRouter();
+
+  const handleGoBack = () =>
+    history.canGoBack() ? history.go(-1) : navigate({ to: "/" });
+
   return (
     <>
-      <div className='md:hidden'>
-        <DropdownMenu modal={false}>
-          <DropdownMenuTrigger asChild>
-            <Button size='icon' variant='outline'>
-              <IconMenu />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent side='bottom' align='start'>
-            {links.map(({ title, href, isActive, disabled }) => (
-              <DropdownMenuItem key={`${title}-${href}`} asChild>
-                <Link
-                  to={href}
-                  className={!isActive ? 'text-muted-foreground' : ''}
-                  disabled={disabled}
-                >
-                  {title}
-                </Link>
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
+      <div className="md:hidden">
+        <Button size="icon" variant="outline" onClick={handleGoBack}>
+          <IconArrowLeft />
+        </Button>
       </div>
 
-      <nav
+      <div
         className={cn(
-          'hidden items-center space-x-4 md:flex lg:space-x-6',
+          "hidden items-center space-x-4 md:flex lg:space-x-6",
           className
         )}
         {...props}
       >
-        {links.map(({ title, href, isActive, disabled }) => (
-          <Link
-            key={`${title}-${href}`}
-            to={href}
-            disabled={disabled}
-            className={`text-sm font-medium transition-colors hover:text-primary ${isActive ? '' : 'text-muted-foreground'}`}
-          >
-            {title}
-          </Link>
-        ))}
-      </nav>
+        <Button
+          onClick={handleGoBack}
+          disabled={!history.canGoBack()}
+          variant="link"
+          size="sm"
+          className="text-muted-foreground"
+        >
+          <IconArrowLeft /> Prev
+        </Button>
+      </div>
     </>
-  )
+  );
 }

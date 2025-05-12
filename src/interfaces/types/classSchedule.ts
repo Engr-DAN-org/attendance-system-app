@@ -1,5 +1,6 @@
 import { DayOfWeekSchema } from "@/enums/dayOfWeek";
 import { z } from "zod";
+import { ClassSessionShema } from "./classSession";
 
 export const classScheduleQuerySchema = z.object({
   unassigned: z.boolean().optional(),
@@ -25,6 +26,7 @@ export const baseClassScheduleSchema = z.object({
   endTime: z.string().min(1, "End time is required"), // Format: "HH:mm"
   gracePeriod: z.any().default("5"),
   isBreak: z.boolean().optional(),
+  classSessions: z.array(ClassSessionShema).optional(),
 });
 
 export const classScheduleSchema = baseClassScheduleSchema

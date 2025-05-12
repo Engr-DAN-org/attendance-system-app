@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import { getSlotIndex } from "@/utils/section.util";
 import { slotHeight } from "@/constants/section.constants";
 import { ClassSchedule } from "@/interfaces/types/classSchedule";
-import { formatTime } from "@/utils/time-format.util";
+import { formatTime } from "@/utils/date-time-format.util";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 

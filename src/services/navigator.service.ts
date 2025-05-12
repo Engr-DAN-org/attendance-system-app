@@ -1,0 +1,63 @@
+import axios from "axios";
+
+interface Coordinate {
+  latitude: number;
+  longitude: number;
+}
+
+interface Location extends Coordinate {
+  location: string;
+}
+
+interface NominatimReverseResponse {
+  display_name: string;
+  lat: number;
+  lon: number;
+  address: {
+    city: string;
+    country: string;
+    country_code: string;
+    postcode: number;
+    quarter: string;
+    region: string;
+    state: string;
+  };
+}
+
+const getCurrentCoordinates = async (): Promise<Coordinate> => {
+  return new Promise((resolve, reject) => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          resolve({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          });
+        },
+        (error) => {
+          reject(error);
+        }
+      );
+    } else {
+      reject(new Error("Geolocation is not supported by this browser."));
+    }
+  });
+};
+
+const getLocationWithCoordinates = async (): Promise<Location> => {
+  const { latitude, longitude } = await getCurrentCoordinates();
+  console.log("getLocationWithCoordinates", latitude, longitude);
+
+  const response = await axios.get(
+    `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
+  );
+  const data: NominatimReverseResponse = response.data;
+
+  return {
+    latitude: data.lat,
+    longitude: data.lon,
+    location: `${data.address.quarter}, ${data.address.city}, ${data.address.state}`,
+  };
+};
+
+export { getCurrentCoordinates, getLocationWithCoordinates };

@@ -8,7 +8,7 @@ import {
   getByTeacherOrSectionAsync,
   updateAsync,
 } from "@/services/class-schedule.service";
-import { toMinutes } from "@/utils/time-format.util";
+import { toMinutes } from "@/utils/date-time-format.util";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
