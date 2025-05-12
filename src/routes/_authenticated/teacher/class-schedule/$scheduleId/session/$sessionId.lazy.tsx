@@ -36,7 +36,7 @@ function RouteComponent() {
               View and manage student attendance records.
             </p>
           </div>
-          <ClassSessionPrimaryButtons />
+          <ClassSessionPrimaryButtons classSession={classSession} />
         </div>
         <AttendanceRecordsTable data={classSession?.attendanceRecords} />
       </Main>
