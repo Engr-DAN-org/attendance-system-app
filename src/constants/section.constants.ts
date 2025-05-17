@@ -1,5 +1,5 @@
 import { TimeSlot } from "@/components/admin/sections/components/weekly-calendar";
-import { formatTime } from "@/utils/time-format.util";
+import { formatTime } from "@/utils/date-time-format.util";
 
 const startHour = 6; // 6AM
 const endHour = 20; // 8PM

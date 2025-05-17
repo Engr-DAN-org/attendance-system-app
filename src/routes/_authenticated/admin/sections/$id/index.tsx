@@ -12,7 +12,7 @@ export const Route = createFileRoute("/_authenticated/admin/sections/$id/")({
     if (isNaN(id) || id <= 0) {
       throw new Error("Invalid id parameter");
     }
-    return await getByIdAsync(id.toString());
+    return await getByIdAsync(id);
   },
   params: {
     parse: (params) => {

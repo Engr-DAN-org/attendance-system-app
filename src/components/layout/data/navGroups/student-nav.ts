@@ -35,7 +35,7 @@ export const studentNavGroups: NavGroup[] = [
       },
       {
         title: "Scan QR Code",
-        url: `${studentUrl}/scan-qr-code` as LinkProps["to"],
+        url: "/student/qr-scan", // Direct link to QR scan page
         icon: IconQrcode, // Use QR code icon
       },
     ],

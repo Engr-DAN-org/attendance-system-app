@@ -1,6 +1,6 @@
 import { OptionTypes } from "@/components/form-components/form-command";
 import { CourseQueryOption } from "@/config/useOptions/courseOption";
-import { SectionQueryOption } from "@/config/useOptions/sectionQueryOptions";
+import { SectionsQueryOption } from "@/config/useOptions/sectionQueryOptions";
 import { subjectTeachersQueryOption } from "@/config/useOptions/subjectQueryOptions";
 import {
   initialCourseQuery,
@@ -42,7 +42,7 @@ export const useSelectDataLogic = () => {
   };
 
   const { data: sectionData, isPending: isSectionQueryPending } = useQuery(
-    SectionQueryOption(selectSectionQuery)
+    SectionsQueryOption(selectSectionQuery)
   );
 
   const updateSelectSectionQuery = (courseCode: string) => {

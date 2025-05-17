@@ -37,6 +37,15 @@ const queryClient = new QueryClient({
     mutations: {
       onError: (error) => {
         handleServerError(error);
+        if (error instanceof AxiosError) {
+          const status = error.response?.status;
+          const navigate = router.navigate;
+
+          if (status == 401) {
+            useAuthStore.getState().logout(navigate);
+            router.navigate({ to: "/sign-in" });
+          }
+        }
       },
     },
   },
@@ -49,6 +58,7 @@ const queryClient = new QueryClient({
         if (status == 401) {
           toast.error("Session expired!");
           useAuthStore.getState().logout(navigate);
+          router.navigate({ to: "/sign-in" });
         }
         if (error.response?.status === 500) {
           toast("Internal Server Error!");

@@ -1,3 +1,5 @@
+import { ClassScheduleContextProvider } from "@/components/admin/class-schedule/class-schedule-context";
+import { StudentContextProvider } from "@/components/student/context/student.context";
 import {
   createFileRoute,
   LinkProps,
@@ -17,5 +19,11 @@ export const Route = createFileRoute("/_authenticated/student")({
 });
 
 function RouteComponent() {
-  return <Outlet />;
+  return (
+    <StudentContextProvider>
+      <ClassScheduleContextProvider>
+        <Outlet />
+      </ClassScheduleContextProvider>
+    </StudentContextProvider>
+  );
 }

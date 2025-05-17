@@ -20,16 +20,20 @@ import { Route as AuthenticatedTeacherRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedStudentRouteImport } from './routes/_authenticated/student/route'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin/route'
 import { Route as AuthenticatedAdminSectionsRouteImport } from './routes/_authenticated/admin/sections/route'
+import { Route as AuthenticatedStudentQrScanIndexImport } from './routes/_authenticated/student/qr-scan/index'
+import { Route as AuthenticatedStudentClassScheduleIndexImport } from './routes/_authenticated/student/class-schedule/index'
 import { Route as AuthenticatedAdminUsersIndexImport } from './routes/_authenticated/admin/users/index'
 import { Route as AuthenticatedAdminSubjectsIndexImport } from './routes/_authenticated/admin/subjects/index'
 import { Route as AuthenticatedAdminCoursesIndexImport } from './routes/_authenticated/admin/courses/index'
-import { Route as AuthenticatedTeacherClassScheduleScheduleIdImport } from './routes/_authenticated/teacher/class-schedule/$scheduleId'
+import { Route as AuthenticatedTeacherClassScheduleScheduleIdRouteImport } from './routes/_authenticated/teacher/class-schedule/$scheduleId/route'
 import { Route as AuthenticatedAdminUsersUserIdRouteImport } from './routes/_authenticated/admin/users/$userId/route'
+import { Route as AuthenticatedTeacherClassScheduleScheduleIdIndexImport } from './routes/_authenticated/teacher/class-schedule/$scheduleId/index'
+import { Route as AuthenticatedStudentClassScheduleScheduleIdIndexImport } from './routes/_authenticated/student/class-schedule/$scheduleId/index'
 import { Route as AuthenticatedAdminUsersUserIdIndexImport } from './routes/_authenticated/admin/users/$userId/index'
-import { Route as AuthenticatedAdminSectionsCreateIndexImport } from './routes/_authenticated/admin/sections/create/index'
 import { Route as AuthenticatedAdminSectionsIdIndexImport } from './routes/_authenticated/admin/sections/$id/index'
 import { Route as AuthenticatedAdminUsersUserIdGuardianImport } from './routes/_authenticated/admin/users/$userId/guardian'
 import { Route as AuthenticatedAdminUsersUserIdClassScheduleImport } from './routes/_authenticated/admin/users/$userId/class-schedule'
+import { Route as AuthenticatedStudentClassScheduleScheduleIdSessionSessionIdImport } from './routes/_authenticated/student/class-schedule/$scheduleId/session/$sessionId'
 
 // Create Virtual Routes
 
@@ -56,6 +60,10 @@ const AuthenticatedTeacherClassScheduleIndexLazyImport = createFileRoute(
 const AuthenticatedAdminSectionsIndexLazyImport = createFileRoute(
   '/_authenticated/admin/sections/',
 )()
+const AuthenticatedTeacherClassScheduleScheduleIdSessionSessionIdLazyImport =
+  createFileRoute(
+    '/_authenticated/teacher/class-schedule/$scheduleId/session/$sessionId',
+  )()
 
 // Create/Update Routes
 
@@ -201,6 +209,20 @@ const AuthenticatedAdminSectionsIndexLazyRoute =
     ),
   )
 
+const AuthenticatedStudentQrScanIndexRoute =
+  AuthenticatedStudentQrScanIndexImport.update({
+    id: '/qr-scan/',
+    path: '/qr-scan/',
+    getParentRoute: () => AuthenticatedStudentRouteRoute,
+  } as any)
+
+const AuthenticatedStudentClassScheduleIndexRoute =
+  AuthenticatedStudentClassScheduleIndexImport.update({
+    id: '/class-schedule/',
+    path: '/class-schedule/',
+    getParentRoute: () => AuthenticatedStudentRouteRoute,
+  } as any)
+
 const AuthenticatedAdminUsersIndexRoute =
   AuthenticatedAdminUsersIndexImport.update({
     id: '/users/',
@@ -222,8 +244,8 @@ const AuthenticatedAdminCoursesIndexRoute =
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
 
-const AuthenticatedTeacherClassScheduleScheduleIdRoute =
-  AuthenticatedTeacherClassScheduleScheduleIdImport.update({
+const AuthenticatedTeacherClassScheduleScheduleIdRouteRoute =
+  AuthenticatedTeacherClassScheduleScheduleIdRouteImport.update({
     id: '/class-schedule/$scheduleId',
     path: '/class-schedule/$scheduleId',
     getParentRoute: () => AuthenticatedTeacherRouteRoute,
@@ -236,18 +258,25 @@ const AuthenticatedAdminUsersUserIdRouteRoute =
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
 
+const AuthenticatedTeacherClassScheduleScheduleIdIndexRoute =
+  AuthenticatedTeacherClassScheduleScheduleIdIndexImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedTeacherClassScheduleScheduleIdRouteRoute,
+  } as any)
+
+const AuthenticatedStudentClassScheduleScheduleIdIndexRoute =
+  AuthenticatedStudentClassScheduleScheduleIdIndexImport.update({
+    id: '/class-schedule/$scheduleId/',
+    path: '/class-schedule/$scheduleId/',
+    getParentRoute: () => AuthenticatedStudentRouteRoute,
+  } as any)
+
 const AuthenticatedAdminUsersUserIdIndexRoute =
   AuthenticatedAdminUsersUserIdIndexImport.update({
     id: '/',
     path: '/',
     getParentRoute: () => AuthenticatedAdminUsersUserIdRouteRoute,
-  } as any)
-
-const AuthenticatedAdminSectionsCreateIndexRoute =
-  AuthenticatedAdminSectionsCreateIndexImport.update({
-    id: '/create/',
-    path: '/create/',
-    getParentRoute: () => AuthenticatedAdminSectionsRouteRoute,
   } as any)
 
 const AuthenticatedAdminSectionsIdIndexRoute =
@@ -269,6 +298,24 @@ const AuthenticatedAdminUsersUserIdClassScheduleRoute =
     id: '/class-schedule',
     path: '/class-schedule',
     getParentRoute: () => AuthenticatedAdminUsersUserIdRouteRoute,
+  } as any)
+
+const AuthenticatedTeacherClassScheduleScheduleIdSessionSessionIdLazyRoute =
+  AuthenticatedTeacherClassScheduleScheduleIdSessionSessionIdLazyImport.update({
+    id: '/session/$sessionId',
+    path: '/session/$sessionId',
+    getParentRoute: () => AuthenticatedTeacherClassScheduleScheduleIdRouteRoute,
+  } as any).lazy(() =>
+    import(
+      './routes/_authenticated/teacher/class-schedule/$scheduleId/session/$sessionId.lazy'
+    ).then((d) => d.Route),
+  )
+
+const AuthenticatedStudentClassScheduleScheduleIdSessionSessionIdRoute =
+  AuthenticatedStudentClassScheduleScheduleIdSessionSessionIdImport.update({
+    id: '/class-schedule/$scheduleId/session/$sessionId',
+    path: '/class-schedule/$scheduleId/session/$sessionId',
+    getParentRoute: () => AuthenticatedStudentRouteRoute,
   } as any)
 
 // Populate the FileRoutesByPath interface
@@ -398,7 +445,7 @@ declare module '@tanstack/react-router' {
       id: '/_authenticated/teacher/class-schedule/$scheduleId'
       path: '/class-schedule/$scheduleId'
       fullPath: '/teacher/class-schedule/$scheduleId'
-      preLoaderRoute: typeof AuthenticatedTeacherClassScheduleScheduleIdImport
+      preLoaderRoute: typeof AuthenticatedTeacherClassScheduleScheduleIdRouteImport
       parentRoute: typeof AuthenticatedTeacherRouteImport
     }
     '/_authenticated/admin/courses/': {
@@ -421,6 +468,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/users'
       preLoaderRoute: typeof AuthenticatedAdminUsersIndexImport
       parentRoute: typeof AuthenticatedAdminRouteImport
+    }
+    '/_authenticated/student/class-schedule/': {
+      id: '/_authenticated/student/class-schedule/'
+      path: '/class-schedule'
+      fullPath: '/student/class-schedule'
+      preLoaderRoute: typeof AuthenticatedStudentClassScheduleIndexImport
+      parentRoute: typeof AuthenticatedStudentRouteImport
+    }
+    '/_authenticated/student/qr-scan/': {
+      id: '/_authenticated/student/qr-scan/'
+      path: '/qr-scan'
+      fullPath: '/student/qr-scan'
+      preLoaderRoute: typeof AuthenticatedStudentQrScanIndexImport
+      parentRoute: typeof AuthenticatedStudentRouteImport
     }
     '/_authenticated/admin/sections/': {
       id: '/_authenticated/admin/sections/'
@@ -457,19 +518,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminSectionsIdIndexImport
       parentRoute: typeof AuthenticatedAdminSectionsRouteImport
     }
-    '/_authenticated/admin/sections/create/': {
-      id: '/_authenticated/admin/sections/create/'
-      path: '/create'
-      fullPath: '/admin/sections/create'
-      preLoaderRoute: typeof AuthenticatedAdminSectionsCreateIndexImport
-      parentRoute: typeof AuthenticatedAdminSectionsRouteImport
-    }
     '/_authenticated/admin/users/$userId/': {
       id: '/_authenticated/admin/users/$userId/'
       path: '/'
       fullPath: '/admin/users/$userId/'
       preLoaderRoute: typeof AuthenticatedAdminUsersUserIdIndexImport
       parentRoute: typeof AuthenticatedAdminUsersUserIdRouteImport
+    }
+    '/_authenticated/student/class-schedule/$scheduleId/': {
+      id: '/_authenticated/student/class-schedule/$scheduleId/'
+      path: '/class-schedule/$scheduleId'
+      fullPath: '/student/class-schedule/$scheduleId'
+      preLoaderRoute: typeof AuthenticatedStudentClassScheduleScheduleIdIndexImport
+      parentRoute: typeof AuthenticatedStudentRouteImport
+    }
+    '/_authenticated/teacher/class-schedule/$scheduleId/': {
+      id: '/_authenticated/teacher/class-schedule/$scheduleId/'
+      path: '/'
+      fullPath: '/teacher/class-schedule/$scheduleId/'
+      preLoaderRoute: typeof AuthenticatedTeacherClassScheduleScheduleIdIndexImport
+      parentRoute: typeof AuthenticatedTeacherClassScheduleScheduleIdRouteImport
+    }
+    '/_authenticated/student/class-schedule/$scheduleId/session/$sessionId': {
+      id: '/_authenticated/student/class-schedule/$scheduleId/session/$sessionId'
+      path: '/class-schedule/$scheduleId/session/$sessionId'
+      fullPath: '/student/class-schedule/$scheduleId/session/$sessionId'
+      preLoaderRoute: typeof AuthenticatedStudentClassScheduleScheduleIdSessionSessionIdImport
+      parentRoute: typeof AuthenticatedStudentRouteImport
+    }
+    '/_authenticated/teacher/class-schedule/$scheduleId/session/$sessionId': {
+      id: '/_authenticated/teacher/class-schedule/$scheduleId/session/$sessionId'
+      path: '/session/$sessionId'
+      fullPath: '/teacher/class-schedule/$scheduleId/session/$sessionId'
+      preLoaderRoute: typeof AuthenticatedTeacherClassScheduleScheduleIdSessionSessionIdLazyImport
+      parentRoute: typeof AuthenticatedTeacherClassScheduleScheduleIdRouteImport
     }
   }
 }
@@ -479,7 +561,6 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedAdminSectionsRouteRouteChildren {
   AuthenticatedAdminSectionsIndexLazyRoute: typeof AuthenticatedAdminSectionsIndexLazyRoute
   AuthenticatedAdminSectionsIdIndexRoute: typeof AuthenticatedAdminSectionsIdIndexRoute
-  AuthenticatedAdminSectionsCreateIndexRoute: typeof AuthenticatedAdminSectionsCreateIndexRoute
 }
 
 const AuthenticatedAdminSectionsRouteRouteChildren: AuthenticatedAdminSectionsRouteRouteChildren =
@@ -488,8 +569,6 @@ const AuthenticatedAdminSectionsRouteRouteChildren: AuthenticatedAdminSectionsRo
       AuthenticatedAdminSectionsIndexLazyRoute,
     AuthenticatedAdminSectionsIdIndexRoute:
       AuthenticatedAdminSectionsIdIndexRoute,
-    AuthenticatedAdminSectionsCreateIndexRoute:
-      AuthenticatedAdminSectionsCreateIndexRoute,
   }
 
 const AuthenticatedAdminSectionsRouteRouteWithChildren =
@@ -546,11 +625,22 @@ const AuthenticatedAdminRouteRouteWithChildren =
 
 interface AuthenticatedStudentRouteRouteChildren {
   AuthenticatedStudentIndexLazyRoute: typeof AuthenticatedStudentIndexLazyRoute
+  AuthenticatedStudentClassScheduleIndexRoute: typeof AuthenticatedStudentClassScheduleIndexRoute
+  AuthenticatedStudentQrScanIndexRoute: typeof AuthenticatedStudentQrScanIndexRoute
+  AuthenticatedStudentClassScheduleScheduleIdIndexRoute: typeof AuthenticatedStudentClassScheduleScheduleIdIndexRoute
+  AuthenticatedStudentClassScheduleScheduleIdSessionSessionIdRoute: typeof AuthenticatedStudentClassScheduleScheduleIdSessionSessionIdRoute
 }
 
 const AuthenticatedStudentRouteRouteChildren: AuthenticatedStudentRouteRouteChildren =
   {
     AuthenticatedStudentIndexLazyRoute: AuthenticatedStudentIndexLazyRoute,
+    AuthenticatedStudentClassScheduleIndexRoute:
+      AuthenticatedStudentClassScheduleIndexRoute,
+    AuthenticatedStudentQrScanIndexRoute: AuthenticatedStudentQrScanIndexRoute,
+    AuthenticatedStudentClassScheduleScheduleIdIndexRoute:
+      AuthenticatedStudentClassScheduleScheduleIdIndexRoute,
+    AuthenticatedStudentClassScheduleScheduleIdSessionSessionIdRoute:
+      AuthenticatedStudentClassScheduleScheduleIdSessionSessionIdRoute,
   }
 
 const AuthenticatedStudentRouteRouteWithChildren =
@@ -558,17 +648,35 @@ const AuthenticatedStudentRouteRouteWithChildren =
     AuthenticatedStudentRouteRouteChildren,
   )
 
+interface AuthenticatedTeacherClassScheduleScheduleIdRouteRouteChildren {
+  AuthenticatedTeacherClassScheduleScheduleIdIndexRoute: typeof AuthenticatedTeacherClassScheduleScheduleIdIndexRoute
+  AuthenticatedTeacherClassScheduleScheduleIdSessionSessionIdLazyRoute: typeof AuthenticatedTeacherClassScheduleScheduleIdSessionSessionIdLazyRoute
+}
+
+const AuthenticatedTeacherClassScheduleScheduleIdRouteRouteChildren: AuthenticatedTeacherClassScheduleScheduleIdRouteRouteChildren =
+  {
+    AuthenticatedTeacherClassScheduleScheduleIdIndexRoute:
+      AuthenticatedTeacherClassScheduleScheduleIdIndexRoute,
+    AuthenticatedTeacherClassScheduleScheduleIdSessionSessionIdLazyRoute:
+      AuthenticatedTeacherClassScheduleScheduleIdSessionSessionIdLazyRoute,
+  }
+
+const AuthenticatedTeacherClassScheduleScheduleIdRouteRouteWithChildren =
+  AuthenticatedTeacherClassScheduleScheduleIdRouteRoute._addFileChildren(
+    AuthenticatedTeacherClassScheduleScheduleIdRouteRouteChildren,
+  )
+
 interface AuthenticatedTeacherRouteRouteChildren {
   AuthenticatedTeacherIndexLazyRoute: typeof AuthenticatedTeacherIndexLazyRoute
-  AuthenticatedTeacherClassScheduleScheduleIdRoute: typeof AuthenticatedTeacherClassScheduleScheduleIdRoute
+  AuthenticatedTeacherClassScheduleScheduleIdRouteRoute: typeof AuthenticatedTeacherClassScheduleScheduleIdRouteRouteWithChildren
   AuthenticatedTeacherClassScheduleIndexLazyRoute: typeof AuthenticatedTeacherClassScheduleIndexLazyRoute
 }
 
 const AuthenticatedTeacherRouteRouteChildren: AuthenticatedTeacherRouteRouteChildren =
   {
     AuthenticatedTeacherIndexLazyRoute: AuthenticatedTeacherIndexLazyRoute,
-    AuthenticatedTeacherClassScheduleScheduleIdRoute:
-      AuthenticatedTeacherClassScheduleScheduleIdRoute,
+    AuthenticatedTeacherClassScheduleScheduleIdRouteRoute:
+      AuthenticatedTeacherClassScheduleScheduleIdRouteRouteWithChildren,
     AuthenticatedTeacherClassScheduleIndexLazyRoute:
       AuthenticatedTeacherClassScheduleIndexLazyRoute,
   }
@@ -613,17 +721,22 @@ export interface FileRoutesByFullPath {
   '/student/': typeof AuthenticatedStudentIndexLazyRoute
   '/teacher/': typeof AuthenticatedTeacherIndexLazyRoute
   '/admin/users/$userId': typeof AuthenticatedAdminUsersUserIdRouteRouteWithChildren
-  '/teacher/class-schedule/$scheduleId': typeof AuthenticatedTeacherClassScheduleScheduleIdRoute
+  '/teacher/class-schedule/$scheduleId': typeof AuthenticatedTeacherClassScheduleScheduleIdRouteRouteWithChildren
   '/admin/courses': typeof AuthenticatedAdminCoursesIndexRoute
   '/admin/subjects': typeof AuthenticatedAdminSubjectsIndexRoute
   '/admin/users': typeof AuthenticatedAdminUsersIndexRoute
+  '/student/class-schedule': typeof AuthenticatedStudentClassScheduleIndexRoute
+  '/student/qr-scan': typeof AuthenticatedStudentQrScanIndexRoute
   '/admin/sections/': typeof AuthenticatedAdminSectionsIndexLazyRoute
   '/teacher/class-schedule': typeof AuthenticatedTeacherClassScheduleIndexLazyRoute
   '/admin/users/$userId/class-schedule': typeof AuthenticatedAdminUsersUserIdClassScheduleRoute
   '/admin/users/$userId/guardian': typeof AuthenticatedAdminUsersUserIdGuardianRoute
   '/admin/sections/$id': typeof AuthenticatedAdminSectionsIdIndexRoute
-  '/admin/sections/create': typeof AuthenticatedAdminSectionsCreateIndexRoute
   '/admin/users/$userId/': typeof AuthenticatedAdminUsersUserIdIndexRoute
+  '/student/class-schedule/$scheduleId': typeof AuthenticatedStudentClassScheduleScheduleIdIndexRoute
+  '/teacher/class-schedule/$scheduleId/': typeof AuthenticatedTeacherClassScheduleScheduleIdIndexRoute
+  '/student/class-schedule/$scheduleId/session/$sessionId': typeof AuthenticatedStudentClassScheduleScheduleIdSessionSessionIdRoute
+  '/teacher/class-schedule/$scheduleId/session/$sessionId': typeof AuthenticatedTeacherClassScheduleScheduleIdSessionSessionIdLazyRoute
 }
 
 export interface FileRoutesByTo {
@@ -639,17 +752,21 @@ export interface FileRoutesByTo {
   '/coming-soon': typeof AuthenticatedComingSoonIndexLazyRoute
   '/student': typeof AuthenticatedStudentIndexLazyRoute
   '/teacher': typeof AuthenticatedTeacherIndexLazyRoute
-  '/teacher/class-schedule/$scheduleId': typeof AuthenticatedTeacherClassScheduleScheduleIdRoute
   '/admin/courses': typeof AuthenticatedAdminCoursesIndexRoute
   '/admin/subjects': typeof AuthenticatedAdminSubjectsIndexRoute
   '/admin/users': typeof AuthenticatedAdminUsersIndexRoute
+  '/student/class-schedule': typeof AuthenticatedStudentClassScheduleIndexRoute
+  '/student/qr-scan': typeof AuthenticatedStudentQrScanIndexRoute
   '/admin/sections': typeof AuthenticatedAdminSectionsIndexLazyRoute
   '/teacher/class-schedule': typeof AuthenticatedTeacherClassScheduleIndexLazyRoute
   '/admin/users/$userId/class-schedule': typeof AuthenticatedAdminUsersUserIdClassScheduleRoute
   '/admin/users/$userId/guardian': typeof AuthenticatedAdminUsersUserIdGuardianRoute
   '/admin/sections/$id': typeof AuthenticatedAdminSectionsIdIndexRoute
-  '/admin/sections/create': typeof AuthenticatedAdminSectionsCreateIndexRoute
   '/admin/users/$userId': typeof AuthenticatedAdminUsersUserIdIndexRoute
+  '/student/class-schedule/$scheduleId': typeof AuthenticatedStudentClassScheduleScheduleIdIndexRoute
+  '/teacher/class-schedule/$scheduleId': typeof AuthenticatedTeacherClassScheduleScheduleIdIndexRoute
+  '/student/class-schedule/$scheduleId/session/$sessionId': typeof AuthenticatedStudentClassScheduleScheduleIdSessionSessionIdRoute
+  '/teacher/class-schedule/$scheduleId/session/$sessionId': typeof AuthenticatedTeacherClassScheduleScheduleIdSessionSessionIdLazyRoute
 }
 
 export interface FileRoutesById {
@@ -671,17 +788,22 @@ export interface FileRoutesById {
   '/_authenticated/student/': typeof AuthenticatedStudentIndexLazyRoute
   '/_authenticated/teacher/': typeof AuthenticatedTeacherIndexLazyRoute
   '/_authenticated/admin/users/$userId': typeof AuthenticatedAdminUsersUserIdRouteRouteWithChildren
-  '/_authenticated/teacher/class-schedule/$scheduleId': typeof AuthenticatedTeacherClassScheduleScheduleIdRoute
+  '/_authenticated/teacher/class-schedule/$scheduleId': typeof AuthenticatedTeacherClassScheduleScheduleIdRouteRouteWithChildren
   '/_authenticated/admin/courses/': typeof AuthenticatedAdminCoursesIndexRoute
   '/_authenticated/admin/subjects/': typeof AuthenticatedAdminSubjectsIndexRoute
   '/_authenticated/admin/users/': typeof AuthenticatedAdminUsersIndexRoute
+  '/_authenticated/student/class-schedule/': typeof AuthenticatedStudentClassScheduleIndexRoute
+  '/_authenticated/student/qr-scan/': typeof AuthenticatedStudentQrScanIndexRoute
   '/_authenticated/admin/sections/': typeof AuthenticatedAdminSectionsIndexLazyRoute
   '/_authenticated/teacher/class-schedule/': typeof AuthenticatedTeacherClassScheduleIndexLazyRoute
   '/_authenticated/admin/users/$userId/class-schedule': typeof AuthenticatedAdminUsersUserIdClassScheduleRoute
   '/_authenticated/admin/users/$userId/guardian': typeof AuthenticatedAdminUsersUserIdGuardianRoute
   '/_authenticated/admin/sections/$id/': typeof AuthenticatedAdminSectionsIdIndexRoute
-  '/_authenticated/admin/sections/create/': typeof AuthenticatedAdminSectionsCreateIndexRoute
   '/_authenticated/admin/users/$userId/': typeof AuthenticatedAdminUsersUserIdIndexRoute
+  '/_authenticated/student/class-schedule/$scheduleId/': typeof AuthenticatedStudentClassScheduleScheduleIdIndexRoute
+  '/_authenticated/teacher/class-schedule/$scheduleId/': typeof AuthenticatedTeacherClassScheduleScheduleIdIndexRoute
+  '/_authenticated/student/class-schedule/$scheduleId/session/$sessionId': typeof AuthenticatedStudentClassScheduleScheduleIdSessionSessionIdRoute
+  '/_authenticated/teacher/class-schedule/$scheduleId/session/$sessionId': typeof AuthenticatedTeacherClassScheduleScheduleIdSessionSessionIdLazyRoute
 }
 
 export interface FileRouteTypes {
@@ -708,13 +830,18 @@ export interface FileRouteTypes {
     | '/admin/courses'
     | '/admin/subjects'
     | '/admin/users'
+    | '/student/class-schedule'
+    | '/student/qr-scan'
     | '/admin/sections/'
     | '/teacher/class-schedule'
     | '/admin/users/$userId/class-schedule'
     | '/admin/users/$userId/guardian'
     | '/admin/sections/$id'
-    | '/admin/sections/create'
     | '/admin/users/$userId/'
+    | '/student/class-schedule/$scheduleId'
+    | '/teacher/class-schedule/$scheduleId/'
+    | '/student/class-schedule/$scheduleId/session/$sessionId'
+    | '/teacher/class-schedule/$scheduleId/session/$sessionId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -729,17 +856,21 @@ export interface FileRouteTypes {
     | '/coming-soon'
     | '/student'
     | '/teacher'
-    | '/teacher/class-schedule/$scheduleId'
     | '/admin/courses'
     | '/admin/subjects'
     | '/admin/users'
+    | '/student/class-schedule'
+    | '/student/qr-scan'
     | '/admin/sections'
     | '/teacher/class-schedule'
     | '/admin/users/$userId/class-schedule'
     | '/admin/users/$userId/guardian'
     | '/admin/sections/$id'
-    | '/admin/sections/create'
     | '/admin/users/$userId'
+    | '/student/class-schedule/$scheduleId'
+    | '/teacher/class-schedule/$scheduleId'
+    | '/student/class-schedule/$scheduleId/session/$sessionId'
+    | '/teacher/class-schedule/$scheduleId/session/$sessionId'
   id:
     | '__root__'
     | '/'
@@ -763,13 +894,18 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/courses/'
     | '/_authenticated/admin/subjects/'
     | '/_authenticated/admin/users/'
+    | '/_authenticated/student/class-schedule/'
+    | '/_authenticated/student/qr-scan/'
     | '/_authenticated/admin/sections/'
     | '/_authenticated/teacher/class-schedule/'
     | '/_authenticated/admin/users/$userId/class-schedule'
     | '/_authenticated/admin/users/$userId/guardian'
     | '/_authenticated/admin/sections/$id/'
-    | '/_authenticated/admin/sections/create/'
     | '/_authenticated/admin/users/$userId/'
+    | '/_authenticated/student/class-schedule/$scheduleId/'
+    | '/_authenticated/teacher/class-schedule/$scheduleId/'
+    | '/_authenticated/student/class-schedule/$scheduleId/session/$sessionId'
+    | '/_authenticated/teacher/class-schedule/$scheduleId/session/$sessionId'
   fileRoutesById: FileRoutesById
 }
 
@@ -843,7 +979,11 @@ export const routeTree = rootRoute
       "filePath": "_authenticated/student/route.tsx",
       "parent": "/_authenticated",
       "children": [
-        "/_authenticated/student/"
+        "/_authenticated/student/",
+        "/_authenticated/student/class-schedule/",
+        "/_authenticated/student/qr-scan/",
+        "/_authenticated/student/class-schedule/$scheduleId/",
+        "/_authenticated/student/class-schedule/$scheduleId/session/$sessionId"
       ]
     },
     "/_authenticated/teacher": {
@@ -878,8 +1018,7 @@ export const routeTree = rootRoute
       "parent": "/_authenticated/admin",
       "children": [
         "/_authenticated/admin/sections/",
-        "/_authenticated/admin/sections/$id/",
-        "/_authenticated/admin/sections/create/"
+        "/_authenticated/admin/sections/$id/"
       ]
     },
     "/_authenticated/admin/": {
@@ -908,8 +1047,12 @@ export const routeTree = rootRoute
       ]
     },
     "/_authenticated/teacher/class-schedule/$scheduleId": {
-      "filePath": "_authenticated/teacher/class-schedule/$scheduleId.tsx",
-      "parent": "/_authenticated/teacher"
+      "filePath": "_authenticated/teacher/class-schedule/$scheduleId/route.tsx",
+      "parent": "/_authenticated/teacher",
+      "children": [
+        "/_authenticated/teacher/class-schedule/$scheduleId/",
+        "/_authenticated/teacher/class-schedule/$scheduleId/session/$sessionId"
+      ]
     },
     "/_authenticated/admin/courses/": {
       "filePath": "_authenticated/admin/courses/index.tsx",
@@ -922,6 +1065,14 @@ export const routeTree = rootRoute
     "/_authenticated/admin/users/": {
       "filePath": "_authenticated/admin/users/index.tsx",
       "parent": "/_authenticated/admin"
+    },
+    "/_authenticated/student/class-schedule/": {
+      "filePath": "_authenticated/student/class-schedule/index.tsx",
+      "parent": "/_authenticated/student"
+    },
+    "/_authenticated/student/qr-scan/": {
+      "filePath": "_authenticated/student/qr-scan/index.tsx",
+      "parent": "/_authenticated/student"
     },
     "/_authenticated/admin/sections/": {
       "filePath": "_authenticated/admin/sections/index.lazy.tsx",
@@ -943,13 +1094,25 @@ export const routeTree = rootRoute
       "filePath": "_authenticated/admin/sections/$id/index.tsx",
       "parent": "/_authenticated/admin/sections"
     },
-    "/_authenticated/admin/sections/create/": {
-      "filePath": "_authenticated/admin/sections/create/index.tsx",
-      "parent": "/_authenticated/admin/sections"
-    },
     "/_authenticated/admin/users/$userId/": {
       "filePath": "_authenticated/admin/users/$userId/index.tsx",
       "parent": "/_authenticated/admin/users/$userId"
+    },
+    "/_authenticated/student/class-schedule/$scheduleId/": {
+      "filePath": "_authenticated/student/class-schedule/$scheduleId/index.tsx",
+      "parent": "/_authenticated/student"
+    },
+    "/_authenticated/teacher/class-schedule/$scheduleId/": {
+      "filePath": "_authenticated/teacher/class-schedule/$scheduleId/index.tsx",
+      "parent": "/_authenticated/teacher/class-schedule/$scheduleId"
+    },
+    "/_authenticated/student/class-schedule/$scheduleId/session/$sessionId": {
+      "filePath": "_authenticated/student/class-schedule/$scheduleId/session/$sessionId.tsx",
+      "parent": "/_authenticated/student"
+    },
+    "/_authenticated/teacher/class-schedule/$scheduleId/session/$sessionId": {
+      "filePath": "_authenticated/teacher/class-schedule/$scheduleId/session/$sessionId.lazy.tsx",
+      "parent": "/_authenticated/teacher/class-schedule/$scheduleId"
     }
   }
 }

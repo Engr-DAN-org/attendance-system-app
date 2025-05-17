@@ -1,3 +1,4 @@
+import { OverrideAttendanceRecord } from "@/interfaces/types/attendanceRecord";
 import { ClassSchedule } from "@/interfaces/types/classSchedule";
 import api from "@/lib/axiosSetup";
 
@@ -20,6 +21,18 @@ export const getClassScheduleByIdAsync = async (
     return response.data;
   } catch (error) {
     console.error("Error fetching class schedule by ID:", error);
+    throw error; // Rethrow the error to be handled by the caller
+  }
+};
+
+export const overrideAttendanceRecordAsync = async (
+  data: OverrideAttendanceRecord
+) => {
+  try {
+    const response = await api.post(`/teacher/override-attendance`, data);
+    return response.data;
+  } catch (error) {
+    console.error("Error overriding attendance record:", error);
     throw error; // Rethrow the error to be handled by the caller
   }
 };
