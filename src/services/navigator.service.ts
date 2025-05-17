@@ -54,8 +54,8 @@ const getLocationWithCoordinates = async (): Promise<Location> => {
   const data: NominatimReverseResponse = response.data;
 
   return {
-    latitude: data.lat,
-    longitude: data.lon,
+    latitude: Number(data.lat),
+    longitude: Number(data.lon),
     location: `${data.address.quarter}, ${data.address.city}, ${data.address.state}`,
   };
 };

@@ -1,4 +1,9 @@
-export function formatTime(time: string) {
+/**
+ *
+ * @param time - Time string in "HH:MM" format
+ * @returns {string} - Formatted time string in "HH:MM AM/PM" format
+ */
+export function formatTime(time: string): string {
   const [hourStr, minuteStr] = time.split(":");
   let hour = parseInt(hourStr, 10);
   const minute = minuteStr.padStart(2, "0");

@@ -71,13 +71,13 @@ export const attendanceRecordColumn: ColumnDef<AttendanceRecord>[] = [
     enableHiding: true,
   },
   {
-    accessorKey: "timeIn",
+    accessorKey: "clockInRecord",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Time In" />
     ),
     cell: ({ row }) => {
-      const { timeIn } = row.original;
-      const time = timeIn ? formatUTCTime(timeIn) : "--";
+      const { clockInRecord } = row.original;
+      const time = clockInRecord?.trim() ? formatUTCTime(clockInRecord) : "--";
       return <div>{time}</div>;
     },
     enableHiding: false,

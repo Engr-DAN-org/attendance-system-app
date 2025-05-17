@@ -1,5 +1,9 @@
 import { User } from "./user";
 
+interface ErrorResponseDTO {
+  message?: string;
+}
+
 interface ResponseDTO {
   responseType: string;
   message: string;
@@ -28,4 +32,5 @@ export type {
   AuthResponseDTO,
   FailedLoginResponseDTO,
   SuccessLoginResponseDTO,
+  ErrorResponseDTO,
 };
