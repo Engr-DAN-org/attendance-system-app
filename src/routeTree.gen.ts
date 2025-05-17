@@ -30,7 +30,6 @@ import { Route as AuthenticatedAdminUsersUserIdRouteImport } from './routes/_aut
 import { Route as AuthenticatedTeacherClassScheduleScheduleIdIndexImport } from './routes/_authenticated/teacher/class-schedule/$scheduleId/index'
 import { Route as AuthenticatedStudentClassScheduleScheduleIdIndexImport } from './routes/_authenticated/student/class-schedule/$scheduleId/index'
 import { Route as AuthenticatedAdminUsersUserIdIndexImport } from './routes/_authenticated/admin/users/$userId/index'
-import { Route as AuthenticatedAdminSectionsCreateIndexImport } from './routes/_authenticated/admin/sections/create/index'
 import { Route as AuthenticatedAdminSectionsIdIndexImport } from './routes/_authenticated/admin/sections/$id/index'
 import { Route as AuthenticatedAdminUsersUserIdGuardianImport } from './routes/_authenticated/admin/users/$userId/guardian'
 import { Route as AuthenticatedAdminUsersUserIdClassScheduleImport } from './routes/_authenticated/admin/users/$userId/class-schedule'
@@ -280,13 +279,6 @@ const AuthenticatedAdminUsersUserIdIndexRoute =
     getParentRoute: () => AuthenticatedAdminUsersUserIdRouteRoute,
   } as any)
 
-const AuthenticatedAdminSectionsCreateIndexRoute =
-  AuthenticatedAdminSectionsCreateIndexImport.update({
-    id: '/create/',
-    path: '/create/',
-    getParentRoute: () => AuthenticatedAdminSectionsRouteRoute,
-  } as any)
-
 const AuthenticatedAdminSectionsIdIndexRoute =
   AuthenticatedAdminSectionsIdIndexImport.update({
     id: '/$id/',
@@ -526,13 +518,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminSectionsIdIndexImport
       parentRoute: typeof AuthenticatedAdminSectionsRouteImport
     }
-    '/_authenticated/admin/sections/create/': {
-      id: '/_authenticated/admin/sections/create/'
-      path: '/create'
-      fullPath: '/admin/sections/create'
-      preLoaderRoute: typeof AuthenticatedAdminSectionsCreateIndexImport
-      parentRoute: typeof AuthenticatedAdminSectionsRouteImport
-    }
     '/_authenticated/admin/users/$userId/': {
       id: '/_authenticated/admin/users/$userId/'
       path: '/'
@@ -576,7 +561,6 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedAdminSectionsRouteRouteChildren {
   AuthenticatedAdminSectionsIndexLazyRoute: typeof AuthenticatedAdminSectionsIndexLazyRoute
   AuthenticatedAdminSectionsIdIndexRoute: typeof AuthenticatedAdminSectionsIdIndexRoute
-  AuthenticatedAdminSectionsCreateIndexRoute: typeof AuthenticatedAdminSectionsCreateIndexRoute
 }
 
 const AuthenticatedAdminSectionsRouteRouteChildren: AuthenticatedAdminSectionsRouteRouteChildren =
@@ -585,8 +569,6 @@ const AuthenticatedAdminSectionsRouteRouteChildren: AuthenticatedAdminSectionsRo
       AuthenticatedAdminSectionsIndexLazyRoute,
     AuthenticatedAdminSectionsIdIndexRoute:
       AuthenticatedAdminSectionsIdIndexRoute,
-    AuthenticatedAdminSectionsCreateIndexRoute:
-      AuthenticatedAdminSectionsCreateIndexRoute,
   }
 
 const AuthenticatedAdminSectionsRouteRouteWithChildren =
@@ -750,7 +732,6 @@ export interface FileRoutesByFullPath {
   '/admin/users/$userId/class-schedule': typeof AuthenticatedAdminUsersUserIdClassScheduleRoute
   '/admin/users/$userId/guardian': typeof AuthenticatedAdminUsersUserIdGuardianRoute
   '/admin/sections/$id': typeof AuthenticatedAdminSectionsIdIndexRoute
-  '/admin/sections/create': typeof AuthenticatedAdminSectionsCreateIndexRoute
   '/admin/users/$userId/': typeof AuthenticatedAdminUsersUserIdIndexRoute
   '/student/class-schedule/$scheduleId': typeof AuthenticatedStudentClassScheduleScheduleIdIndexRoute
   '/teacher/class-schedule/$scheduleId/': typeof AuthenticatedTeacherClassScheduleScheduleIdIndexRoute
@@ -781,7 +762,6 @@ export interface FileRoutesByTo {
   '/admin/users/$userId/class-schedule': typeof AuthenticatedAdminUsersUserIdClassScheduleRoute
   '/admin/users/$userId/guardian': typeof AuthenticatedAdminUsersUserIdGuardianRoute
   '/admin/sections/$id': typeof AuthenticatedAdminSectionsIdIndexRoute
-  '/admin/sections/create': typeof AuthenticatedAdminSectionsCreateIndexRoute
   '/admin/users/$userId': typeof AuthenticatedAdminUsersUserIdIndexRoute
   '/student/class-schedule/$scheduleId': typeof AuthenticatedStudentClassScheduleScheduleIdIndexRoute
   '/teacher/class-schedule/$scheduleId': typeof AuthenticatedTeacherClassScheduleScheduleIdIndexRoute
@@ -819,7 +799,6 @@ export interface FileRoutesById {
   '/_authenticated/admin/users/$userId/class-schedule': typeof AuthenticatedAdminUsersUserIdClassScheduleRoute
   '/_authenticated/admin/users/$userId/guardian': typeof AuthenticatedAdminUsersUserIdGuardianRoute
   '/_authenticated/admin/sections/$id/': typeof AuthenticatedAdminSectionsIdIndexRoute
-  '/_authenticated/admin/sections/create/': typeof AuthenticatedAdminSectionsCreateIndexRoute
   '/_authenticated/admin/users/$userId/': typeof AuthenticatedAdminUsersUserIdIndexRoute
   '/_authenticated/student/class-schedule/$scheduleId/': typeof AuthenticatedStudentClassScheduleScheduleIdIndexRoute
   '/_authenticated/teacher/class-schedule/$scheduleId/': typeof AuthenticatedTeacherClassScheduleScheduleIdIndexRoute
@@ -858,7 +837,6 @@ export interface FileRouteTypes {
     | '/admin/users/$userId/class-schedule'
     | '/admin/users/$userId/guardian'
     | '/admin/sections/$id'
-    | '/admin/sections/create'
     | '/admin/users/$userId/'
     | '/student/class-schedule/$scheduleId'
     | '/teacher/class-schedule/$scheduleId/'
@@ -888,7 +866,6 @@ export interface FileRouteTypes {
     | '/admin/users/$userId/class-schedule'
     | '/admin/users/$userId/guardian'
     | '/admin/sections/$id'
-    | '/admin/sections/create'
     | '/admin/users/$userId'
     | '/student/class-schedule/$scheduleId'
     | '/teacher/class-schedule/$scheduleId'
@@ -924,7 +901,6 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/users/$userId/class-schedule'
     | '/_authenticated/admin/users/$userId/guardian'
     | '/_authenticated/admin/sections/$id/'
-    | '/_authenticated/admin/sections/create/'
     | '/_authenticated/admin/users/$userId/'
     | '/_authenticated/student/class-schedule/$scheduleId/'
     | '/_authenticated/teacher/class-schedule/$scheduleId/'
@@ -1042,8 +1018,7 @@ export const routeTree = rootRoute
       "parent": "/_authenticated/admin",
       "children": [
         "/_authenticated/admin/sections/",
-        "/_authenticated/admin/sections/$id/",
-        "/_authenticated/admin/sections/create/"
+        "/_authenticated/admin/sections/$id/"
       ]
     },
     "/_authenticated/admin/": {
@@ -1117,10 +1092,6 @@ export const routeTree = rootRoute
     },
     "/_authenticated/admin/sections/$id/": {
       "filePath": "_authenticated/admin/sections/$id/index.tsx",
-      "parent": "/_authenticated/admin/sections"
-    },
-    "/_authenticated/admin/sections/create/": {
-      "filePath": "_authenticated/admin/sections/create/index.tsx",
       "parent": "/_authenticated/admin/sections"
     },
     "/_authenticated/admin/users/$userId/": {

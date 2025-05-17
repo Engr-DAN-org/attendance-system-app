@@ -3,13 +3,12 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { AttendanceRecord } from "@/interfaces/types/attendanceRecord";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
-import { IconEdit, IconTrash } from "@tabler/icons-react";
+import { IconEdit } from "@tabler/icons-react";
 import { Row } from "@tanstack/react-table";
 import { useClassSessionContext } from "../context/class-session-context";
 
