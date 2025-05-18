@@ -1,4 +1,4 @@
-import { AttendanceRecordQuery } from "@/interfaces/queryParams/attendanceRecordQuery";
+import { AttendanceRecordQueryParams } from "@/interfaces/queryParams/attendanceRecordQuery";
 import {
   AttendanceRecord,
   LogAttendanceRecord,
@@ -13,7 +13,9 @@ const logAttendance = async (
   return response.data;
 };
 
-const getAttendanceRecordsQuery = async (params: AttendanceRecordQuery) => {
+const getAttendanceRecordsQuery = async (
+  params: AttendanceRecordQueryParams
+) => {
   const response = await api.get("attendanceRecord", {
     params,
   });
@@ -21,10 +23,27 @@ const getAttendanceRecordsQuery = async (params: AttendanceRecordQuery) => {
   return response.data;
 };
 
-const getRecordBySessionId = async (sessionId: string) => {
+const getStudentRecordHistory = async (
+  queryParams: AttendanceRecordQueryParams
+) => {
+  const response = await api.get("attendanceRecord/student-history", {
+    params: queryParams,
+  });
+
+  return response.data;
+};
+
+const getRecordBySessionId = async (
+  sessionId: string
+): Promise<AttendanceRecord> => {
   const response = await api.get(`classSession/${sessionId}/attendance-record`);
 
   return response.data;
 };
 
-export { logAttendance, getAttendanceRecordsQuery, getRecordBySessionId };
+export {
+  logAttendance,
+  getAttendanceRecordsQuery,
+  getRecordBySessionId,
+  getStudentRecordHistory,
+};

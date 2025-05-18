@@ -1,10 +1,5 @@
 import { NavGroup } from "@/interfaces/types/sidebar";
-import {
-  IconCalendar,
-  IconQrcode,
-  IconListCheck,
-  IconTimeline,
-} from "@tabler/icons-react"; // Import relevant icons
+import { IconCalendar, IconQrcode, IconTimeline } from "@tabler/icons-react"; // Import relevant icons
 import { LinkProps } from "@tanstack/react-router";
 
 const studentUrl: LinkProps["to"] = "/student";
@@ -28,11 +23,6 @@ export const studentNavGroups: NavGroup[] = [
   {
     title: "Attendance Actions", // More descriptive group name
     items: [
-      {
-        title: "Attendance History", // More descriptive and less redundant
-        url: `${studentUrl}/attendance` as LinkProps["to"],
-        icon: IconListCheck, // Use a checklist icon
-      },
       {
         title: "Scan QR Code",
         url: "/student/qr-scan", // Direct link to QR scan page

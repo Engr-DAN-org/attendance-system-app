@@ -4,6 +4,7 @@ import { Main } from "@/components/layout/main";
 import { AttendanceRecordsTable } from "@/components/student/attendance-record/attendance-record-table";
 import StudentScheduleHeader from "@/components/student/class-schedule/class-schedule-header";
 import { useStudentContext } from "@/components/student/context/student.context";
+import { Separator } from "@/components/ui/separator";
 import { AttendanceStatus } from "@/enums/attendanceStatus";
 import GeneralError from "@/features/errors/general-error";
 import NotFoundError from "@/features/errors/not-found-error";
@@ -25,7 +26,8 @@ function RouteComponent() {
   const { scheduleId } = Route.useParams();
   const { user: student } = useAuthStore((state) => state);
 
-  const { setQuery, attendanceRecords, isPending } = useStudentContext();
+  const { setQuery, attendanceRecords, isPending, refetchRecords } =
+    useStudentContext();
 
   const { sectionData, setSectionId, sectionId } = useClassScheduleContext();
 
@@ -38,6 +40,7 @@ function RouteComponent() {
       classScheduleId: Number(scheduleId),
       studentIdNumber: student.idNumber,
     });
+    refetchRecords();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scheduleId, student]);
 
@@ -51,6 +54,15 @@ function RouteComponent() {
         records={attendanceRecords}
         scheduleData={classSchedule}
       />
+      <Separator />
+      <div className="my-2 flex flex-wrap items-center justify-between space-y-2">
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight">Past Attendance</h2>
+          <p className="text-muted-foreground">
+            You can check your past attendance records here.
+          </p>
+        </div>
+      </div>
       <AttendanceRecordsTable
         data={attendanceRecords?.filter(
           (record) => record.status != AttendanceStatus.Unmarked

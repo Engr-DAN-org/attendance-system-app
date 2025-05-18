@@ -9,10 +9,12 @@ import { Button } from "@/components/ui/button";
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>;
+  withRowSelection?: boolean;
 }
 
 export function DataTablePagination<TData>({
   table,
+  withRowSelection = true,
 }: DataTablePaginationProps<TData>) {
   return (
     <div
@@ -20,8 +22,12 @@ export function DataTablePagination<TData>({
       style={{ overflowClipMargin: 1 }}
     >
       <div className="hidden flex-1 text-sm text-muted-foreground sm:block">
-        {table.getFilteredSelectedRowModel().rows.length} of{" "}
-        {table.getFilteredRowModel().rows.length} row(s) selected.
+        {withRowSelection && (
+          <>
+            {table.getFilteredSelectedRowModel().rows.length} of{" "}
+            {table.getFilteredRowModel().rows.length} row(s) selected.
+          </>
+        )}
       </div>
       <div className="flex items-center sm:space-x-6 lg:space-x-8">
         <div className="flex w-[100px] items-center justify-center text-sm font-medium">

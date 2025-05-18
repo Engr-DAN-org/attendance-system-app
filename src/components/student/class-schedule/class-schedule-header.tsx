@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BadgeCheck, QrCode, Info } from "lucide-react";
 import { useRouter } from "@tanstack/react-router";
 import { AttendanceRecord } from "@/interfaces/types/attendanceRecord";
@@ -82,14 +82,12 @@ const RightBlock: React.FC<RightBlockProps> = ({
               "text-muted-foreground": !showPending && !showOngoingButAllSet,
             })}
           >
-            {showPending ? (
-              <QrCode />
-            ) : showOngoingButAllSet ? (
-              <BadgeCheck />
-            ) : (
-              <Info className=" text-blue-500" />
-            )}
-            {showPending ? "Pending" : showOngoingButAllSet ? "All Set" : "N/A"}
+            {showPending ? <QrCode /> : <BadgeCheck />}
+            {showPending
+              ? "Pending"
+              : showOngoingButAllSet
+                ? "Logged"
+                : "All Set"}
           </Badge>
         </div>
       </CardHeader>
@@ -109,11 +107,11 @@ const RightBlock: React.FC<RightBlockProps> = ({
             </Button>
           </>
         ) : showOngoingButAllSet ? (
-          <p>You're already marked present. Enjoy your class!</p>
+          <p>You're already marked for attendance. Enjoy your class!</p>
         ) : (
           <div className="flex items-center gap-2">
             <Info className="h-4 w-4 text-blue-500" />
-            <span>You have no pending attendance. You're all set!</span>
+            <span>No ongoing class session. You're all set!</span>
           </div>
         )}
       </CardContent>
@@ -125,8 +123,13 @@ const StudentScheduleHeader: React.FC<StudentAttendanceCardProps> = ({
   scheduleData,
 }) => {
   const ongoingRecord = records?.find(
-    (rec) => !rec.clockInRecord || rec.status === AttendanceStatus.Unmarked
+    (rec) => !rec.clockInRecord || rec.status == AttendanceStatus.Unmarked
   );
+  useEffect(() => {
+    if (ongoingRecord) {
+      console.log("Ongoing Record:", ongoingRecord);
+    }
+  }, [ongoingRecord]);
 
   return (
     <Card className="shadow-sm mb-6">

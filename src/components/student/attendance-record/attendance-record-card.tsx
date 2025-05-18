@@ -6,9 +6,12 @@ import { MapPin, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { AttendanceRecord } from "@/interfaces/types/attendanceRecord";
 import { attendanceStatusCallTypes } from "@/enums/attendanceStatus";
+import getNameInitials from "@/utils/avatar.util";
+import { ClassSchedule } from "@/interfaces/types/classSchedule";
 
 interface Props {
   record: AttendanceRecord;
+  classSchedule: ClassSchedule;
 }
 
 export default function AttendanceRecordCard({ record }: Props) {
@@ -16,8 +19,8 @@ export default function AttendanceRecordCard({ record }: Props) {
     <Card className="w-full max-w-md mx-auto shadow-md rounded-2xl p-4">
       <CardHeader className="flex items-center gap-4 p-0 mb-4">
         <Avatar className="h-12 w-12">
-          <AvatarImage src={record.student.imageUrl} />
-          <AvatarFallback>{record.studentName[0]}</AvatarFallback>
+          <AvatarImage src="/avatars/01.png" alt="@shadcn" />
+          <AvatarFallback>{getNameInitials(record.studentName)}</AvatarFallback>
         </Avatar>
         <div className="flex-1">
           <CardTitle className="text-base font-medium">

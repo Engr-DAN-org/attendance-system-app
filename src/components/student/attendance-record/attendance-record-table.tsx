@@ -23,6 +23,8 @@ import {
 import { User } from "@/interfaces/types/user";
 // import { AtendanceRecordsTableToolbar } from "./attendance-record-table-toolbar";
 import { attendanceRecordColumn } from "./attendance-record-column";
+import { AtendanceRecordsTableToolbar } from "./attendance-record-table-toolbar";
+import { DataTablePagination } from "@/components/admin/users/components/data-table-pagination";
 
 declare module "@tanstack/react-table" {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -68,7 +70,7 @@ export function AttendanceRecordsTable({
 
   return (
     <div className="space-y-4">
-      {/* <AtendanceRecordsTableToolbar table={table} /> */}
+      <AtendanceRecordsTableToolbar table={table} />
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -99,20 +101,12 @@ export function AttendanceRecordsTable({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  className="group/row"
+                  className="group/row relative"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell
                       onClick={() => {
                         if (onRowClick) onRowClick(row.original);
-                        // if (!cell.id.includes("actions")) {
-                        //   const { id } = row.original;
-                        //   // navigate to the user details page
-                        //   navigate({
-                        //     to: "/admin/users/$userId",
-                        //     params: { userId: id },
-                        //   });
-                        // }
                       }}
                       key={cell.id}
                       className={cell.column.columnDef.meta?.className ?? ""}
@@ -138,7 +132,7 @@ export function AttendanceRecordsTable({
           </TableBody>
         </Table>
       </div>
-      {/* <DataTablePagination table={table} /> */}
+      <DataTablePagination table={table} withRowSelection={false} />
     </div>
   );
 }
