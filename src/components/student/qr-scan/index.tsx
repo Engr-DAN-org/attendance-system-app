@@ -2,7 +2,7 @@ import { IDetectedBarcode, Scanner } from "@yudiel/react-qr-scanner";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { QrCode, QrCodeIcon } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   decodeQrCodeString,
   isValidQRString,
@@ -44,6 +44,62 @@ export default function QRScannerPage() {
     setDialogState(initialDialogState)
   );
 
+  const resetScanner = () => {
+    setDialogState(initialDialogState);
+    setPaused(false);
+  };
+
+  useEffect(() => {
+    resetScanner();
+  }, []);
+
+  const handleSuccess = ({ classScheduleId }: { classScheduleId?: number }) => {
+    setConfirmHandler(() => () => {
+      if (!classScheduleId) {
+        navigate({
+          to: "/student/class-schedule",
+        });
+      } else
+        navigate({
+          to: "/student/class-schedule/$scheduleId",
+          params: {
+            scheduleId: classScheduleId.toString(),
+          },
+        });
+    });
+    setDialogState({
+      message: "QR code scanned successfully.",
+      open: true,
+      type: "success",
+    });
+  };
+
+  const handleServerError = (error: unknown) => {
+    console.error("Error:", error);
+
+    // Set the handler to close dialog and resume scanning
+    setConfirmHandler(() => resetScanner());
+
+    if (error instanceof AxiosError) {
+      const responseData: ErrorResponseDTO =
+        error && error.response && error.response.data
+          ? error.response.data
+          : undefined;
+
+      setDialogState({
+        message: responseData?.message || "Something went wrong.",
+        open: true,
+        type: "error",
+      });
+    } else {
+      setDialogState({
+        message: "Something Went Wrong",
+        open: true,
+        type: "error",
+      });
+    }
+  };
+
   const handleScan = useCallback(async (data: IDetectedBarcode[]) => {
     setDialogState({
       type: "loading",
@@ -79,46 +135,11 @@ export default function QRScannerPage() {
       };
       console.log("Request Data:", requestData);
 
-      const { classSessionId, id } = await logAttendance(requestData);
+      const { classScheduleId } = await logAttendance(requestData);
 
-      setConfirmHandler(() => () => {
-        navigate({
-          to: "/student/class-schedule/$scheduleId/session/$sessionId",
-          params: {
-            sessionId: classSessionId,
-            scheduleId: id,
-          },
-        });
-      });
+      handleSuccess({ classScheduleId });
     } catch (error: unknown) {
-      console.error("Error:", error);
-
-      // Set the handler to close dialog and resume scanning
-      setConfirmHandler(() => () => {
-        setDialogState(initialDialogState);
-        setPaused(false); // <-- resume scanner
-      });
-
-      if (error instanceof AxiosError) {
-        const responseData: ErrorResponseDTO =
-          error && error.response && error.response.data
-            ? error.response.data
-            : undefined;
-
-        setDialogState({
-          message: responseData?.message || "Something went wrong.",
-          open: true,
-          type: "error",
-        });
-      } else {
-        setDialogState({
-          message: "Something Went Wrong",
-          open: true,
-          type: "error",
-        });
-      }
-    } finally {
-      setPaused(false);
+      handleServerError(error);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -173,7 +194,9 @@ export default function QRScannerPage() {
         open={dialogState.open || false}
         type={dialogState.type || "error"}
         message={dialogState.message}
-        onConfirm={() => confirmHandler()}
+        onConfirm={
+          confirmHandler ? () => confirmHandler() : () => resetScanner()
+        }
       />
     </>
   );

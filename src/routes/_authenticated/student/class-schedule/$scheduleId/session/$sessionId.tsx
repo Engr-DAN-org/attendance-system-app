@@ -4,6 +4,7 @@ import AttendanceRecordCard from "@/components/student/attendance-record/attenda
 import GeneralError from "@/features/errors/general-error";
 import NotFoundError from "@/features/errors/not-found-error";
 import { getRecordBySessionId } from "@/services/attendance-record.service";
+import { getByIdAsync } from "@/services/class-schedule.service";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute(
@@ -11,8 +12,20 @@ export const Route = createFileRoute(
 )({
   component: RouteComponent,
   loader: async ({ params }) => {
-    const { sessionId } = params;
-    return await getRecordBySessionId(sessionId);
+    const { sessionId, scheduleId } = params;
+    const attendanceRecord = await getRecordBySessionId(sessionId);
+    if (
+      attendanceRecord.classScheduleId &&
+      attendanceRecord.classScheduleId != Number(scheduleId)
+    ) {
+      throw new Error("Class schedule ID does not match");
+    }
+    const classSchedule = await getByIdAsync(Number(scheduleId));
+
+    return {
+      attendanceRecord,
+      classSchedule,
+    };
   },
   notFoundComponent: NotFoundError,
   errorComponent: GeneralError,
@@ -20,10 +33,13 @@ export const Route = createFileRoute(
 });
 
 function RouteComponent() {
-  const attendanceRecord = Route.useLoaderData();
+  const { attendanceRecord, classSchedule } = Route.useLoaderData();
   return (
     <Main>
-      <AttendanceRecordCard record={attendanceRecord} />
+      <AttendanceRecordCard
+        record={attendanceRecord}
+        classSchedule={classSchedule}
+      />
     </Main>
   );
 }

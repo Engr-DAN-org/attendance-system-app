@@ -2,12 +2,15 @@ import { z } from "zod";
 import { userSchema } from "./user";
 import { attendanceStatus } from "@/enums/attendanceStatus";
 import { ClassSessionShema } from "./classSession";
+import { classScheduleSchema } from "./classSchedule";
 
 export const attendanceRecordSchema = z.object({
   id: z.string(),
   studentId: z.string(),
   classSessionId: z.string(),
   classSession: ClassSessionShema.optional(),
+  classScheduleId: z.number().optional(),
+  classSchedule: classScheduleSchema.optional(),
   status: attendanceStatus,
   location: z.string().optional(),
   latitude: z.number().optional(),

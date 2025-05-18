@@ -5,26 +5,26 @@ import { formatDate, formatUTCTime } from "@/utils/date-time-format.util";
 import { Badge } from "@/components/ui/badge";
 import { AttendanceRecord } from "@/interfaces/types/attendanceRecord";
 import { attendanceStatusCallTypes } from "@/enums/attendanceStatus";
+import LongText from "@/components/long-text";
 
 export const attendanceRecordColumn: ColumnDef<AttendanceRecord>[] = [
   {
-    id: "createdAt",
+    accessorKey: "createdAt",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Date" />
     ),
     cell: ({ row }) => {
       const { createdAt } = row.original;
       return (
-        <div className="w-fit text-nowrap">
+        <LongText className="w-fit text-nowrap sticky left-0 right-0 bg-background z-10">
           {createdAt?.trim() ? formatDate(createdAt) : "--"}
-        </div>
+        </LongText>
       );
     },
     meta: { className: "w-36" },
     enableHiding: false,
     enableSorting: true,
   },
-
   {
     accessorKey: "clockInRecord",
     header: ({ column }) => (
@@ -33,14 +33,44 @@ export const attendanceRecordColumn: ColumnDef<AttendanceRecord>[] = [
     cell: ({ row }) => {
       const { clockInRecord } = row.original;
       const time = clockInRecord?.trim() ? formatUTCTime(clockInRecord) : "--";
-      return <div>{time}</div>;
+      return <div className="text-nowrap">{time}</div>;
     },
-    enableHiding: false,
+    enableHiding: true,
+    enableSorting: false,
+  },
+  {
+    accessorKey: "location",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Location" />
+    ),
+    cell: ({ row }) => {
+      const { classSession } = row.original;
+      return (
+        <LongText>
+          {classSession?.isRemote ? "Remote" : row.getValue("location")}
+        </LongText>
+      );
+    },
+    enableHiding: true,
+    enableSorting: false,
+  },
+  {
+    accessorKey: "distance",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Distance" />
+    ),
+    cell: ({ row }) => {
+      const { distance } = row.original;
+      if (!distance) return <div>--</div>;
+      return <div>{row.getValue("distance")}</div>;
+    },
+    enableHiding: true,
+    enableSorting: false,
   },
   {
     accessorKey: "status",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Attendance Status" />
+      <DataTableColumnHeader column={column} title="Status" />
     ),
     cell: ({ row }) => {
       const { status } = row.original;

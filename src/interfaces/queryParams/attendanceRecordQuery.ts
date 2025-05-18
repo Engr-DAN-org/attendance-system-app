@@ -1,7 +1,7 @@
 import { AttendanceStatus } from "@/enums/attendanceStatus";
 import { BaseQueryParam } from "./baseQueryParam";
 
-export interface AttendanceRecordQuery extends BaseQueryParam {
+export interface AttendanceRecordQueryParams extends BaseQueryParam {
   classSessionId?: string;
   classScheduleId?: number;
   studentIdNumber?: string;
