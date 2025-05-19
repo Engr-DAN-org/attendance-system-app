@@ -15,7 +15,7 @@ const logAttendance = async (
 
 const getAttendanceRecordsQuery = async (
   params: AttendanceRecordQueryParams
-) => {
+): Promise<AttendanceRecord[]> => {
   const response = await api.get("attendanceRecord", {
     params,
   });

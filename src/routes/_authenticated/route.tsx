@@ -12,6 +12,7 @@ import { Header } from "@/components/layout/header";
 import { TopNav } from "@/components/layout/top-nav";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { ProfileDropdown } from "@/components/profile-dropdown";
+import InstallPromptButton from "@/components/install-app-button";
 
 export const Route = createFileRoute("/_authenticated")({
   beforeLoad: async ({ context }) => {
@@ -62,6 +63,7 @@ function RouteComponent() {
         <Header>
           <TopNav />
           <div className="ml-auto flex items-center space-x-4">
+            <InstallPromptButton />
             <ThemeSwitch />
             <ProfileDropdown />
           </div>
