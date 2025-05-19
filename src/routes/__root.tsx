@@ -7,7 +7,6 @@ import GeneralError from "@/features/errors/general-error";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthStoreType } from "@/store/authStore";
 import { LoadingComponent } from "@/components/general-loader";
-import InstallPromptButton from "@/components/install-app-button";
 
 export type SystemContext = {
   queryClient: QueryClient;
@@ -20,7 +19,6 @@ export const Route = createRootRouteWithContext<SystemContext>()({
       <>
         <Outlet />
         <Toaster />
-        <InstallPromptButton />
         {import.meta.env.MODE === "development" && (
           <>
             <ReactQueryDevtools buttonPosition="bottom-left" />

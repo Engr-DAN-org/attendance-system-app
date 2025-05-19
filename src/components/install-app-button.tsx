@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 import { Download } from "lucide-react";
+import { useAuthStore } from "@/store/authStore";
 
 // Extend the Navigator interface to include iOS-specific PWA detection
 declare global {
@@ -23,17 +24,20 @@ export default function InstallPromptButton() {
     useState<BeforeInstallPromptEvent | null>(null);
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [expandButton, setExpandButton] = useState<boolean>(false);
+  const { isStudent } = useAuthStore((state) => state);
 
   useEffect(() => {
     const isInPWA =
       window.matchMedia("(display-mode: standalone)").matches ||
       window.navigator.standalone === true;
+    console.log("Is in PWA:", isInPWA);
 
     if (!isInPWA) {
+      setIsVisible(true);
+
       const handler = (e: Event) => {
         e.preventDefault();
         setDeferredPrompt(e as BeforeInstallPromptEvent);
-        setIsVisible(true);
       };
 
       window.addEventListener("beforeinstallprompt", handler);
@@ -43,6 +47,8 @@ export default function InstallPromptButton() {
       };
     }
   }, []);
+
+  if (isStudent()) return null;
 
   const handleClick = async () => {
     if (!deferredPrompt) return;
@@ -60,17 +66,14 @@ export default function InstallPromptButton() {
     setIsVisible(false);
   };
 
-  if (!isVisible) return null;
-
-  return (
+  return isVisible ? (
     <Button
-      size="lg"
-      variant="default"
+      variant="outline"
       onClick={handleClick}
       onMouseEnter={() => setExpandButton(true)}
       onMouseLeave={() => setExpandButton(false)}
       className={cn(
-        "fixed bottom-32 right-0 rounded-r-none transition-all duration-300 group",
+        "transition-all duration-300 group !hover:bg-primary",
         "px-3 pr-4"
       )}
     >
@@ -84,5 +87,7 @@ export default function InstallPromptButton() {
         Install App
       </span>
     </Button>
+  ) : (
+    <></>
   );
 }

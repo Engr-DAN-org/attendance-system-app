@@ -1,10 +1,14 @@
-import ComingSoon from "@/components/coming-soon";
+import StudentDashboard from "@/components/student/dashboard";
 import { createLazyFileRoute } from "@tanstack/react-router";
 
 export const Route = createLazyFileRoute("/_authenticated/student/")({
-  component: ComingSoon,
+  component: RouteComponent,
 });
 
-// function RouteComponent() {
-//   return <div>Hello "/_authenticated/student/"!</div>
-// }
+function RouteComponent() {
+  return (
+    <>
+      <StudentDashboard />
+    </>
+  );
+}

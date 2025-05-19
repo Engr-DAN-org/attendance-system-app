@@ -1,3 +1,4 @@
+import { AttendanceRecord } from "./attendanceRecord";
 import { Course } from "./course";
 import { Section } from "./section";
 import { Subject, SubjectTeacher } from "./subject";
@@ -15,6 +16,7 @@ type CourseQueryResponseDTO = BaseQueryResponse<Course>;
 type UserQueryResponseDTO = BaseQueryResponse<User>;
 type SubjectQueryResponseDTO = BaseQueryResponse<Subject>;
 type SectionQueryResponseDTO = BaseQueryResponse<Section>;
+type AttendanceRecordQueryResponseDTO = BaseQueryResponse<AttendanceRecord>;
 
 type SubjectTeachersResponseDTO = SubjectTeacher[];
 
@@ -24,4 +26,5 @@ export type {
   UserQueryResponseDTO,
   SubjectQueryResponseDTO,
   SectionQueryResponseDTO,
+  AttendanceRecordQueryResponseDTO,
 };
