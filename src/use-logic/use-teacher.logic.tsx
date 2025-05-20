@@ -1,10 +1,9 @@
-import { User } from "@/interfaces/types/user";
 import { getClassSchedulesAsync } from "@/services/teacher.service";
+import { useAuthStore } from "@/store/authStore";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
 
 export const useTeacherLogic = () => {
-  const [authTeacher, setAuthTeacher] = useState<User | undefined>(undefined);
+  const { user: authTeacher } = useAuthStore((state) => state);
   //   const [usersQuery, setUsersQuery] = useState<UserQuery>(initialUsersQuery);
   //   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   //   const [dialogOpen, setDialogOpen] = useDialogState<UsersDialogType>(null);
@@ -47,6 +46,5 @@ export const useTeacherLogic = () => {
     refechSchedules,
     isFetchingSchedules,
     authTeacher,
-    setAuthTeacher,
   };
 };

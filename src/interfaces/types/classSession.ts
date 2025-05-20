@@ -19,6 +19,7 @@ export const ClassSessionShema = ClassSessionFormSchema.extend({
   attendanceRecords: z.array(z.any()), // will finalize later
   createdAt: z.string().datetime(),
   status: classSessionStatus,
+  classSchedule: z.any().optional(),
   isRemote: z.boolean(),
 });
 

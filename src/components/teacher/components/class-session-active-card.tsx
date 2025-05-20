@@ -1,5 +1,13 @@
 import React from "react";
-import { BadgeCheck, Clock, Info } from "lucide-react";
+import {
+  BadgeCheck,
+  CheckCircle2,
+  Clock,
+  Clock4,
+  HelpCircle,
+  Info,
+  XCircle,
+} from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ClassSession } from "@/interfaces/types/classSession";
@@ -12,13 +20,15 @@ import {
 } from "@/utils/date-time-format.util";
 import { useRouter } from "@tanstack/react-router";
 import StartSessionButton from "./dialog-class-session-start";
-
-interface ActiveSessionProps {
-  section?: Section;
-  activeSession?: ClassSession;
-  classSchedule: ClassSchedule;
-  refetchFn: () => void;
-}
+import { Progress } from "@/components/ui/progress";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { AttendanceRecord } from "@/interfaces/types/attendanceRecord";
+import { AttendanceStatus } from "@/enums/attendanceStatus";
 
 const LeftBlock: React.FC<{
   section?: Section;
@@ -26,9 +36,9 @@ const LeftBlock: React.FC<{
 }> = ({ section, classSchedule }) => (
   <div className="space-y-2">
     <CardHeader>
-      <CardTitle className="text-xl">Class Information</CardTitle>
+      <CardTitle className="text-xl md:text-3xl">Class Information</CardTitle>
     </CardHeader>
-    <CardContent className="flex flex-col gap-2">
+    <CardContent className="flex flex-col gap-2 md:gap-4 md:text-xl py-4">
       <p>
         <span className="font-medium text-foreground">Subject:</span>{" "}
         {classSchedule?.subjectCode} - {classSchedule?.subjectName}
@@ -51,6 +61,23 @@ const RightBlock: React.FC<{
   refetchFn: () => void;
 }> = ({ activeSession, classSchedule, refetchFn }) => {
   const { navigate } = useRouter();
+
+  const studentRecords: AttendanceRecord[] =
+    activeSession?.attendanceRecords ?? [];
+
+  // Mock data - replace with your actual attendance data
+  const attendanceSummary = {
+    totalStudents: studentRecords.length,
+    present: studentRecords.filter((r) => r.status == AttendanceStatus.Present)
+      .length,
+    late: studentRecords.filter((r) => r.status == AttendanceStatus.Late)
+      .length,
+    absent: studentRecords.filter((r) => r.status == AttendanceStatus.Absent)
+      .length,
+    unmarked: studentRecords.filter(
+      (r) => r.status == AttendanceStatus.Unmarked
+    ).length,
+  };
 
   if (!activeSession) {
     return (
@@ -94,7 +121,7 @@ const RightBlock: React.FC<{
           </Badge>
         </div>
       </CardHeader>
-      <CardContent className="space-y-2 text-sm text-muted-foreground">
+      <CardContent className="space-y-4 text-sm text-muted-foreground">
         <div className="flex items-center gap-2">
           <span className="font-medium text-foreground">Location:</span>{" "}
           <span>
@@ -115,14 +142,98 @@ const RightBlock: React.FC<{
           </span>
         </div>
 
-        {/* Optional: Placeholder for actions or metadata */}
-        {/* <div className="pt-2">
-            <Button variant="ghost" size="sm">Join</Button>
-          </div> */}
+        {/* Attendance Summary Section */}
+        <div className="pt-2 space-y-3">
+          <div className="flex justify-between items-center">
+            <span className="font-medium text-foreground">
+              Attendance Summary
+            </span>
+            <span className="text-xs text-muted-foreground">
+              {attendanceSummary.totalStudents} students
+            </span>
+          </div>
+
+          {/* Correct Progress Bars Implementation */}
+          <div className="space-y-2">
+            {[
+              {
+                status: "Present",
+                value: attendanceSummary.present,
+                bgColor: "bg-green-500",
+                textColor: "text-green-500",
+                icon: CheckCircle2,
+              },
+              {
+                status: "Late",
+                value: attendanceSummary.late,
+                bgColor: "bg-yellow-500",
+                textColor: "text-yellow-500",
+                icon: Clock4,
+              },
+              {
+                status: "Absent",
+                value: attendanceSummary.absent,
+                bgColor: "bg-red-500",
+                textColor: "text-red-500",
+                icon: XCircle,
+              },
+              {
+                status: "Unmarked",
+                value: attendanceSummary.unmarked,
+                bgColor: "bg-gray-400",
+                textColor: "text-gray-400",
+                icon: HelpCircle,
+              },
+            ].map((item) => (
+              <TooltipProvider key={item.status}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="flex items-center gap-2 group">
+                      <div className={`w-2 h-2 rounded-full ${item.bgColor}`} />
+                      <span className="text-xs w-14">{item.status}</span>
+                      <div className="flex-1 relative">
+                        <Progress
+                          value={
+                            (item.value / attendanceSummary.totalStudents) * 100
+                          }
+                          className="h-2"
+                        />
+                        <div
+                          className={`absolute inset-y-0 left-0 h-full rounded-full ${item.bgColor}`}
+                          style={{
+                            width: `${(item.value / attendanceSummary.totalStudents) * 100}%`,
+                          }}
+                        />
+                      </div>
+                      <span
+                        className={`text-xs w-8 text-right font-medium ${item.textColor}`}
+                      >
+                        {item.value}
+                      </span>
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent side="top" className="text-xs">
+                    {Math.round(
+                      (item.value / attendanceSummary.totalStudents) * 100
+                    )}
+                    % {item.status.toLowerCase()}
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            ))}
+          </div>
+        </div>
       </CardContent>
     </Card>
   );
 };
+
+interface ActiveSessionProps {
+  section?: Section;
+  activeSession?: ClassSession;
+  classSchedule: ClassSchedule;
+  refetchFn: () => void;
+}
 
 const ActiveSessionCard: React.FC<ActiveSessionProps> = ({
   section,

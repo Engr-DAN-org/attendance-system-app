@@ -57,19 +57,19 @@ const startAsync = async (
     throw error; // Rethrow the error to be handled by the caller
   }
 };
-// const updateAsync = async (
-//   id: number,
-//   classSessionData: ClassSession
-// ): Promise<ClassSession> => {
-//   try {
-//     const response = await api.put(`/classSession/${id}`, classSessionData);
 
-//     return response.data;
-//   } catch (error) {
-//     console.error("Error updating class schedule:", error);
-//     throw error; // Rethrow the error to be handled by the caller
-//   }
-// };
+/**
+ * @returns {Promise<ClassSession>} - The first ongoing class session of a teacher
+ */
+const getFirstOngoingClassAsync = async (): Promise<ClassSession> => {
+  try {
+    const response = await api.get(`/classSession/ongoing`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching ongoing class session:", error);
+    throw error; // Rethrow the error to be handled by the caller
+  }
+};
 
 const getListByScheduleIdAsync = async (
   scheduleId: number
@@ -109,4 +109,5 @@ export {
   endSessionAsync,
   cancelSessionAsync,
   getListByScheduleIdAsync,
+  getFirstOngoingClassAsync,
 };

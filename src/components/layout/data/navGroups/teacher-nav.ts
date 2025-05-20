@@ -7,12 +7,12 @@ const general: NavGroup = {
   title: "General",
   items: [
     {
-      title: "Dashboard",
+      title: "Quick Access",
       url: teacherUrl,
       icon: IconLayoutDashboard,
     },
     {
-      title: "Class Schedule",
+      title: "Weekly Schedule",
       url: (teacherUrl + "/class-schedule") as LinkProps["to"],
       icon: IconChecklist,
     },
