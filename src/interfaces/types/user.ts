@@ -83,7 +83,7 @@ const userSchema: z.ZodSchema = baseUserSchema.extend({
     .optional()
     .describe("Section"),
   guardianId: z.number().optional(),
-  subjectTeachers: z.array(subjectTeacherSchema).optional(),
+  subjectTeachers: z.lazy(() => z.array(subjectTeacherSchema)).optional(),
 });
 
 type UserCredForm = z.infer<typeof userCredFormSchema>;

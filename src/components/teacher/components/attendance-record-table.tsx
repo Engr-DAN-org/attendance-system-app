@@ -23,6 +23,7 @@ import {
 import { User } from "@/interfaces/types/user";
 import { attendanceRecordColumn } from "./attendance-record-column";
 import { AtendanceRecordsTableToolbar } from "./attendance-record-table-toolbar";
+import { ClassSession } from "@/interfaces/types/classSession";
 
 declare module "@tanstack/react-table" {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -32,11 +33,16 @@ declare module "@tanstack/react-table" {
 }
 
 interface DataTableProps {
+  classSession: ClassSession;
   data?: User[];
   isLoading?: boolean;
 }
 
-export function AttendanceRecordsTable({ data, isLoading }: DataTableProps) {
+export function AttendanceRecordsTable({
+  classSession,
+  data,
+  isLoading,
+}: DataTableProps) {
   const [rowSelection, setRowSelection] = useState({});
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -48,6 +54,12 @@ export function AttendanceRecordsTable({ data, isLoading }: DataTableProps) {
       sorting,
       rowSelection,
       columnFilters,
+    },
+    initialState: {
+      columnVisibility: {
+        distance: classSession.isRemote ? false : true,
+        phoneNumber: false,
+      },
     },
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,

@@ -83,6 +83,18 @@ export const attendanceRecordColumn: ColumnDef<AttendanceRecord>[] = [
     enableHiding: false,
   },
   {
+    accessorKey: "distance",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Distance" />
+    ),
+    cell: ({ row }) => {
+      const { distance } = row.original;
+      return <div>{distance || "--"}</div>;
+    },
+    enableHiding: true,
+    enableSorting: false,
+  },
+  {
     accessorKey: "status",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Attendance Status" />
