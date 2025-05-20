@@ -3,6 +3,7 @@ import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 import { Download } from "lucide-react";
 import { useAuthStore } from "@/store/authStore";
+import { UserRole } from "@/enums/userRole";
 
 // Extend the Navigator interface to include iOS-specific PWA detection
 declare global {
@@ -24,7 +25,7 @@ export default function InstallPromptButton() {
     useState<BeforeInstallPromptEvent | null>(null);
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [expandButton, setExpandButton] = useState<boolean>(false);
-  const { isStudent } = useAuthStore((state) => state);
+  const { isStudent, user } = useAuthStore((state) => state);
 
   useEffect(() => {
     const isInPWA =
@@ -66,7 +67,7 @@ export default function InstallPromptButton() {
     setIsVisible(false);
   };
 
-  return isVisible ? (
+  return isVisible && user?.role == UserRole.Student ? (
     <Button
       variant="outline"
       onClick={handleClick}
