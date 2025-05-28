@@ -57,7 +57,7 @@ export function AttendanceRecordsTable({
     },
     initialState: {
       columnVisibility: {
-        distance: classSession.isRemote ? false : true,
+        distance: classSession?.isRemote ? false : true,
         phoneNumber: false,
       },
     },

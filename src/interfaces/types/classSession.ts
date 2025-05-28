@@ -5,11 +5,12 @@ import { z } from "zod";
 const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)(:[0-5]\d)?$/;
 
 export const ClassSessionFormSchema = z.object({
+  isRemote: z.boolean(),
   classScheduleId: z.number(),
   startTime: z.string().regex(timeRegex, "Invalid time format").optional(),
-  location: z.string().optional(),
-  latitude: z.number().optional(),
-  longitude: z.number().optional(),
+  location: z.string().optional().nullable(),
+  latitude: z.number().optional().nullable(),
+  longitude: z.number().optional().nullable(),
   graceTime: z.string().regex(timeRegex, "Invalid time format").optional(),
 });
 
