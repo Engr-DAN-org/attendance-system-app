@@ -43,6 +43,7 @@ export const SubjectDialog = () => {
       open={openSubjectDialog}
       onOpenChange={(state) => {
         setOpenSubjectDialog(state);
+        subjectForm.reset({});
       }}
     >
       <DialogTrigger asChild>

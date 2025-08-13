@@ -14,6 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { PinInput, PinInputField } from "@/components/pin-input";
+import { Loader2 } from "lucide-react";
 
 type OtpFormProps = HTMLAttributes<HTMLDivElement> & {
   isLoading: boolean;
@@ -93,6 +94,7 @@ export function OtpForm({
               )}
             />
             <Button className="mt-2" disabled={disabledBtn || isLoading}>
+              {isLoading && <Loader2 className="animate-spin" />}
               Verify
             </Button>
           </div>

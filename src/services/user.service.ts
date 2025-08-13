@@ -1,6 +1,6 @@
 import { UserQuery } from "@/interfaces/queryParams/userQuery";
 import { UserQueryResponseDTO } from "@/interfaces/types/queryResponseDTO";
-import { User, UserCompleteForm } from "@/interfaces/types/user";
+import { User, UserCompleteForm, UserCredForm } from "@/interfaces/types/user";
 import api from "@/lib/axiosSetup";
 
 const createAsync = async (userData: UserCompleteForm): Promise<User> => {
@@ -22,6 +22,19 @@ const updateAsync = async (
     return response.data;
   } catch (error) {
     console.error("Error updating user:", error);
+    throw error; // Rethrow the error to be handled by the caller
+  }
+};
+
+const updateUserCredOnlyAsync = async (
+  id: string,
+  userData: UserCredForm
+): Promise<User> => {
+  try {
+    const response = await api.put(`/user/${id}`, userData);
+    return response.data;
+  } catch (error) {
+    console.error("Error updating user credentials:", error);
     throw error; // Rethrow the error to be handled by the caller
   }
 };
@@ -62,4 +75,11 @@ const getByIdAsync = async (userId: string): Promise<User> => {
   }
 };
 
-export { createAsync, updateAsync, deleteAsync, getQueryAsync, getByIdAsync };
+export {
+  createAsync,
+  updateAsync,
+  updateUserCredOnlyAsync,
+  deleteAsync,
+  getQueryAsync,
+  getByIdAsync,
+};

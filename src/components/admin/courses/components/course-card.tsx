@@ -10,7 +10,8 @@ interface CourseCardProps {
 }
 
 export const CourseCard = ({ course }: CourseCardProps) => {
-  const { handleDelete, openEditCourse, updateCourseIcon } = useCourseContext();
+  const { openDeleteDialog, openEditCourse, updateCourseIcon } =
+    useCourseContext();
 
   const courseLogo =
     courseIcons.find((icon) => icon.id == course.iconId) ?? courseIcons[0];
@@ -37,7 +38,7 @@ export const CourseCard = ({ course }: CourseCardProps) => {
             <span className="font-semibold text-xl">{course.code}</span>
           </div>
           <OptionsButton
-            onDelete={() => handleDelete(course.id)}
+            onDelete={() => openDeleteDialog(course)}
             key={course.id}
             onEdit={() => openEditCourse(course)}
           />

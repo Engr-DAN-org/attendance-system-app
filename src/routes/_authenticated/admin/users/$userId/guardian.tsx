@@ -6,8 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { StudentGuardianRelationshipOptions } from "@/enums/studentGuardianRelationship";
 import { GuardianForm, guardianSchema } from "@/interfaces/types/guardian";
+import { UserCompleteForm } from "@/interfaces/types/user";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createFileRoute } from "@tanstack/react-router";
+import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 
 export const Route = createFileRoute(
@@ -17,29 +19,28 @@ export const Route = createFileRoute(
 });
 
 function RouteComponent() {
-  const { selectedUser: user } = useUserQueryContext();
+  const {
+    selectedUser: user,
+    submitForm,
+    isFormSubmitPending,
+  } = useUserQueryContext();
   const form = useForm<GuardianForm>({
     resolver: zodResolver(guardianSchema),
     defaultValues: user ? { ...user.guardian, studentId: user.id } : null,
   });
 
-  const onSubmit = (data: GuardianForm) => {
-    console.log("Form data", data);
+  const onSubmit = async (data: GuardianForm) => {
+    const userData: UserCompleteForm = { ...user, guardian: data };
+    return await submitForm(userData);
   };
-  const errorSub = (e: unknown) => {
-    console.error("Error submitting form", e);
-  };
-  console.log("usertest", user);
+
   return (
     <ContentSection
       title="Guardian Credentials"
       desc="View and manage the student's guardian credentials."
     >
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit, errorSub)}
-          className="space-y-8 "
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 ">
           <div className="grid lg:grid-cols-3 gap-2 lg:gap-4">
             <div className="">
               <FormInputField<typeof guardianSchema>
@@ -90,7 +91,10 @@ function RouteComponent() {
               />
             </div>
           </div>
-          <Button type="submit">Update</Button>
+          <Button disabled={isFormSubmitPending} type="submit">
+            {isFormSubmitPending && <Loader2 className=" animate-spin" />}
+            {isFormSubmitPending ? "Updating..." : "Update"}
+          </Button>
         </form>
       </Form>
     </ContentSection>

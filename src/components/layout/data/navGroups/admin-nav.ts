@@ -1,25 +1,11 @@
 import { NavGroup } from "@/interfaces/types/sidebar";
-import {
-  // IconLayoutDashboard,
-  IconUsers,
-  IconBook,
-  IconBuilding,
-} from "@tabler/icons-react";
+import { IconUsers, IconBook, IconBuilding } from "@tabler/icons-react";
 import { LinkProps } from "@tanstack/react-router";
+import settings from "./settings-nav";
 
 const adminUrl: LinkProps["to"] = "/admin";
 
 export const adminNavGroups: NavGroup[] = [
-  // {
-  //   title: "Overview", // More descriptive than "General"
-  //   items: [
-  //     {
-  //       title: "Dashboard",
-  //       url: adminUrl,
-  //       icon: IconLayoutDashboard,
-  //     },
-  //   ],
-  // },
   {
     title: "Organization Management", // Grouping for academic-related items
     items: [
@@ -45,4 +31,5 @@ export const adminNavGroups: NavGroup[] = [
       },
     ],
   },
+  settings,
 ];

@@ -26,6 +26,7 @@ export const FormInputField = <TSchema extends ZodTypeAny>({
   label,
   placeholder,
   type = "text",
+  disabled = false,
   ...props
 }: FormInputFieldProps<TSchema>) => {
   return (
@@ -38,6 +39,7 @@ export const FormInputField = <TSchema extends ZodTypeAny>({
           {label && <FormLabel>{label}</FormLabel>}
           <FormControl>
             <Input
+              disabled={disabled}
               {...field}
               placeholder={placeholder ? placeholder : ""}
               type={type}

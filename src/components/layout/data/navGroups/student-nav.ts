@@ -1,6 +1,7 @@
 import { NavGroup } from "@/interfaces/types/sidebar";
 import { IconCalendar, IconQrcode, IconTimeline } from "@tabler/icons-react"; // Import relevant icons
 import { LinkProps } from "@tanstack/react-router";
+import settings from "./settings-nav";
 
 const studentUrl: LinkProps["to"] = "/student";
 
@@ -30,4 +31,6 @@ export const studentNavGroups: NavGroup[] = [
       },
     ],
   },
+
+  settings,
 ];

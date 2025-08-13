@@ -29,8 +29,9 @@ interface Verify2faDTO {
   code: string;
 }
 
-// interface authRoutes{
+interface PasswordResetForm {
+  oldPassword: string;
+  newPassword: string;
+}
 
-// }
-
-export type { AuthState, LoginDTO, Verify2faDTO };
+export type { AuthState, LoginDTO, Verify2faDTO, PasswordResetForm };

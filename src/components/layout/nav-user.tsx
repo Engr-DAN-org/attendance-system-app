@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { BadgeCheck, ChevronsUpDown, LogOut } from "lucide-react";
+import { ChevronsUpDown, LogOut } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -19,6 +19,7 @@ import {
 import getNameInitials from "@/utils/avatar.util";
 import { UserProfile } from "@/interfaces/types/profile";
 import { useAuthStore } from "@/store/authStore";
+import settings from "./data/navGroups/settings-nav";
 
 export function NavUser({ user }: { user: UserProfile }) {
   const { isMobile } = useSidebar();
@@ -68,12 +69,14 @@ export function NavUser({ user }: { user: UserProfile }) {
             <DropdownMenuSeparator />
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem asChild>
-                <Link to="/coming-soon">
-                  <BadgeCheck />
-                  Account
-                </Link>
-              </DropdownMenuItem>
+              {settings.items.map((navItem, index) => (
+                <DropdownMenuItem key={index} asChild>
+                  <Link to={navItem.url}>
+                    {navItem.icon && <navItem.icon />}
+                    {navItem.title}
+                  </Link>
+                </DropdownMenuItem>
+              ))}
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem

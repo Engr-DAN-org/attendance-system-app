@@ -1,48 +1,46 @@
-import { useUserQueryContext } from "@/components/admin/users/context/users-context";
 import { FormInputField } from "@/components/form-components/form-input";
 import ContentSection from "@/components/general/content-section";
+import { useProfileContext } from "@/components/general/context/profile.contex";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import GeneralError from "@/features/errors/general-error";
-import NotFoundError from "@/features/errors/not-found-error";
-import { UserCredForm, userCredFormSchema } from "@/interfaces/types/user";
+import { UserCompleteForm, userCredFormSchema } from "@/interfaces/types/user";
+import { useAuthStore } from "@/store/authStore";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createFileRoute } from "@tanstack/react-router";
 import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 
-export const Route = createFileRoute("/_authenticated/admin/users/$userId/")({
+export const Route = createFileRoute("/_authenticated/settings/profile/")({
   component: RouteComponent,
-  notFoundComponent: NotFoundError,
-  errorComponent: GeneralError,
 });
 
 function RouteComponent() {
-  const {
-    selectedUser: user,
-    isUpdateCredPending,
-    handleUpdateUserCred,
-  } = useUserQueryContext();
-  const form = useForm<UserCredForm>({
+  const { user, isAdmin } = useAuthStore((state) => state);
+  const { updateProfile, isUpdatePending } = useProfileContext();
+
+  const form = useForm<UserCompleteForm>({
     resolver: zodResolver(userCredFormSchema),
-    defaultValues: user ? { ...user, userRole: user.role } : null,
+    defaultValues: user ? { ...user, userRole: user.role, id: user.id } : null,
   });
 
   return (
     <ContentSection
-      title="User Profile"
-      desc="View and manage user profile here."
+      title="Personal Information"
+      desc="View and manage your personal information."
       headerBtns={<>{/*  */}</>}
     >
       <Form {...form}>
         <form
-          onSubmit={form.handleSubmit((data) => handleUpdateUserCred(data))}
+          onSubmit={form.handleSubmit(
+            async (values) => await updateProfile(values)
+          )}
           className="space-y-8 "
         >
           <div className="grid lg:grid-cols-3 gap-2 lg:gap-4">
             <div className="col-span-full">
               <FormInputField<typeof userCredFormSchema>
                 form={form}
+                disabled={!isAdmin()}
                 name="idNumber"
                 label="ID Number"
                 className="lg:max-w-1/4"
@@ -51,6 +49,7 @@ function RouteComponent() {
             <div className="">
               <FormInputField<typeof userCredFormSchema>
                 form={form}
+                disabled={!isAdmin()}
                 name="firstName"
                 label="First Name"
               />
@@ -58,6 +57,7 @@ function RouteComponent() {
             <div className="lg:col-span-2">
               <FormInputField<typeof userCredFormSchema>
                 form={form}
+                disabled={!isAdmin()}
                 name="lastName"
                 label="Last Name"
                 className="lg:max-w-1/2"
@@ -66,6 +66,7 @@ function RouteComponent() {
             <div className="col-span-full">
               <FormInputField<typeof userCredFormSchema>
                 form={form}
+                disabled={!isAdmin()}
                 name="email"
                 label="Email"
                 className="lg:max-w-1/2"
@@ -74,15 +75,16 @@ function RouteComponent() {
             <div className="col-span-full">
               <FormInputField<typeof userCredFormSchema>
                 form={form}
+                disabled={!isAdmin()}
                 name="phoneNumber"
                 label="Phone Number (optional)"
                 className="lg:max-w-1/3"
               />
             </div>
           </div>
-          <Button disabled={isUpdateCredPending} type="submit">
-            {isUpdateCredPending && <Loader2 className=" animate-spin" />}
-            {isUpdateCredPending ? "Updating..." : "Update profile"}
+          <Button disabled={isUpdatePending || !isAdmin()} type="submit">
+            {isUpdatePending && <Loader2 className="animate-spin" />}
+            {isAdmin() ? "Update profile" : "Only admin can make changes"}
           </Button>
         </form>
       </Form>

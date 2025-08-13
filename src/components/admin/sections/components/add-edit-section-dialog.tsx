@@ -26,15 +26,17 @@ import { PlusIcon } from "lucide-react";
 
 export default function SectionFormDialog() {
   const {
-    openDialog,
-    setOpenDialog,
     courseSelectData,
     updateSelectCourseQuery: updateCourseQuery,
     isCourseQueryPending,
   } = useSelectDataContext();
+
   const {
+    openSectionDialog,
+    setOpenSectionDialog,
     sectionForm: form,
     onFormSubmit,
+    isFormSubmitPending,
     usersQueryData,
     updateTeachersQuery,
     isUsersQueryPending,
@@ -47,19 +49,16 @@ export default function SectionFormDialog() {
     })) || [];
 
   const handleClose = () => {
-    setOpenDialog(false);
+    setOpenSectionDialog(false);
     form.reset();
   };
 
   return (
     <Dialog
-      open={openDialog}
+      open={openSectionDialog}
       onOpenChange={(state) => {
-        setOpenDialog(state);
-
-        if (!state) {
-          form.reset();
-        }
+        setOpenSectionDialog(state);
+        form.reset({});
       }}
     >
       <DialogTrigger asChild>
@@ -145,7 +144,9 @@ export default function SectionFormDialog() {
               <Button type="button" variant="outline" onClick={handleClose}>
                 Cancel
               </Button>
-              <Button type="submit">Save Section</Button>
+              <Button disabled={isFormSubmitPending} type="submit">
+                Save Section
+              </Button>
             </DialogFooter>
           </form>
         </Form>

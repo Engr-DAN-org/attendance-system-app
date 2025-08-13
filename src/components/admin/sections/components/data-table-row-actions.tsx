@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Section } from "@/interfaces/types/section";
 import { useSectionContext } from "../context/section-context";
+import { useSectionCreationContext } from "../context/create-section-context";
 
 interface DataTableRowActionsProps {
   row: Row<Section>;
@@ -19,6 +20,7 @@ interface DataTableRowActionsProps {
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
   const { setTargetDeletion } = useSectionContext();
+  const { sectionForm, setOpenSectionDialog } = useSectionCreationContext();
   return (
     <>
       <DropdownMenu modal={false}>
@@ -35,7 +37,16 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           <DropdownMenuItem
             onClick={() => {
               const section = row.original;
-              setTargetDeletion(section);
+              sectionForm.reset({
+                id: section.id,
+                courseId: section.courseId.toString(),
+                name: section.name,
+                yearLevel: section.yearLevel.toString(),
+                teacherId: section.teacher?.id,
+                description: section.description,
+                classSchedules: section.classSchedules,
+              });
+              setOpenSectionDialog(true);
             }}
           >
             Edit

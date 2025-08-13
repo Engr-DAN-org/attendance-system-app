@@ -4,8 +4,13 @@ import { UserRole } from "@/enums/userRole";
 import useDialogState from "@/hooks/use-dialog-state";
 import { initialUsersQuery } from "@/initialStates/queryStates";
 import { UserQuery } from "@/interfaces/queryParams/userQuery";
-import { User, UserCompleteForm } from "@/interfaces/types/user";
-import { createAsync, deleteAsync, updateAsync } from "@/services/user.service";
+import { User, UserCompleteForm, UserCredForm } from "@/interfaces/types/user";
+import {
+  createAsync,
+  deleteAsync,
+  updateAsync,
+  updateUserCredOnlyAsync,
+} from "@/services/user.service";
 import { IconUser } from "@tabler/icons-react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
@@ -37,13 +42,26 @@ export const useUserLogic = () => {
       },
     });
 
+  const { mutateAsync: handleUpdateUserCred, isPending: isUpdateCredPending } =
+    useMutation({
+      mutationFn: async (userData: UserCredForm) =>
+        await updateUserCredOnlyAsync(userData.id!, userData),
+      onSuccess: (user) => {
+        toast.success(
+          `${user.role}'s credentials have been updated successfully!`
+        );
+        setSelectedUser(user);
+      },
+      onError: () => toast.error("Something went wrong!"),
+    });
+
   const { mutateAsync: handleDelete, isPending: isDeletePending } = useMutation(
     {
       mutationFn: async (id: string) => await deleteAsync(id),
       onSuccess: () => {
         toast.success("User has been deleted successfully!");
-        refechUsers();
       },
+      onError: () => toast.error("Something went wrong!"),
     }
   );
 
@@ -85,6 +103,8 @@ export const useUserLogic = () => {
   };
 
   return {
+    handleUpdateUserCred,
+    isUpdateCredPending,
     usersQuery,
     setUsersQuery,
     handleDelete,

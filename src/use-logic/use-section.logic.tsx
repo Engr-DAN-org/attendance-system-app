@@ -33,7 +33,7 @@ export const useSectionLogic = () => {
   const {
     data: response,
     isPending: isQueryPending,
-    refetch,
+    refetch: refetchSections,
   } = useQuery(SectionsQueryOption(query));
 
   const setTargetDeletion = (data: Section) => {
@@ -50,7 +50,7 @@ export const useSectionLogic = () => {
     setQuery,
     response,
     isQueryPending,
-    refetch,
+    refetchSections,
     deleteDialogState,
     section,
     setTargetDeletion,
@@ -61,6 +61,8 @@ export const useSectionLogic = () => {
 };
 
 export const useSectionCreationLogic = () => {
+  const { refetchSections } = useSectionLogic();
+  const [openSectionDialog, setOpenSectionDialog] = useState<boolean>(false);
   const [section, setSection] = useState<Section | undefined>(undefined);
   const [openScheduleDialog, setOpenScheduleDialog] = useState<boolean>(false);
   const [sectionId, setSectionId] = useState<number | undefined>(undefined);
@@ -111,7 +113,9 @@ export const useSectionCreationLogic = () => {
     },
   });
 
-  // Course Create or Edit
+  // Section Create or Edit
+  // Get refetchSections from useSectionLogic at the top level of the hook/component
+
   const { mutateAsync: submitForm, isPending: isFormSubmitPending } =
     useMutation({
       mutationFn: async (formData: Section) =>
@@ -120,7 +124,8 @@ export const useSectionCreationLogic = () => {
           : await createAsync(formData),
       onSuccess: () => {
         toast.success("Course has been created/updated successfully!");
-        // refetchCourses();
+        refetchSections();
+        setOpenSectionDialog(false);
       },
     });
 
@@ -157,6 +162,10 @@ export const useSectionCreationLogic = () => {
     isUsersQueryPending,
     openScheduleDialog,
     setOpenScheduleDialog,
+
+    // Section Dialog
+    openSectionDialog,
+    setOpenSectionDialog,
     section,
     setSection,
     sectionForm,

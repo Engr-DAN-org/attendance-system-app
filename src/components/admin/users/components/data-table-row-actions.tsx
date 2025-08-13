@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { User } from "@/interfaces/types/user";
 import { useUserQueryContext } from "../context/users-context";
-import { UsersDialogType } from "../../../../use-logic/use-user.logic";
+import { useRouter } from "@tanstack/react-router";
 
 interface DataTableRowActionsProps {
   row: Row<User>;
@@ -20,6 +20,7 @@ interface DataTableRowActionsProps {
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
   const { setDialogOpen, setSelectedUser } = useUserQueryContext();
+  const { navigate } = useRouter();
   return (
     <>
       <DropdownMenu modal={false}>
@@ -36,10 +37,14 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           <DropdownMenuItem
             onClick={() => {
               const user = row.original;
-              setSelectedUser(user);
-              setDialogOpen(
-                `edit-${user.role.toLowerCase()}` as UsersDialogType
-              );
+              navigate({
+                to: "/admin/users/$userId",
+                params: { userId: user.id },
+              });
+              // setSelectedUser(user);
+              // setDialogOpen(
+              //   `edit-${user.role.toLowerCase()}` as UsersDialogType
+              // );
             }}
           >
             Edit

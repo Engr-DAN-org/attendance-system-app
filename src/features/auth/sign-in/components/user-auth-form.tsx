@@ -84,7 +84,7 @@ export function UserAuthForm({
                   <div className="flex items-center justify-between">
                     <FormLabel>Password</FormLabel>
                     <Link
-                      to="/coming-soon"
+                      to="/forgot-password"
                       className="text-sm font-medium text-muted-foreground hover:opacity-75"
                     >
                       Forgot password?

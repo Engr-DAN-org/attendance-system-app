@@ -1,10 +1,9 @@
-import { Link, useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -37,21 +36,17 @@ export function ProfileDropdown() {
             </p>
           </div>
         </DropdownMenuLabel>
-        <DropdownMenuSeparator />
+        {/* <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem asChild>
-            <Link to="/coming-soon">
-              Profile
-              <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link to="/coming-soon">
-              Settings
-              <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
-            </Link>
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
+          {settings.items.map((navItem, index) => (
+            <DropdownMenuItem key={index} asChild>
+              <Link to={navItem.url}>
+                {navItem.icon && <navItem.icon className="mr-2" />}
+                {navItem.title}
+              </Link>
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuGroup> */}
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={() => logout(navigate)}

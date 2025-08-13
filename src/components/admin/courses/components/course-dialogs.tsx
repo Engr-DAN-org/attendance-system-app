@@ -29,28 +29,39 @@ import { useCourseContext } from "@/components/admin/courses/context/course-cont
 export function CourseDialog() {
   // const [open, setOpen] = useState<boolean>(false);
   // Default form values for new course or editing existing one
-  const { courseForm, dialogOpen, setDialogOpen, submitForm, editCourse } =
-    useCourseContext();
+  const {
+    courseForm,
+    dialogState,
+    setDialogState,
+    submitForm,
+    isFormSubmitPending,
+    editCourse,
+    setEditCourse,
+  } = useCourseContext();
 
   const onSubmit = async (data: CourseForm) => {
     await submitForm(data);
-    courseForm.reset(); // Reset the form after submission
-    setDialogOpen(false); // Close the dialog
+    courseForm.reset({}); // Reset the form after submission
+    setDialogState(""); // Close the dialog
   };
 
   return (
     <Dialog
-      open={dialogOpen}
+      open={dialogState == "form"}
       onOpenChange={(state) => {
-        setDialogOpen(state);
+        setDialogState(state ? "form" : "");
+        if (state == false) {
+          setEditCourse(null);
+          courseForm.reset({});
+        }
       }}
     >
       <DialogTrigger asChild>
         <Button
           className="space-x-1"
           onClick={() => {
-            courseForm.reset();
-            setDialogOpen(false);
+            courseForm.reset({});
+            setEditCourse(null);
           }}
         >
           <span>Create</span> <IconPlus size={18} />
@@ -167,7 +178,11 @@ export function CourseDialog() {
           <DialogClose asChild>
             <Button variant="outline">Cancel</Button>
           </DialogClose>
-          <Button type="submit" form="course-dialog-form">
+          <Button
+            type="submit"
+            form="course-dialog-form"
+            disabled={isFormSubmitPending}
+          >
             {editCourse ? "Save Changes" : "Create Course"} <IconSend />
           </Button>
         </DialogFooter>

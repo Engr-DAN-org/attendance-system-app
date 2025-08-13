@@ -18,8 +18,8 @@ import { toast } from "sonner";
 export const useCourseLogic = (course?: CourseForm) => {
   const queryClient = useQueryClient();
   const [query, setQuery] = useState<CourseQuery>(initialCourseQuery);
-  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
-  const [editCourse, setEditCourse] = useState<Course | undefined>(undefined);
+  const [dialogState, setDialogState] = useState<"" | "form" | "delete">("");
+  const [editCourse, setEditCourse] = useState<Course | null>(null);
 
   // Course Query
   const {
@@ -34,6 +34,8 @@ export const useCourseLogic = (course?: CourseForm) => {
     {
       mutationFn: async (courseId: number) => await deleteAsync(courseId),
       onSuccess: () => {
+        setEditCourse(null);
+        setDialogState("");
         toast.success("Course has been deleted successfully!");
         refetchCourses();
       },
@@ -50,27 +52,38 @@ export const useCourseLogic = (course?: CourseForm) => {
       onSuccess: () => {
         toast.success("Course has been created/updated successfully!");
         refetchCourses();
+        setEditCourse(null);
       },
     });
 
   // Course Icon Update
-  const { mutateAsync: updateCourseIcon } = useMutation({
-    mutationFn: async ({
-      courseId,
-      iconId,
-    }: {
-      courseId: number;
-      iconId: number;
-    }) => await updateIconAsync(courseId, iconId),
-    onSuccess: () => {
-      toast.success("Course Icon has been updated!");
-      refetchCourses();
-    },
-  });
+  const { mutateAsync: updateCourseIcon, isPending: pendingUpdateCourseIcon } =
+    useMutation({
+      mutationFn: async ({
+        courseId,
+        iconId,
+      }: {
+        courseId: number;
+        iconId: number;
+      }) => await updateIconAsync(courseId, iconId),
+      onSuccess: () => {
+        toast.success("Course Icon has been updated!");
+        refetchCourses();
+      },
+    });
+
+  const openDeleteDialog = (course: Course) => {
+    setEditCourse(course);
+    setDialogState("delete");
+  };
 
   const openEditCourse = (course: Course) => {
     setEditCourse(course);
-    setDialogOpen(true);
+    courseForm.reset({
+      ...course,
+      years: course.years.toString(),
+    });
+    setDialogState("form");
   };
 
   const handlePageClick = (page: number) => {
@@ -107,14 +120,17 @@ export const useCourseLogic = (course?: CourseForm) => {
     handleDelete,
     isDeletePending,
     submitForm,
-    dialogOpen,
-    setDialogOpen,
+    dialogState,
+    setDialogState,
     editCourse,
+    setEditCourse,
     openEditCourse,
     handlePageClick,
     courseForm,
     updateCourseIcon,
+    pendingUpdateCourseIcon,
     isAnyPendingRefetch,
     isFormSubmitPending,
+    openDeleteDialog,
   };
 };

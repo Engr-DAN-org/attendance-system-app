@@ -22,6 +22,9 @@ import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedAdminSectionsRouteImport } from './routes/_authenticated/admin/sections/route'
 import { Route as AuthenticatedStudentQrScanIndexImport } from './routes/_authenticated/student/qr-scan/index'
 import { Route as AuthenticatedStudentClassScheduleIndexImport } from './routes/_authenticated/student/class-schedule/index'
+import { Route as AuthenticatedSettingsProfileIndexImport } from './routes/_authenticated/settings/profile/index'
+import { Route as AuthenticatedSettingsPasswordIndexImport } from './routes/_authenticated/settings/password/index'
+import { Route as AuthenticatedSettingsAppearanceIndexImport } from './routes/_authenticated/settings/appearance/index'
 import { Route as AuthenticatedAdminUsersIndexImport } from './routes/_authenticated/admin/users/index'
 import { Route as AuthenticatedAdminSubjectsIndexImport } from './routes/_authenticated/admin/subjects/index'
 import { Route as AuthenticatedAdminCoursesIndexImport } from './routes/_authenticated/admin/courses/index'
@@ -42,6 +45,12 @@ const errors500LazyImport = createFileRoute('/(errors)/500')()
 const errors404LazyImport = createFileRoute('/(errors)/404')()
 const errors403LazyImport = createFileRoute('/(errors)/403')()
 const errors401LazyImport = createFileRoute('/(errors)/401')()
+const authForgotPasswordLazyImport = createFileRoute(
+  '/(auth)/forgot-password',
+)()
+const AuthenticatedSettingsRouteLazyImport = createFileRoute(
+  '/_authenticated/settings',
+)()
 const AuthenticatedTeacherIndexLazyImport = createFileRoute(
   '/_authenticated/teacher/',
 )()
@@ -50,9 +59,6 @@ const AuthenticatedStudentIndexLazyImport = createFileRoute(
 )()
 const AuthenticatedComingSoonIndexLazyImport = createFileRoute(
   '/_authenticated/coming-soon/',
-)()
-const AuthenticatedAdminIndexLazyImport = createFileRoute(
-  '/_authenticated/admin/',
 )()
 const AuthenticatedTeacherClassScheduleIndexLazyImport = createFileRoute(
   '/_authenticated/teacher/class-schedule/',
@@ -118,6 +124,25 @@ const errors401LazyRoute = errors401LazyImport
   } as any)
   .lazy(() => import('./routes/(errors)/401.lazy').then((d) => d.Route))
 
+const authForgotPasswordLazyRoute = authForgotPasswordLazyImport
+  .update({
+    id: '/(auth)/forgot-password',
+    path: '/forgot-password',
+    getParentRoute: () => rootRoute,
+  } as any)
+  .lazy(() =>
+    import('./routes/(auth)/forgot-password.lazy').then((d) => d.Route),
+  )
+
+const AuthenticatedSettingsRouteLazyRoute =
+  AuthenticatedSettingsRouteLazyImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any).lazy(() =>
+    import('./routes/_authenticated/settings/route.lazy').then((d) => d.Route),
+  )
+
 const authSignInRoute = authSignInImport.update({
   id: '/(auth)/sign-in',
   path: '/sign-in',
@@ -171,15 +196,6 @@ const AuthenticatedComingSoonIndexLazyRoute =
     ),
   )
 
-const AuthenticatedAdminIndexLazyRoute =
-  AuthenticatedAdminIndexLazyImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => AuthenticatedAdminRouteRoute,
-  } as any).lazy(() =>
-    import('./routes/_authenticated/admin/index.lazy').then((d) => d.Route),
-  )
-
 const AuthenticatedAdminSectionsRouteRoute =
   AuthenticatedAdminSectionsRouteImport.update({
     id: '/sections',
@@ -221,6 +237,27 @@ const AuthenticatedStudentClassScheduleIndexRoute =
     id: '/class-schedule/',
     path: '/class-schedule/',
     getParentRoute: () => AuthenticatedStudentRouteRoute,
+  } as any)
+
+const AuthenticatedSettingsProfileIndexRoute =
+  AuthenticatedSettingsProfileIndexImport.update({
+    id: '/profile/',
+    path: '/profile/',
+    getParentRoute: () => AuthenticatedSettingsRouteLazyRoute,
+  } as any)
+
+const AuthenticatedSettingsPasswordIndexRoute =
+  AuthenticatedSettingsPasswordIndexImport.update({
+    id: '/password/',
+    path: '/password/',
+    getParentRoute: () => AuthenticatedSettingsRouteLazyRoute,
+  } as any)
+
+const AuthenticatedSettingsAppearanceIndexRoute =
+  AuthenticatedSettingsAppearanceIndexImport.update({
+    id: '/appearance/',
+    path: '/appearance/',
+    getParentRoute: () => AuthenticatedSettingsRouteLazyRoute,
   } as any)
 
 const AuthenticatedAdminUsersIndexRoute =
@@ -364,6 +401,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authSignInImport
       parentRoute: typeof rootRoute
     }
+    '/_authenticated/settings': {
+      id: '/_authenticated/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AuthenticatedSettingsRouteLazyImport
+      parentRoute: typeof AuthenticatedRouteImport
+    }
+    '/(auth)/forgot-password': {
+      id: '/(auth)/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof authForgotPasswordLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/(errors)/401': {
       id: '/(errors)/401'
       path: '/401'
@@ -404,13 +455,6 @@ declare module '@tanstack/react-router' {
       path: '/sections'
       fullPath: '/admin/sections'
       preLoaderRoute: typeof AuthenticatedAdminSectionsRouteImport
-      parentRoute: typeof AuthenticatedAdminRouteImport
-    }
-    '/_authenticated/admin/': {
-      id: '/_authenticated/admin/'
-      path: '/'
-      fullPath: '/admin/'
-      preLoaderRoute: typeof AuthenticatedAdminIndexLazyImport
       parentRoute: typeof AuthenticatedAdminRouteImport
     }
     '/_authenticated/coming-soon/': {
@@ -468,6 +512,27 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/users'
       preLoaderRoute: typeof AuthenticatedAdminUsersIndexImport
       parentRoute: typeof AuthenticatedAdminRouteImport
+    }
+    '/_authenticated/settings/appearance/': {
+      id: '/_authenticated/settings/appearance/'
+      path: '/appearance'
+      fullPath: '/settings/appearance'
+      preLoaderRoute: typeof AuthenticatedSettingsAppearanceIndexImport
+      parentRoute: typeof AuthenticatedSettingsRouteLazyImport
+    }
+    '/_authenticated/settings/password/': {
+      id: '/_authenticated/settings/password/'
+      path: '/password'
+      fullPath: '/settings/password'
+      preLoaderRoute: typeof AuthenticatedSettingsPasswordIndexImport
+      parentRoute: typeof AuthenticatedSettingsRouteLazyImport
+    }
+    '/_authenticated/settings/profile/': {
+      id: '/_authenticated/settings/profile/'
+      path: '/profile'
+      fullPath: '/settings/profile'
+      preLoaderRoute: typeof AuthenticatedSettingsProfileIndexImport
+      parentRoute: typeof AuthenticatedSettingsRouteLazyImport
     }
     '/_authenticated/student/class-schedule/': {
       id: '/_authenticated/student/class-schedule/'
@@ -599,7 +664,6 @@ const AuthenticatedAdminUsersUserIdRouteRouteWithChildren =
 
 interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminSectionsRouteRoute: typeof AuthenticatedAdminSectionsRouteRouteWithChildren
-  AuthenticatedAdminIndexLazyRoute: typeof AuthenticatedAdminIndexLazyRoute
   AuthenticatedAdminUsersUserIdRouteRoute: typeof AuthenticatedAdminUsersUserIdRouteRouteWithChildren
   AuthenticatedAdminCoursesIndexRoute: typeof AuthenticatedAdminCoursesIndexRoute
   AuthenticatedAdminSubjectsIndexRoute: typeof AuthenticatedAdminSubjectsIndexRoute
@@ -610,7 +674,6 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
   {
     AuthenticatedAdminSectionsRouteRoute:
       AuthenticatedAdminSectionsRouteRouteWithChildren,
-    AuthenticatedAdminIndexLazyRoute: AuthenticatedAdminIndexLazyRoute,
     AuthenticatedAdminUsersUserIdRouteRoute:
       AuthenticatedAdminUsersUserIdRouteRouteWithChildren,
     AuthenticatedAdminCoursesIndexRoute: AuthenticatedAdminCoursesIndexRoute,
@@ -686,10 +749,32 @@ const AuthenticatedTeacherRouteRouteWithChildren =
     AuthenticatedTeacherRouteRouteChildren,
   )
 
+interface AuthenticatedSettingsRouteLazyRouteChildren {
+  AuthenticatedSettingsAppearanceIndexRoute: typeof AuthenticatedSettingsAppearanceIndexRoute
+  AuthenticatedSettingsPasswordIndexRoute: typeof AuthenticatedSettingsPasswordIndexRoute
+  AuthenticatedSettingsProfileIndexRoute: typeof AuthenticatedSettingsProfileIndexRoute
+}
+
+const AuthenticatedSettingsRouteLazyRouteChildren: AuthenticatedSettingsRouteLazyRouteChildren =
+  {
+    AuthenticatedSettingsAppearanceIndexRoute:
+      AuthenticatedSettingsAppearanceIndexRoute,
+    AuthenticatedSettingsPasswordIndexRoute:
+      AuthenticatedSettingsPasswordIndexRoute,
+    AuthenticatedSettingsProfileIndexRoute:
+      AuthenticatedSettingsProfileIndexRoute,
+  }
+
+const AuthenticatedSettingsRouteLazyRouteWithChildren =
+  AuthenticatedSettingsRouteLazyRoute._addFileChildren(
+    AuthenticatedSettingsRouteLazyRouteChildren,
+  )
+
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRouteRoute: typeof AuthenticatedAdminRouteRouteWithChildren
   AuthenticatedStudentRouteRoute: typeof AuthenticatedStudentRouteRouteWithChildren
   AuthenticatedTeacherRouteRoute: typeof AuthenticatedTeacherRouteRouteWithChildren
+  AuthenticatedSettingsRouteLazyRoute: typeof AuthenticatedSettingsRouteLazyRouteWithChildren
   AuthenticatedComingSoonIndexLazyRoute: typeof AuthenticatedComingSoonIndexLazyRoute
 }
 
@@ -697,6 +782,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRouteRoute: AuthenticatedAdminRouteRouteWithChildren,
   AuthenticatedStudentRouteRoute: AuthenticatedStudentRouteRouteWithChildren,
   AuthenticatedTeacherRouteRoute: AuthenticatedTeacherRouteRouteWithChildren,
+  AuthenticatedSettingsRouteLazyRoute:
+    AuthenticatedSettingsRouteLazyRouteWithChildren,
   AuthenticatedComingSoonIndexLazyRoute: AuthenticatedComingSoonIndexLazyRoute,
 }
 
@@ -710,13 +797,14 @@ export interface FileRoutesByFullPath {
   '/student': typeof AuthenticatedStudentRouteRouteWithChildren
   '/teacher': typeof AuthenticatedTeacherRouteRouteWithChildren
   '/sign-in': typeof authSignInRoute
+  '/settings': typeof AuthenticatedSettingsRouteLazyRouteWithChildren
+  '/forgot-password': typeof authForgotPasswordLazyRoute
   '/401': typeof errors401LazyRoute
   '/403': typeof errors403LazyRoute
   '/404': typeof errors404LazyRoute
   '/500': typeof errors500LazyRoute
   '/503': typeof errors503LazyRoute
   '/admin/sections': typeof AuthenticatedAdminSectionsRouteRouteWithChildren
-  '/admin/': typeof AuthenticatedAdminIndexLazyRoute
   '/coming-soon': typeof AuthenticatedComingSoonIndexLazyRoute
   '/student/': typeof AuthenticatedStudentIndexLazyRoute
   '/teacher/': typeof AuthenticatedTeacherIndexLazyRoute
@@ -725,6 +813,9 @@ export interface FileRoutesByFullPath {
   '/admin/courses': typeof AuthenticatedAdminCoursesIndexRoute
   '/admin/subjects': typeof AuthenticatedAdminSubjectsIndexRoute
   '/admin/users': typeof AuthenticatedAdminUsersIndexRoute
+  '/settings/appearance': typeof AuthenticatedSettingsAppearanceIndexRoute
+  '/settings/password': typeof AuthenticatedSettingsPasswordIndexRoute
+  '/settings/profile': typeof AuthenticatedSettingsProfileIndexRoute
   '/student/class-schedule': typeof AuthenticatedStudentClassScheduleIndexRoute
   '/student/qr-scan': typeof AuthenticatedStudentQrScanIndexRoute
   '/admin/sections/': typeof AuthenticatedAdminSectionsIndexLazyRoute
@@ -742,19 +833,24 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '': typeof AuthenticatedRouteRouteWithChildren
+  '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/sign-in': typeof authSignInRoute
+  '/settings': typeof AuthenticatedSettingsRouteLazyRouteWithChildren
+  '/forgot-password': typeof authForgotPasswordLazyRoute
   '/401': typeof errors401LazyRoute
   '/403': typeof errors403LazyRoute
   '/404': typeof errors404LazyRoute
   '/500': typeof errors500LazyRoute
   '/503': typeof errors503LazyRoute
-  '/admin': typeof AuthenticatedAdminIndexLazyRoute
   '/coming-soon': typeof AuthenticatedComingSoonIndexLazyRoute
   '/student': typeof AuthenticatedStudentIndexLazyRoute
   '/teacher': typeof AuthenticatedTeacherIndexLazyRoute
   '/admin/courses': typeof AuthenticatedAdminCoursesIndexRoute
   '/admin/subjects': typeof AuthenticatedAdminSubjectsIndexRoute
   '/admin/users': typeof AuthenticatedAdminUsersIndexRoute
+  '/settings/appearance': typeof AuthenticatedSettingsAppearanceIndexRoute
+  '/settings/password': typeof AuthenticatedSettingsPasswordIndexRoute
+  '/settings/profile': typeof AuthenticatedSettingsProfileIndexRoute
   '/student/class-schedule': typeof AuthenticatedStudentClassScheduleIndexRoute
   '/student/qr-scan': typeof AuthenticatedStudentQrScanIndexRoute
   '/admin/sections': typeof AuthenticatedAdminSectionsIndexLazyRoute
@@ -777,13 +873,14 @@ export interface FileRoutesById {
   '/_authenticated/student': typeof AuthenticatedStudentRouteRouteWithChildren
   '/_authenticated/teacher': typeof AuthenticatedTeacherRouteRouteWithChildren
   '/(auth)/sign-in': typeof authSignInRoute
+  '/_authenticated/settings': typeof AuthenticatedSettingsRouteLazyRouteWithChildren
+  '/(auth)/forgot-password': typeof authForgotPasswordLazyRoute
   '/(errors)/401': typeof errors401LazyRoute
   '/(errors)/403': typeof errors403LazyRoute
   '/(errors)/404': typeof errors404LazyRoute
   '/(errors)/500': typeof errors500LazyRoute
   '/(errors)/503': typeof errors503LazyRoute
   '/_authenticated/admin/sections': typeof AuthenticatedAdminSectionsRouteRouteWithChildren
-  '/_authenticated/admin/': typeof AuthenticatedAdminIndexLazyRoute
   '/_authenticated/coming-soon/': typeof AuthenticatedComingSoonIndexLazyRoute
   '/_authenticated/student/': typeof AuthenticatedStudentIndexLazyRoute
   '/_authenticated/teacher/': typeof AuthenticatedTeacherIndexLazyRoute
@@ -792,6 +889,9 @@ export interface FileRoutesById {
   '/_authenticated/admin/courses/': typeof AuthenticatedAdminCoursesIndexRoute
   '/_authenticated/admin/subjects/': typeof AuthenticatedAdminSubjectsIndexRoute
   '/_authenticated/admin/users/': typeof AuthenticatedAdminUsersIndexRoute
+  '/_authenticated/settings/appearance/': typeof AuthenticatedSettingsAppearanceIndexRoute
+  '/_authenticated/settings/password/': typeof AuthenticatedSettingsPasswordIndexRoute
+  '/_authenticated/settings/profile/': typeof AuthenticatedSettingsProfileIndexRoute
   '/_authenticated/student/class-schedule/': typeof AuthenticatedStudentClassScheduleIndexRoute
   '/_authenticated/student/qr-scan/': typeof AuthenticatedStudentQrScanIndexRoute
   '/_authenticated/admin/sections/': typeof AuthenticatedAdminSectionsIndexLazyRoute
@@ -815,13 +915,14 @@ export interface FileRouteTypes {
     | '/student'
     | '/teacher'
     | '/sign-in'
+    | '/settings'
+    | '/forgot-password'
     | '/401'
     | '/403'
     | '/404'
     | '/500'
     | '/503'
     | '/admin/sections'
-    | '/admin/'
     | '/coming-soon'
     | '/student/'
     | '/teacher/'
@@ -830,6 +931,9 @@ export interface FileRouteTypes {
     | '/admin/courses'
     | '/admin/subjects'
     | '/admin/users'
+    | '/settings/appearance'
+    | '/settings/password'
+    | '/settings/profile'
     | '/student/class-schedule'
     | '/student/qr-scan'
     | '/admin/sections/'
@@ -846,19 +950,24 @@ export interface FileRouteTypes {
   to:
     | '/'
     | ''
+    | '/admin'
     | '/sign-in'
+    | '/settings'
+    | '/forgot-password'
     | '/401'
     | '/403'
     | '/404'
     | '/500'
     | '/503'
-    | '/admin'
     | '/coming-soon'
     | '/student'
     | '/teacher'
     | '/admin/courses'
     | '/admin/subjects'
     | '/admin/users'
+    | '/settings/appearance'
+    | '/settings/password'
+    | '/settings/profile'
     | '/student/class-schedule'
     | '/student/qr-scan'
     | '/admin/sections'
@@ -879,13 +988,14 @@ export interface FileRouteTypes {
     | '/_authenticated/student'
     | '/_authenticated/teacher'
     | '/(auth)/sign-in'
+    | '/_authenticated/settings'
+    | '/(auth)/forgot-password'
     | '/(errors)/401'
     | '/(errors)/403'
     | '/(errors)/404'
     | '/(errors)/500'
     | '/(errors)/503'
     | '/_authenticated/admin/sections'
-    | '/_authenticated/admin/'
     | '/_authenticated/coming-soon/'
     | '/_authenticated/student/'
     | '/_authenticated/teacher/'
@@ -894,6 +1004,9 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/courses/'
     | '/_authenticated/admin/subjects/'
     | '/_authenticated/admin/users/'
+    | '/_authenticated/settings/appearance/'
+    | '/_authenticated/settings/password/'
+    | '/_authenticated/settings/profile/'
     | '/_authenticated/student/class-schedule/'
     | '/_authenticated/student/qr-scan/'
     | '/_authenticated/admin/sections/'
@@ -913,6 +1026,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   authSignInRoute: typeof authSignInRoute
+  authForgotPasswordLazyRoute: typeof authForgotPasswordLazyRoute
   errors401LazyRoute: typeof errors401LazyRoute
   errors403LazyRoute: typeof errors403LazyRoute
   errors404LazyRoute: typeof errors404LazyRoute
@@ -924,6 +1038,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   authSignInRoute: authSignInRoute,
+  authForgotPasswordLazyRoute: authForgotPasswordLazyRoute,
   errors401LazyRoute: errors401LazyRoute,
   errors403LazyRoute: errors403LazyRoute,
   errors404LazyRoute: errors404LazyRoute,
@@ -944,6 +1059,7 @@ export const routeTree = rootRoute
         "/",
         "/_authenticated",
         "/(auth)/sign-in",
+        "/(auth)/forgot-password",
         "/(errors)/401",
         "/(errors)/403",
         "/(errors)/404",
@@ -960,6 +1076,7 @@ export const routeTree = rootRoute
         "/_authenticated/admin",
         "/_authenticated/student",
         "/_authenticated/teacher",
+        "/_authenticated/settings",
         "/_authenticated/coming-soon/"
       ]
     },
@@ -968,7 +1085,6 @@ export const routeTree = rootRoute
       "parent": "/_authenticated",
       "children": [
         "/_authenticated/admin/sections",
-        "/_authenticated/admin/",
         "/_authenticated/admin/users/$userId",
         "/_authenticated/admin/courses/",
         "/_authenticated/admin/subjects/",
@@ -998,6 +1114,18 @@ export const routeTree = rootRoute
     "/(auth)/sign-in": {
       "filePath": "(auth)/sign-in.tsx"
     },
+    "/_authenticated/settings": {
+      "filePath": "_authenticated/settings/route.lazy.tsx",
+      "parent": "/_authenticated",
+      "children": [
+        "/_authenticated/settings/appearance/",
+        "/_authenticated/settings/password/",
+        "/_authenticated/settings/profile/"
+      ]
+    },
+    "/(auth)/forgot-password": {
+      "filePath": "(auth)/forgot-password.lazy.tsx"
+    },
     "/(errors)/401": {
       "filePath": "(errors)/401.lazy.tsx"
     },
@@ -1020,10 +1148,6 @@ export const routeTree = rootRoute
         "/_authenticated/admin/sections/",
         "/_authenticated/admin/sections/$id/"
       ]
-    },
-    "/_authenticated/admin/": {
-      "filePath": "_authenticated/admin/index.lazy.tsx",
-      "parent": "/_authenticated/admin"
     },
     "/_authenticated/coming-soon/": {
       "filePath": "_authenticated/coming-soon/index.lazy.tsx",
@@ -1065,6 +1189,18 @@ export const routeTree = rootRoute
     "/_authenticated/admin/users/": {
       "filePath": "_authenticated/admin/users/index.tsx",
       "parent": "/_authenticated/admin"
+    },
+    "/_authenticated/settings/appearance/": {
+      "filePath": "_authenticated/settings/appearance/index.tsx",
+      "parent": "/_authenticated/settings"
+    },
+    "/_authenticated/settings/password/": {
+      "filePath": "_authenticated/settings/password/index.tsx",
+      "parent": "/_authenticated/settings"
+    },
+    "/_authenticated/settings/profile/": {
+      "filePath": "_authenticated/settings/profile/index.tsx",
+      "parent": "/_authenticated/settings"
     },
     "/_authenticated/student/class-schedule/": {
       "filePath": "_authenticated/student/class-schedule/index.tsx",

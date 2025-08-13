@@ -18,6 +18,7 @@ import {
   IconSortDescendingLetters,
 } from "@tabler/icons-react";
 import { useCourseContext } from "@/components/admin/courses/context/course-context";
+import { CoursesDeleteDialog } from "./components/course-delete-dialog";
 
 export default function CourseManager() {
   const {
@@ -79,6 +80,7 @@ export default function CourseManager() {
             </Select>
           </div>
           <CourseDialog />
+          <CoursesDeleteDialog />
         </div>
         <Separator className="shadow" />
 

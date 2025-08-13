@@ -1,6 +1,7 @@
 import { NavGroup } from "@/interfaces/types/sidebar";
 import { IconChecklist, IconLayoutDashboard } from "@tabler/icons-react";
 import { LinkProps } from "@tanstack/react-router";
+import settings from "./settings-nav";
 
 const teacherUrl: LinkProps["to"] = "/teacher";
 const general: NavGroup = {
@@ -19,4 +20,4 @@ const general: NavGroup = {
   ],
 };
 
-export const teacherNavGroups: NavGroup[] = [general];
+export const teacherNavGroups: NavGroup[] = [general, settings];

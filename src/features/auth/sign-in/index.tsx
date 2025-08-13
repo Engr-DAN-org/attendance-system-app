@@ -1,11 +1,15 @@
 import { UserAuthForm } from "./components/user-auth-form";
 import AuthLayout from "../auth-layout";
 import { Card } from "@/components/ui/card";
-import { useState } from "react";
-import { Link, useRouter } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { useRouter } from "@tanstack/react-router";
 import { OtpForm } from "./components/otp-form";
 import { LoginDTO } from "@/interfaces/types/auth";
-import { loginAsync, verify2faAsync } from "@/services/auth.service";
+import {
+  loginAsync,
+  resendCodeAsync,
+  verify2faAsync,
+} from "@/services/auth.service";
 import {
   AuthResponseDTO,
   FailedLoginResponseDTO,
@@ -14,6 +18,7 @@ import {
 import { AxiosError, AxiosResponse } from "axios";
 import { toast } from "sonner";
 import { useAuthStore } from "@/store/authStore";
+import { Button } from "@/components/ui/button";
 
 export default function SignIn() {
   const { login } = useAuthStore();
@@ -22,6 +27,21 @@ export default function SignIn() {
   const [isOTP, setIsOTP] = useState<boolean>(false);
   const [otpEmail, setOtpEmail] = useState<string>("");
   const [disabledBtn, setDisabledBtn] = useState<boolean>(true);
+  const [resendEnabledTime, setResendEnabledTime] = useState<number>(0);
+
+  useEffect(() => {
+    const targetTime = new Date().getTime() + resendEnabledTime * 1000;
+
+    const interval = setInterval(() => {
+      const now = new Date().getTime();
+      const diff = Math.max(0, Math.floor((targetTime - now) / 1000));
+      setResendEnabledTime(diff == 0 ? diff : diff + 1);
+      if (diff <= 0) {
+        clearInterval(interval);
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [resendEnabledTime]);
 
   const onLoginSubmit = async (request: LoginDTO) => {
     try {
@@ -35,6 +55,7 @@ export default function SignIn() {
       // const { email } = response.data as { email: string };
       setOtpEmail(email);
       setIsOTP(true);
+      setResendEnabledTime(60);
 
       toast.info(responseType, {
         description: <code className="text-gray-700">{message}</code>,
@@ -57,13 +78,45 @@ export default function SignIn() {
         ),
       });
     }
-    // const response = await coldStart();
-    // if
-    // console.log(response);
 
     setTimeout(() => {
       setIsLoading(false);
     }, 2000);
+  };
+
+  const handleResendCode = async () => {
+    try {
+      setIsLoading(true);
+      const { responseType, message } = await resendCodeAsync(otpEmail);
+      toast.info(responseType, {
+        description: <code className="text-gray-700">{message}</code>,
+      });
+    } catch (e) {
+      const { response, status } = e as AxiosError & {
+        response?: AxiosResponse & {
+          data: FailedLoginResponseDTO;
+        };
+      };
+      const statusText = response?.statusText;
+      const responseType = response?.data?.responseType;
+      const message = response?.data?.message;
+
+      console.log(e);
+      toast.error(responseType ?? statusText, {
+        description: (
+          <code className="text-gray-700">
+            {message ?? "Something Went Wrong."}
+          </code>
+        ),
+      });
+      if (status == 409) {
+        setIsOTP(false);
+      }
+    }
+    setResendEnabledTime(30);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
   };
 
   const onOTPSubmit = async (code: string) => {
@@ -136,13 +189,18 @@ export default function SignIn() {
           />
           <p className="mt-4 px-8 text-center text-sm text-muted-foreground">
             Haven't received it?{" "}
-            <Link
-              to="/sign-in"
-              className="underline underline-offset-4 hover:text-primary"
+            <Button
+              variant={"link"}
+              size={"sm"}
+              disabled={resendEnabledTime > 0}
+              onClick={handleResendCode}
+              className="px-0"
             >
-              Resend a new code.
-            </Link>
-            .
+              {resendEnabledTime > 0
+                ? `(${resendEnabledTime}) seconds to Resend`
+                : "Resend a new code"}
+              .
+            </Button>
           </p>
         </Card>
       ) : (
