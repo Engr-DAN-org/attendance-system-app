@@ -1,8 +1,11 @@
 import { useUserQueryContext } from "@/components/admin/users/context/users-context";
+import { FormComboField } from "@/components/form-components/form-command";
 import { FormInputField } from "@/components/form-components/form-input";
 import ContentSection from "@/components/general/content-section";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
+import { useSelectDataContext } from "@/context/select-data-context";
+import { UserRole } from "@/enums/userRole";
 import GeneralError from "@/features/errors/general-error";
 import NotFoundError from "@/features/errors/not-found-error";
 import { UserCredForm, userCredFormSchema } from "@/interfaces/types/user";
@@ -28,6 +31,9 @@ function RouteComponent() {
     defaultValues: user ? { ...user, userRole: user.role } : null,
   });
 
+  const { sectionSelectData, updateSelectSectionQuery, isSectionQueryPending } =
+    useSelectDataContext();
+
   return (
     <ContentSection
       title="User Profile"
@@ -48,6 +54,18 @@ function RouteComponent() {
                 className="lg:max-w-1/4"
               />
             </div>
+            {user.role == UserRole.Student && (
+              <div className="col-span-full">
+                <FormComboField<typeof userCredFormSchema>
+                  label="Course-Section"
+                  form={form}
+                  name="sectionId"
+                  options={sectionSelectData}
+                  isLoading={isSectionQueryPending}
+                  onSearch={updateSelectSectionQuery}
+                />
+              </div>
+            )}
             <div className="">
               <FormInputField<typeof userCredFormSchema>
                 form={form}
