@@ -34,13 +34,14 @@ import {
 import { stepMinutes } from "@/constants/section.constants";
 import { useEffect, useState } from "react";
 import { DialogTrigger } from "@radix-ui/react-dialog";
-import { PlusIcon } from "lucide-react";
+import { Loader2, PlusIcon } from "lucide-react";
 import { useClassScheduleContext } from "../../class-schedule/class-schedule-context";
 import { useSelectDataContext } from "@/context/select-data-context";
 
 export const AddScheduleDialog = () => {
   const {
     submitForm,
+    isFormSubmitPending,
     scheduleDialogState,
     setScheduleDialogState,
     scheduleForm,
@@ -217,7 +218,10 @@ export const AddScheduleDialog = () => {
             )}
 
             <DialogFooter className="flex justify-between items-center">
-              <Button type="submit">Add Schedule</Button>
+              <Button disabled={isFormSubmitPending} type="submit">
+                {isFormSubmitPending && <Loader2 className=" animate-spin" />}
+                Add Schedule
+              </Button>
             </DialogFooter>
           </form>
         </Form>

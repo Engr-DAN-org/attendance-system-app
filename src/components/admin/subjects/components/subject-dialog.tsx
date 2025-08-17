@@ -18,6 +18,7 @@ import { IconMailPlus, IconPlus, IconSend } from "@tabler/icons-react";
 import { useSubjectContext } from "../context/subject-context";
 import { SubjectSchema } from "@/interfaces/types/subject";
 import { FormMultiSelectComboField } from "@/components/form-components/form-multi-select-combo-field";
+import { Loader2 } from "lucide-react";
 
 export const SubjectDialog = () => {
   const {
@@ -26,6 +27,7 @@ export const SubjectDialog = () => {
     openSubjectDialog,
     setOpenSubjectDialog,
     onFormSubmit,
+    isFormSubmitPending,
     usersQueryData,
   } = useSubjectContext();
 
@@ -130,8 +132,17 @@ export const SubjectDialog = () => {
           <DialogClose asChild>
             <Button variant="outline">Cancel</Button>
           </DialogClose>
-          <Button type="submit" form="subject-dialog-form">
-            {selectedSubject ? "Save Changes" : "Create Subject"} <IconSend />
+          <Button
+            type="submit"
+            disabled={isFormSubmitPending}
+            form="subject-dialog-form"
+          >
+            {isFormSubmitPending ? (
+              <Loader2 className="animate-spin" />
+            ) : (
+              <IconSend />
+            )}
+            {selectedSubject ? "Save Changes" : "Create Subject"}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -31,7 +31,7 @@ import { useState } from "react";
 import { useUserQueryContext } from "../context/users-context";
 import { FormComboField } from "@/components/form-components/form-command";
 import { useSelectDataContext } from "@/context/select-data-context";
-import { Save } from "lucide-react";
+import { Loader2, Save } from "lucide-react";
 
 interface Props {
   open: boolean;
@@ -48,7 +48,7 @@ export function InviteStudentDialog({
 
   const isEdit = !!selectedUser;
   const [step, setStep] = useState<1 | 2>(1);
-  const { submitForm } = useUserQueryContext();
+  const { submitForm, isFormSubmitPending } = useUserQueryContext();
   const { sectionSelectData, updateSelectSectionQuery, isSectionQueryPending } =
     useSelectDataContext();
 
@@ -348,14 +348,28 @@ export function InviteStudentDialog({
               >
                 Back
               </Button>
-              <Button type="submit" form="user-invite-form">
+              <Button
+                type="submit"
+                form="user-invite-form"
+                disabled={isFormSubmitPending}
+              >
                 {isEdit ? (
                   <>
-                    Save Changes <Save />
+                    Save Changes{" "}
+                    {isFormSubmitPending ? (
+                      <Loader2 className="animate-spin" />
+                    ) : (
+                      <Save />
+                    )}
                   </>
                 ) : (
                   <>
-                    Invite <IconSend />
+                    Invite{" "}
+                    {isFormSubmitPending ? (
+                      <Loader2 className="animate-spin" />
+                    ) : (
+                      <IconSend />
+                    )}
                   </>
                 )}
               </Button>
