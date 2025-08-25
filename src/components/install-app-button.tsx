@@ -30,7 +30,7 @@ export default function InstallPromptButton() {
       window.navigator.standalone === true;
     console.log("Is in PWA:", isInPWA);
 
-    if (isVisible != isInPWA) setIsVisible(isInPWA);
+    if (isVisible == isInPWA) setIsVisible(!isInPWA);
 
     if (!isInPWA) {
       const handler = (e: Event) => {
