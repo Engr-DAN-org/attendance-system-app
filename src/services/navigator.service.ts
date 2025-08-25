@@ -53,18 +53,12 @@ const getLocationWithCoordinates = async (): Promise<Location> => {
     `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
   );
   const data: NominatimReverseResponse = response.data;
-  console.log("address data", data.address);
-  let location: string = "";
-
-  if (data.address.road) location += `${data.address.road} St.`;
-  if (data.address.quarter) location += `, ${data.address.quarter}`;
-  if (data.address.city) location += `, ${data.address.city}`;
-  if (data.address.state) location += `, ${data.address.state}`;
+  console.log("address data", data);
 
   return {
     latitude: Number(data.lat),
     longitude: Number(data.lon),
-    location,
+    location: data.display_name,
   };
 };
 

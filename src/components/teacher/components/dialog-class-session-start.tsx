@@ -60,20 +60,17 @@ const StartSessionButton = ({ scheduleId, refetchFn }: Props) => {
 
       let latitude = null;
       let longitude = null;
-      let location = "Remote Session"; // Default location for remote sessions
 
       if (!isRemote) {
         const locationData = await getLocationWithCoordinates();
 
         latitude = locationData.latitude;
         longitude = locationData.longitude;
-        location = locationData.location;
       }
 
       classSessionForm.setValue("classScheduleId", scheduleId);
       classSessionForm.setValue("latitude", isRemote ? null : latitude);
       classSessionForm.setValue("longitude", isRemote ? null : longitude);
-      classSessionForm.setValue("location", isRemote ? null : location);
       classSessionForm.setValue(
         "startTime",
         new Date().toLocaleTimeString("en-GB", {
@@ -88,7 +85,7 @@ const StartSessionButton = ({ scheduleId, refetchFn }: Props) => {
       toast.success("Class session started successfully");
       refetchFn();
       console.log("newClassSession", newClassSession);
-      classSessionForm.reset();
+      classSessionForm.reset({});
     } catch (error) {
       if (error instanceof AxiosError) {
         toast.error(error.message);

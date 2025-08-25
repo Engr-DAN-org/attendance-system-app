@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 import { Download } from "lucide-react";
-import { useAuthStore } from "@/store/authStore";
-import { UserRole } from "@/enums/userRole";
 
 // Extend the Navigator interface to include iOS-specific PWA detection
 declare global {
@@ -25,7 +23,6 @@ export default function InstallPromptButton() {
     useState<BeforeInstallPromptEvent | null>(null);
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [expandButton, setExpandButton] = useState<boolean>(false);
-  const { isStudent, user } = useAuthStore((state) => state);
 
   useEffect(() => {
     const isInPWA =
@@ -33,9 +30,9 @@ export default function InstallPromptButton() {
       window.navigator.standalone === true;
     console.log("Is in PWA:", isInPWA);
 
-    if (!isInPWA) {
-      setIsVisible(true);
+    if (isVisible != isInPWA) setIsVisible(isInPWA);
 
+    if (!isInPWA) {
       const handler = (e: Event) => {
         e.preventDefault();
         setDeferredPrompt(e as BeforeInstallPromptEvent);
@@ -43,13 +40,9 @@ export default function InstallPromptButton() {
 
       window.addEventListener("beforeinstallprompt", handler);
 
-      return () => {
-        window.removeEventListener("beforeinstallprompt", handler);
-      };
+      return () => window.removeEventListener("beforeinstallprompt", handler);
     }
-  }, []);
-
-  if (isStudent()) return null;
+  }, [isVisible]);
 
   const handleClick = async () => {
     if (!deferredPrompt) return;
@@ -67,7 +60,7 @@ export default function InstallPromptButton() {
     setIsVisible(false);
   };
 
-  return isVisible && user?.role == UserRole.Student ? (
+  return isVisible ? (
     <Button
       variant="outline"
       onClick={handleClick}

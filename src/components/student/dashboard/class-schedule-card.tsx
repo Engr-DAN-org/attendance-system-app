@@ -7,8 +7,12 @@ import { CheckCircle, Clock, ListChecks, XCircle } from "lucide-react";
 
 const ClassScheduleCard = ({
   classSchedule,
+  className,
+  onClick,
 }: {
   classSchedule: ClassSchedule;
+  className?: string | undefined;
+  onClick: () => void;
 }) => {
   const todaySession = classSchedule.classSessions?.find((session) => {
     const sessionDate = new Date(session.createdAt);
@@ -35,11 +39,13 @@ const ClassScheduleCard = ({
 
   return (
     <div
+      onClick={onClick}
       className={cn(
         "p-4 rounded-lg flex items-center justify-between",
         "bg-white dark:bg-gray-900",
         "border border-gray-200 dark:border-gray-800",
-        "shadow-md"
+        "shadow-md",
+        className
       )}
     >
       <div className="space-y-1">

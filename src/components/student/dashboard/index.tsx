@@ -13,10 +13,12 @@ import { useClassScheduleContext } from "@/components/admin/class-schedule/class
 import { useEffect } from "react";
 import { AttendanceStatus } from "@/enums/attendanceStatus";
 import { useStudentContext } from "../context/student.context";
+import { useRouter } from "@tanstack/react-router";
 
 const StudentDashboard = () => {
   const { user } = useAuthStore((state) => state);
   const { sectionClassScheduleList, setSectionId } = useClassScheduleContext();
+  const { navigate } = useRouter();
   const {
     attendanceRecords: unmarkedRecord,
     setQuery,
@@ -74,7 +76,17 @@ const StudentDashboard = () => {
               {todaySchedule.length > 0 ? (
                 <div className="space-y-4">
                   {todaySchedule?.map((classItem, index) => (
-                    <ClassScheduleCard classSchedule={classItem} key={index} />
+                    <ClassScheduleCard
+                      classSchedule={classItem}
+                      key={index}
+                      className="cursor-pointer"
+                      onClick={() =>
+                        navigate({
+                          to: `/student/class-schedule/$scheduleId`,
+                          params: { scheduleId: classItem.id },
+                        })
+                      }
+                    />
                   ))}
                 </div>
               ) : (

@@ -9,7 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import { ClassSession } from "@/interfaces/types/classSession";
 import { getFirstOngoingClassAsync } from "@/services/class-session.service";
 import { useAuthStore } from "@/store/authStore";
-import { createLazyFileRoute, Link } from "@tanstack/react-router";
+import { createLazyFileRoute, Link, useRouter } from "@tanstack/react-router";
 import {
   AlertCircle,
   ArrowRight,
@@ -26,6 +26,7 @@ export const Route = createLazyFileRoute("/_authenticated/teacher/")({
 
 function RouteComponent() {
   const { user } = useAuthStore((state) => state);
+  const { navigate } = useRouter();
 
   const { teacherSchedules } = useTeacherContext();
 
@@ -127,7 +128,16 @@ function RouteComponent() {
               {todaySchedule.length > 0 ? (
                 <div className="space-y-4">
                   {todaySchedule?.map((classItem, index) => (
-                    <ClassScheduleCard classSchedule={classItem} key={index} />
+                    <ClassScheduleCard
+                      classSchedule={classItem}
+                      key={index}
+                      className="cursor-pointer"
+                      onClick={() =>
+                        navigate({
+                          to: `/teacher/class-schedule/${classItem.id}`,
+                        })
+                      }
+                    />
                   ))}
                 </div>
               ) : (
