@@ -12,6 +12,9 @@ function RouteComponent() {
     "System Loading. Please wait..."
   );
   const { navigate } = useRouter();
+
+  navigate({ to: "/sign-in" });
+
   useEffect(() => {
     const fetchData = async () => {
       try {
