@@ -28,23 +28,31 @@ export default function InstallPromptButton() {
     const isInPWA =
       window.matchMedia("(display-mode: standalone)").matches ||
       window.navigator.standalone === true;
-    console.log("Is in PWA:", isInPWA);
 
-    if (isVisible == isInPWA) setIsVisible(!isInPWA);
-
-    if (!isInPWA) {
-      const handler = (e: Event) => {
-        e.preventDefault();
-        setDeferredPrompt(e as BeforeInstallPromptEvent);
-      };
-
-      window.addEventListener("beforeinstallprompt", handler);
-
-      return () => window.removeEventListener("beforeinstallprompt", handler);
+    if (isInPWA) {
+      setIsVisible(false);
+      return;
     }
+
+    const handler = (e: Event) => {
+      e.preventDefault();
+      console.log("beforeinstallprompt event fired", e);
+      setDeferredPrompt(e as BeforeInstallPromptEvent);
+      setIsVisible(true);
+    };
+
+    window.addEventListener("beforeinstallprompt", (e) => handler(e));
+
+    return () => window.removeEventListener("beforeinstallprompt", handler);
   }, [isVisible]);
 
   const handleClick = async () => {
+    console.log(
+      "Install button clicked, is deferredPrompt available?",
+      !!deferredPrompt,
+    );
+    console.log("Deferred prompt:", deferredPrompt);
+
     if (!deferredPrompt) return;
 
     deferredPrompt.prompt();
@@ -68,14 +76,14 @@ export default function InstallPromptButton() {
       onMouseLeave={() => setExpandButton(false)}
       className={cn(
         "transition-all duration-300 group !hover:bg-primary",
-        "px-3 pr-4"
+        "px-3 pr-4",
       )}
     >
       <Download className="h-5 w-5" />
       <span
         className={cn(
           "ml-2 transition-all duration-300 overflow-hidden whitespace-nowrap",
-          expandButton ? "max-w-[200px] opacity-100" : "max-w-0 opacity-0"
+          expandButton ? "max-w-[200px] opacity-100" : "max-w-0 opacity-0",
         )}
       >
         Install App

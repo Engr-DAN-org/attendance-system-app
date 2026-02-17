@@ -42,10 +42,10 @@ export const useAuthStore = create<AuthState>((set, get) => {
 
       set({ user: user });
 
-      console.log("Login token:", token);
-      console.log("Login expiry:", expiryDate);
-      console.log("Login user:", user);
-      console.log("Login expiry timestamp:", expiryTimeStamp);
+      // console.log("Login token:", token);
+      // console.log("Login expiry:", expiryDate);
+      // console.log("Login user:", user);
+      // console.log("Login expiry timestamp:", expiryTimeStamp);
 
       // Redirect to role-based route
       await withDelayAsync(() => navigate(get().getRedirectPath()));

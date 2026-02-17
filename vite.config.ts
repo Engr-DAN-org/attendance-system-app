@@ -18,8 +18,13 @@ export default defineConfig({
       },
       manifest: {
         name: "Attendance System",
+        short_name: "SAS",
+        description: "Attendance System for managing attendance records",
         start_url: "/",
         display: "standalone",
+        theme_color: "#ffffff",
+        background_color: "#ffffff",
+        categories: ["productivity", "utilities"],
         icons: [
           {
             src: "/192.png",
