@@ -36,9 +36,15 @@ declare module "@tanstack/react-table" {
 interface DataTableProps {
   columns: ColumnDef<User>[];
   data: User[];
+  pagination: {
+    currentPage: number;
+    totalPages: number;
+    totalCount: number;
+    onPageClick: (page: number) => void;
+  };
 }
 
-export function UsersTable({ columns, data }: DataTableProps) {
+export function UsersTable({ columns, data, pagination }: DataTableProps) {
   const [rowSelection, setRowSelection] = useState({});
   const { navigate } = useRouter();
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -136,7 +142,14 @@ export function UsersTable({ columns, data }: DataTableProps) {
           </TableBody>
         </Table>
       </div>
-      <DataTablePagination table={table} />
+      <DataTablePagination
+        table={table}
+        currentPage={pagination.currentPage}
+        totalPages={pagination.totalPages}
+        totalCount={pagination.totalCount}
+        onPageClick={pagination.onPageClick}
+        itemLabel="User(s)"
+      />
     </div>
   );
 }

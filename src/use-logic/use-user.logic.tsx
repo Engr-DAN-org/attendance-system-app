@@ -77,6 +77,10 @@ export const useUserLogic = () => {
     return isLoading || isPending || isFetching;
   };
 
+  const handlePageClick = (page: number) => {
+    setUsersQuery({ ...usersQuery, page });
+  };
+
   const setNavItems = (user: User) => {
     console.log("user", user);
 
@@ -107,6 +111,7 @@ export const useUserLogic = () => {
     isUpdateCredPending,
     usersQuery,
     setUsersQuery,
+    handlePageClick,
     handleDelete,
     isDeletePending,
     response,

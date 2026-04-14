@@ -8,7 +8,8 @@ import { LoadingComponent } from "@/components/general-loader";
 import { useUserQueryContext } from "@/components/admin/users/context/users-context";
 
 export default function Users() {
-  const { response, isAnyPendingRefetch } = useUserQueryContext();
+  const { response, isAnyPendingRefetch, handlePageClick } =
+    useUserQueryContext();
   const isLoading = isAnyPendingRefetch();
   // Parse user list
   // const userList = userListSchema.parse(users);
@@ -28,7 +29,16 @@ export default function Users() {
           <LoadingComponent />
         ) : response?.data ? (
           <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0">
-            <UsersTable data={response.data} columns={columns} />
+            <UsersTable
+              data={response.data}
+              columns={columns}
+              pagination={{
+                currentPage: response.page,
+                totalPages: response.totalPages,
+                totalCount: response.totalCount,
+                onPageClick: handlePageClick,
+              }}
+            />
           </div>
         ) : null}
       </Main>

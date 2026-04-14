@@ -10,36 +10,70 @@ import { Button } from "@/components/ui/button";
 interface DataTablePaginationProps<TData> {
   table: Table<TData>;
   withRowSelection?: boolean;
+  currentPage?: number;
+  totalPages?: number;
+  totalCount?: number;
+  onPageClick?: (pageNumber: number) => void;
+  itemLabel?: string;
 }
 
 export function DataTablePagination<TData>({
   table,
   withRowSelection = true,
+  currentPage,
+  totalPages,
+  totalCount,
+  onPageClick,
+  itemLabel = "row(s)",
 }: DataTablePaginationProps<TData>) {
+  const isServerPaginated = Boolean(onPageClick);
+  const page = currentPage ?? table.getState().pagination.pageIndex + 1;
+  const pageCount = totalPages ?? table.getPageCount();
+  const canPreviousPage = isServerPaginated
+    ? page > 1
+    : table.getCanPreviousPage();
+  const canNextPage = isServerPaginated
+    ? page < pageCount
+    : table.getCanNextPage();
+
+  const goToPage = (pageNumber: number) => {
+    if (onPageClick) {
+      onPageClick(pageNumber);
+      return;
+    }
+
+    table.setPageIndex(pageNumber - 1);
+  };
+
   return (
     <div
       className="flex items-center justify-between overflow-clip px-2"
       style={{ overflowClipMargin: 1 }}
     >
       <div className="hidden flex-1 text-sm text-muted-foreground sm:block">
-        {withRowSelection && (
+        {totalCount != null ? (
           <>
-            {table.getFilteredSelectedRowModel().rows.length} of{" "}
-            {table.getFilteredRowModel().rows.length} row(s) selected.
+            {totalCount} {itemLabel} found.
           </>
+        ) : (
+          withRowSelection && (
+            <>
+              {table.getFilteredSelectedRowModel().rows.length} of{" "}
+              {table.getFilteredRowModel().rows.length} row(s) selected.
+            </>
+          )
         )}
       </div>
       <div className="flex items-center sm:space-x-6 lg:space-x-8">
         <div className="flex w-[100px] items-center justify-center text-sm font-medium">
-          Page {table.getState().pagination.pageIndex + 1} of{" "}
-          {table.getPageCount()}
+          Page {page} of {pageCount}
         </div>
         <div className="flex items-center space-x-2">
           <Button
             variant="outline"
             className="hidden h-8 w-8 p-0 lg:flex"
-            onClick={() => table.setPageIndex(0)}
-            disabled={!table.getCanPreviousPage()}
+            onClick={() => goToPage(1)}
+            disabled={!canPreviousPage}
           >
             <span className="sr-only">Go to first page</span>
             <DoubleArrowLeftIcon className="h-4 w-4" />
@@ -47,8 +81,8 @@ export function DataTablePagination<TData>({
           <Button
             variant="outline"
             className="h-8 w-8 p-0"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
+            onClick={() => goToPage(page - 1)}
+            disabled={!canPreviousPage}
           >
             <span className="sr-only">Go to previous page</span>
             <ChevronLeftIcon className="h-4 w-4" />
@@ -56,8 +90,8 @@ export function DataTablePagination<TData>({
           <Button
             variant="outline"
             className="h-8 w-8 p-0"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
+            onClick={() => goToPage(page + 1)}
+            disabled={!canNextPage}
           >
             <span className="sr-only">Go to next page</span>
             <ChevronRightIcon className="h-4 w-4" />
@@ -65,8 +99,8 @@ export function DataTablePagination<TData>({
           <Button
             variant="outline"
             className="hidden h-8 w-8 p-0 lg:flex"
-            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-            disabled={!table.getCanNextPage()}
+            onClick={() => goToPage(pageCount)}
+            disabled={!canNextPage}
           >
             <span className="sr-only">Go to last page</span>
             <DoubleArrowRightIcon className="h-4 w-4" />
